@@ -34,7 +34,7 @@ export function Header() {
             <img
               alt="User profile"
               className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1iN5215bFBQ8p7aCPHj1Xya1AhQR1dnxxz1ACZ0IVU8q_GEVUKKjNwC48EI_oVze1i9QKHAODwefwVOVub3pU3tqk3o70i-i_454s1l404RJxmCsXSiOyH5uhinaP60DiKo95yfsyQOkytRBaC8Qdl2vqifxfbWN_6vPdBkagP7FI1-4EYmVLAkmJ6_SJovyxvkvUkHA_ujvdxystB7-A98IBCpeiIIQMKswUCUlvlzsuU7iGZ3YTsK3St3cayHAtiYGlxNkl0cAx"
+              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               referrerPolicy="no-referrer"
             />
           </button>

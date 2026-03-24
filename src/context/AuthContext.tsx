@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, _password: string) => {
     // Mock login - initially unverified for demo
     const mockUser: AuthUser = {
-      id: 1,
+      id: 123921,
       email,
       firstName: "Alex",
       lastName: "Thompson",
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogle = async () => {
     // Mock Google login
     const mockUser: AuthUser = {
-      id: 1,
+      id: 123921,
       email: "alex.t@energydynamics.com",
       firstName: "Alex",
       lastName: "Thompson",

@@ -122,7 +122,7 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
               <div className="w-full border-t border-slate-100"></div>
             </div>
             <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
-              <span className="bg-card px-4 text-muted-foreground">
+              <span className="bg-background px-4 text-muted-foreground">
                 Or continue with
               </span>
             </div>
