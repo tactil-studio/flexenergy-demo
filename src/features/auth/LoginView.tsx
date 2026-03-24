@@ -1,7 +1,7 @@
 import { Chrome, Lock, LogIn, Mail } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
 import type { FormEvent } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
@@ -82,10 +82,29 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
               </div>
             </div>
 
+            <div className="flex items-center justify-between px-1">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 rounded border-slate-200 text-blue-600 focus:ring-blue-500 transition-all cursor-pointer"
+                />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-slate-600 transition-colors">
+                  Remember me
+                </span>
+              </label>
+              <button
+                type="button"
+                onClick={onShowForgot}
+                className="text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:text-blue-700 transition-colors"
+              >
+                Forgot Password?
+              </button>
+            </div>
+
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-800 transition-all disabled:opacity-50"
+              className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-800 active:scale-[0.98] transition-all disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -118,19 +137,21 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
             Google Account
           </button>
 
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={onShowForgot}
-              className="text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:text-blue-700"
-            >
-              Forgot Password?
-            </button>
+          <div className="text-center space-y-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+              Don't have an account?{" "}
+              <button
+                type="button"
+                className="text-blue-600 hover:text-blue-700 transition-colors"
+              >
+                Create one
+              </button>
+            </p>
           </div>
         </div>
 
         <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-          © 2026 EnergyDynamics • All Rights Reserved
+          FlexEnergy • Premium Energy Management • v2.4.1
         </p>
       </motion.div>
     </div>

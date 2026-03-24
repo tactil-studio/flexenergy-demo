@@ -1,7 +1,7 @@
 import { ArrowLeft, Mail, Send } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
 import type { FormEvent } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
@@ -127,7 +127,7 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
         </div>
 
         <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-          © 2026 EnergyDynamics • All Rights Reserved
+          FlexEnergy • Premium Energy Management • v2.4.1
         </p>
       </motion.div>
     </div>

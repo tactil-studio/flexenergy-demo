@@ -1,6 +1,6 @@
-import { motion } from "motion/react";
 import type { LucideIcon } from "lucide-react";
 import { BarChart3, History, Settings, Zap } from "lucide-react";
+import { motion } from "motion/react";
 import { useApp } from "@/context/AppContext";
 import { cn } from "@/lib/utils";
 import type { ViewType } from "@/types";
@@ -31,19 +31,25 @@ export function BottomNav() {
             onClick={() => handleNavClick(item.id)}
             className={cn(
               "flex flex-col items-center justify-center py-2 px-4 transition-all duration-300 rounded-2xl cursor-pointer group relative",
-              isActive ? "text-blue-600" : "text-slate-400 hover:text-slate-600",
+              isActive
+                ? "text-blue-600"
+                : "text-slate-400 hover:text-slate-600",
             )}
           >
             <item.icon
               className={cn(
                 "w-5 h-5 mb-1 transition-all duration-300 z-10",
-                isActive ? "scale-110 stroke-[2.5px]" : "group-hover:scale-110 stroke-[2px]",
+                isActive
+                  ? "scale-110 stroke-[2.5px]"
+                  : "group-hover:scale-110 stroke-[2px]",
               )}
             />
             <span
               className={cn(
                 "text-[9px] font-bold uppercase tracking-[0.1em] z-10 transition-all duration-300",
-                isActive ? "opacity-100" : "opacity-0 scale-90 h-0 overflow-hidden",
+                isActive
+                  ? "opacity-100"
+                  : "opacity-0 scale-90 h-0 overflow-hidden",
               )}
             >
               {item.label}

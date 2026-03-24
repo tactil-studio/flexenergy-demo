@@ -1,11 +1,13 @@
-import { AlertCircle, Bell, CheckCircle2, Info, X } from "lucide-react";
 import * as Popover from "@radix-ui/react-popover";
+import { AlertCircle, Bell, CheckCircle2, Info, X } from "lucide-react";
 import { useApp } from "@/context/AppContext";
+import { formatCurrency } from "@/types";
 
 export function Header() {
-  const { state, markNotificationAsRead, clearNotifications, setView } = useApp();
+  const { state, markNotificationAsRead, clearNotifications, setView } =
+    useApp();
 
-  const balance = state?.balance ?? 0;
+  const balanceMinor = state?.dashboard?.balance ?? 0;
   const notifications = state?.notifications ?? [];
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -38,11 +40,7 @@ export function Header() {
           </button>
           <div className="flex flex-col">
             <span className="font-bold text-lg tracking-tight text-slate-900">
-              $
-              {balance.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {formatCurrency(balanceMinor)}
             </span>
             <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
               FlexEnergy Balance
@@ -111,7 +109,9 @@ export function Header() {
                           <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500" />
                         )}
                         <div className="flex gap-3">
-                          <div className="mt-0.5 shrink-0">{getIcon(n.type)}</div>
+                          <div className="mt-0.5 shrink-0">
+                            {getIcon(n.type)}
+                          </div>
                           <div className="space-y-1">
                             <p className="text-xs font-bold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">
                               {n.title}

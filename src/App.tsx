@@ -5,8 +5,14 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { BottomNav } from "@/components/layout/bottom-nav";
+import { Header } from "@/components/layout/header";
+import { AppProvider, useApp } from "@/context/AppContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { EmailVerificationView } from "@/features/auth/EmailVerificationView";
 import { ForgotPasswordView } from "@/features/auth/ForgotPasswordView";
 import { LoginView } from "@/features/auth/LoginView";
+import { TwoFactorAuthView } from "@/features/auth/TwoFactorAuthView";
 import { HistoryView } from "@/features/history/HistoryView";
 import { RechargeView } from "@/features/recharge/RechargeView";
 import { AlertSection } from "@/features/settings/AlertSection";
@@ -14,13 +20,6 @@ import { ProfileHero } from "@/features/settings/ProfileHero";
 import { SettingsList } from "@/features/settings/SettingsList";
 import { SupportCenter } from "@/features/settings/SupportCenter";
 import { UsageView } from "@/features/usage/UsageView";
-import { BottomNav } from "@/components/layout/bottom-nav";
-import { Header } from "@/components/layout/header";
-import { AppProvider, useApp } from "@/context/AppContext";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
-
-import { EmailVerificationView } from "@/features/auth/EmailVerificationView";
-import { TwoFactorAuthView } from "@/features/auth/TwoFactorAuthView";
 
 function MainContent() {
   const { currentView, isLoading: isAppLoading } = useApp();
@@ -103,7 +102,7 @@ function MainContent() {
 
         <footer className="text-center py-10">
           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-            FlexEnergy • Smart Grid Management System • 2026
+            FlexEnergy • Premium Energy Management • v2.4.1
           </p>
         </footer>
       </main>

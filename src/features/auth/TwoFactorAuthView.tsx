@@ -1,30 +1,30 @@
-import { ShieldCheck, ArrowRight, LogOut, AlertCircle } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  LogOut,
+  RefreshCw,
+  ShieldCheck,
+  Smartphone,
+} from "lucide-react";
 import { motion } from "motion/react";
-import React, { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import type * as React from "react";
+import { useTwoFactorAuth } from "./useTwoFactorAuth";
 
 export function TwoFactorAuthView() {
-  const { verify2FA, logout } = useAuth();
-  const [code, setCode] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isVerifying, setIsVerifying] = useState(false);
+  const {
+    code,
+    setCode,
+    error,
+    isVerifying,
+    isResending,
+    handleVerify,
+    handleResend,
+    logout,
+  } = useTwoFactorAuth();
 
-  const handleVerify = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (code.length !== 6) {
-      setError("Please enter a 6-digit code");
-      return;
-    }
-
-    setIsVerifying(true);
-    setError(null);
-    try {
-      await verify2FA(code);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Invalid code");
-    } finally {
-      setIsVerifying(false);
-    }
+    handleVerify();
   };
 
   return (
@@ -38,12 +38,15 @@ export function TwoFactorAuthView() {
           <ShieldCheck className="w-8 h-8 text-blue-600" />
         </div>
 
-        <h1 className="text-2xl font-bold text-slate-900 mb-2">Two-Factor Authentication</h1>
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">
+          Two-Factor Authentication
+        </h1>
         <p className="text-slate-500 text-sm mb-8">
-          Enter the 6-digit code from your authenticator app to secure your account.
+          Enter the 6-digit code from your authenticator app to secure your
+          account.
         </p>
 
-        <form onSubmit={handleVerify} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <input
               type="text"
@@ -61,14 +64,37 @@ export function TwoFactorAuthView() {
             )}
           </div>
 
-          <button
-            type="submit"
-            disabled={isVerifying || code.length !== 6}
-            className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isVerifying ? "Verifying..." : "Verify Code"}
-            {!isVerifying && <ArrowRight className="w-5 h-5" />}
-          </button>
+          <div className="space-y-4">
+            <button
+              type="submit"
+              disabled={isVerifying || code.length !== 6}
+              className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isVerifying ? "Verifying..." : "Verify Code"}
+              {!isVerifying && <ArrowRight className="w-5 h-5" />}
+            </button>
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={isResending}
+                className="flex items-center justify-center gap-2 bg-slate-50 text-slate-600 py-3 rounded-xl font-bold text-xs hover:bg-slate-100 transition-all disabled:opacity-50"
+              >
+                <RefreshCw
+                  className={`w-3.5 h-3.5 ${isResending ? "animate-spin" : ""}`}
+                />
+                {isResending ? "Sending..." : "Resend Code"}
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center gap-2 bg-slate-50 text-slate-600 py-3 rounded-xl font-bold text-xs hover:bg-slate-100 transition-all"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                SMS Code
+              </button>
+            </div>
+          </div>
 
           <button
             type="button"

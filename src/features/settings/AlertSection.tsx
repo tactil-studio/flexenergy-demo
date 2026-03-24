@@ -20,7 +20,9 @@ export function AlertSection() {
                 <AlertTriangle className="w-4.5 h-4.5 md:w-6 md:h-6 text-orange-600" />
               </div>
               <div>
-                <h3 className="font-bold text-xs md:text-base text-slate-900">Low Balance Alert</h3>
+                <h3 className="font-bold text-xs md:text-base text-slate-900">
+                  Low Balance Alert
+                </h3>
                 <p className="text-[9px] md:text-xs text-slate-500 font-medium">
                   Notify when balance is below $20.00
                 </p>
@@ -39,7 +41,9 @@ export function AlertSection() {
                 <BarChart2 className="w-4.5 h-4.5 md:w-6 md:h-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-bold text-xs md:text-base text-slate-900">Peak Usage Warning</h3>
+                <h3 className="font-bold text-xs md:text-base text-slate-900">
+                  Peak Usage Warning
+                </h3>
                 <p className="text-[9px] md:text-xs text-slate-500 font-medium">
                   Instant alerts for unusual energy spikes
                 </p>

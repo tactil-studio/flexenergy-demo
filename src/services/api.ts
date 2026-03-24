@@ -1,131 +1,164 @@
 import type {
   AlertSettings,
   AppState,
+  Contract,
+  CustomerDashboard,
+  MeasureData,
   Notification,
   Transaction,
-  UsageData,
+  UserInfo,
 } from "../types";
 
-const INITIAL_STATE: AppState = {
-  balance: 142.5,
-  user: {
-    name: "Alex Thompson",
-    email: "alex.t@energydynamics.com",
-    plan: "Premium Residential Plan",
-    zone: "Zone 4B",
-    deviceId: "EM-992-KWH-2024",
-    status: "active",
-    isVerified: true,
+const _MOCK_USER: UserInfo = {
+  id: 1,
+  email: "alex.t@energydynamics.com",
+  firstName: "Alex",
+  lastName: "Thompson",
+  companyName: "EnergyDynamics Ltd",
+};
+
+const MOCK_CONTRACTS: Contract[] = [
+  {
+    contractId: 101,
+    buContractId: "BU-101-ELE",
+    customerId: 1,
+    description: "Residential Electricity - Main",
+    startDate: "2024-01-01T00:00:00Z",
+    endDate: "2025-12-31T23:59:59Z",
+    serviceStatus: "Active",
+    statusDateTime: "2024-01-01T00:00:00Z",
+    zpbs: [{ zpbId: "ZPB-001", obis: "1.8.0" }],
+    electricalRates: [{ tariffId: "T-RES-01", validFrom: "2024-01-01", validTo: "2025-12-31" }],
+    triggerLockDays: 30,
+    triggerPrelockDays: 15,
+    triggerDeadlineLockDays: 5,
   },
-  alerts: {
-    lowBalance: true,
-    peakUsage: false,
-  },
-  notifications: [
+];
+
+const MOCK_DASHBOARD: CustomerDashboard = {
+  sourceId: 1,
+  status: true,
+  balance: 14250, // 142.50 CHF in minor units
+  consume: 450.5,
+  scale: 2,
+  contracts: [
     {
-      id: "1",
-      title: "Welcome to FlexEnergy",
-      message: "Your account is active and ready to use.",
-      timestamp: new Date().toISOString(),
-      read: false,
-      type: "info",
+      contractId: 101,
+      buContractId: "BU-101-ELE",
+      description: "Residential Electricity - Main",
+      startDate: "2024-01-01T00:00:00Z",
+      endDate: "2025-12-31T23:59:59Z",
+      serviceStatus: "Active",
+      customerId: 1,
     },
   ],
 };
 
 const MOCK_TRANSACTIONS: Transaction[] = [
   {
-    id: "t1",
-    type: "recharge",
-    amount: 50,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(),
+    transactionId: "tx_001",
+    customerId: 1,
+    contractId: 101,
+    amountMinor: 5000,
+    scale: 2,
+    currency: "CHF",
+    transactionSource: "Stripe",
+    transactionStatus: "Settled",
     description: "Manual Recharge",
-    category: "Payment",
+    transactionDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(),
   },
   {
-    id: "t2",
-    type: "consumption",
-    amount: 12.4,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+    transactionId: "tx_002",
+    customerId: 1,
+    contractId: 101,
+    amountMinor: -1240,
+    scale: 2,
+    currency: "CHF",
+    transactionSource: "System",
+    transactionStatus: "Settled",
     description: "Daily Consumption",
-    category: "Usage",
+    transactionDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
   },
   {
-    id: "t3",
-    type: "consumption",
-    amount: 15.2,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
+    transactionId: "tx_003",
+    customerId: 1,
+    contractId: 101,
+    amountMinor: -1520,
+    scale: 2,
+    currency: "CHF",
+    transactionSource: "System",
+    transactionStatus: "Settled",
     description: "Daily Consumption",
-    category: "Usage",
-  },
-  {
-    id: "t4",
-    type: "recharge",
-    amount: 100,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-    description: "Auto Recharge",
-    category: "Payment",
-  },
-  {
-    id: "t5",
-    type: "consumption",
-    amount: 8.9,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6).toISOString(),
-    description: "Daily Consumption",
-    category: "Usage",
+    transactionDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
   },
 ];
 
-const generateUsageData = (days: number): UsageData[] => {
-  return Array.from({ length: days }).map((_, i) => ({
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * i).toISOString(),
-    value: Math.random() * 20 + 5,
-  }));
+const INITIAL_ALERTS: AlertSettings = {
+  lowBalance: true,
+  peakUsage: false,
 };
 
-// This service can be easily swapped for a real API in the future
+const INITIAL_NOTIFICATIONS: Notification[] = [
+  {
+    id: "1",
+    title: "Welcome to FlexEnergy",
+    message: "Your account is active and ready to use.",
+    timestamp: new Date().toISOString(),
+    read: false,
+    type: "info",
+  },
+];
+
 export const apiService = {
   async getAppState(): Promise<AppState> {
     const saved = localStorage.getItem("flex_energy_state");
     if (saved) return JSON.parse(saved);
-    return INITIAL_STATE;
+    
+    return {
+      dashboard: MOCK_DASHBOARD,
+      contracts: MOCK_CONTRACTS,
+      alerts: INITIAL_ALERTS,
+      notifications: INITIAL_NOTIFICATIONS,
+    };
   },
 
   async getTransactions(): Promise<Transaction[]> {
     return MOCK_TRANSACTIONS;
   },
 
-  async getUsageData(period: "day" | "week" | "month"): Promise<UsageData[]> {
-    const days = period === "day" ? 24 : period === "week" ? 7 : 30;
-    if (period === "day") {
-      return Array.from({ length: 24 }).map((_, i) => ({
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * i).toISOString(),
-        value: Math.random() * 2 + 0.5,
-      }));
-    }
-    return generateUsageData(days);
+  async getUsageData(period: "day" | "week" | "month"): Promise<MeasureData[]> {
+    const points = period === "day" ? 24 : period === "week" ? 7 : 30;
+    const interval = period === "day" ? 1000 * 60 * 60 : 1000 * 60 * 60 * 24;
+    
+    return Array.from({ length: points }).map((_, i) => ({
+      timestamp: new Date(Date.now() - interval * i).toISOString(),
+      value: Math.random() * (period === "day" ? 2 : 20) + 0.5,
+      unit: "kWh",
+    }));
   },
 
-  async updateBalance(newBalance: number): Promise<number> {
+  async updateBalance(newBalanceMinor: number): Promise<number> {
     const state = await this.getAppState();
-    const newState = { ...state, balance: newBalance };
-    localStorage.setItem("flex_energy_state", JSON.stringify(newState));
-    return newBalance;
+    if (state.dashboard) {
+      state.dashboard.balance = newBalanceMinor;
+      localStorage.setItem("flex_energy_state", JSON.stringify(state));
+    }
+    return newBalanceMinor;
   },
 
   async updateAlerts(alerts: Partial<AlertSettings>): Promise<AlertSettings> {
     const state = await this.getAppState();
-    const newState = { ...state, alerts: { ...state.alerts, ...alerts } };
-    localStorage.setItem("flex_energy_state", JSON.stringify(newState));
-    return newState.alerts;
+    state.alerts = { ...state.alerts, ...alerts };
+    localStorage.setItem("flex_energy_state", JSON.stringify(state));
+    return state.alerts;
   },
 
   async updateNotifications(
     notifications: Notification[],
   ): Promise<Notification[]> {
     const state = await this.getAppState();
-    const newState = { ...state, notifications };
-    localStorage.setItem("flex_energy_state", JSON.stringify(newState));
+    state.notifications = notifications;
+    localStorage.setItem("flex_energy_state", JSON.stringify(state));
     return notifications;
   },
 };

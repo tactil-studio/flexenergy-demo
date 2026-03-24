@@ -1,41 +1,27 @@
-import { useEffect, useState } from "react";
+import { format, parseISO } from "date-fns";
+import { TrendingDown, Zap } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import {
   Bar,
   BarChart,
+  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
-  Cell,
 } from "recharts";
-import { TrendingDown, Zap } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import { apiService } from "@/services/api";
-import type { UsageData } from "@/types";
-import { format, parseISO } from "date-fns";
+import { useUsage } from "./useUsage";
 
 export function UsageView() {
-  const [period, setPeriod] = useState<"day" | "week" | "month">("week");
-  const [data, setData] = useState<UsageData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(true);
-    apiService.getUsageData(period).then((res) => {
-      setData([...res].reverse());
-      setIsLoading(false);
-    });
-  }, [period]);
-
-  const totalUsage = data.reduce((acc, curr) => acc + curr.value, 0).toFixed(1);
-  const avgUsage = (Number(totalUsage) / (data.length || 1)).toFixed(1);
-
-  const formatXAxis = (tickItem: string) => {
-    const date = parseISO(tickItem);
-    if (period === "day") return format(date, "HH:mm");
-    if (period === "week") return format(date, "EEE");
-    return format(date, "dd MMM");
-  };
+  const {
+    period,
+    setPeriod,
+    data,
+    isLoading,
+    totalUsage,
+    avgUsage,
+    formatXAxis,
+  } = useUsage();
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -54,7 +40,9 @@ export function UsageView() {
             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
               {totalUsage}
             </h2>
-            <span className="text-lg md:text-xl font-bold text-slate-400">kWh</span>
+            <span className="text-lg md:text-xl font-bold text-slate-400">
+              kWh
+            </span>
           </div>
           <div className="flex items-center gap-3 md:gap-4">
             <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-medium bg-emerald-500/10 text-emerald-400 px-2.5 py-1 md:py-1.5 rounded-full border border-emerald-500/20">
@@ -103,15 +91,38 @@ export function UsageView() {
                 className="h-full w-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <BarChart
+                    data={data}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                  >
                     <defs>
-                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient
+                        id="barGradient"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
                         <stop offset="0%" stopColor="#3b82f6" stopOpacity={1} />
-                        <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.8} />
+                        <stop
+                          offset="100%"
+                          stopColor="#60a5fa"
+                          stopOpacity={0.8}
+                        />
                       </linearGradient>
-                      <linearGradient id="barGradientInactive" x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient
+                        id="barGradientInactive"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
                         <stop offset="0%" stopColor="#e2e8f0" stopOpacity={1} />
-                        <stop offset="100%" stopColor="#f1f5f9" stopOpacity={0.8} />
+                        <stop
+                          offset="100%"
+                          stopColor="#f1f5f9"
+                          stopOpacity={0.8}
+                        />
                       </linearGradient>
                     </defs>
                     <XAxis
@@ -130,7 +141,10 @@ export function UsageView() {
                           return (
                             <div className="bg-slate-900 text-white p-3 rounded-2xl shadow-xl border border-slate-800">
                               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">
-                                {format(parseISO(payload[0].payload.timestamp), "PPP p")}
+                                {format(
+                                  parseISO(payload[0].payload.timestamp),
+                                  "PPP p",
+                                )}
                               </p>
                               <p className="text-sm font-bold">
                                 {payload[0].value} kWh
@@ -146,10 +160,14 @@ export function UsageView() {
                       radius={[6, 6, 6, 6]}
                       animationDuration={1000}
                     >
-                      {data.map((_entry, index) => (
+                      {data.map((entry, index) => (
                         <Cell
-                          key={`cell-${index}`}
-                          fill={index === data.length - 1 ? "url(#barGradient)" : "url(#barGradientInactive)"}
+                          key={entry.timestamp}
+                          fill={
+                            index === data.length - 1
+                              ? "url(#barGradient)"
+                              : "url(#barGradientInactive)"
+                          }
                           className="hover:fill-blue-400 transition-colors duration-300"
                         />
                       ))}

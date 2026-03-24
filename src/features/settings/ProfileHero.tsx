@@ -1,9 +1,8 @@
 import { Zap } from "lucide-react";
-import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
 
 export function ProfileHero() {
-  const { state } = useApp();
-  const user = state?.user;
+  const { user } = useAuth();
 
   if (!user) return null;
 
@@ -13,18 +12,18 @@ export function ProfileHero() {
         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -mr-16 -mt-16 blur-3xl opacity-50" />
         <div className="flex-1 z-10">
           <h1 className="font-bold text-xl md:text-3xl tracking-tight mb-0.5 text-slate-900">
-            {user.name}
+            {user.firstName} {user.lastName}
           </h1>
           <p className="text-xs md:text-base text-slate-500 mb-3 font-medium">
-            {user.plan} • {user.zone}
+            {user.companyName || "Personal Account"}
           </p>
           <div className="flex flex-wrap gap-1.5">
             <span className="bg-blue-50 text-blue-600 text-[9px] md:text-[11px] font-bold px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase tracking-wider">
-              {user.status} Account
+              Active Account
             </span>
-            {user.isVerified && (
+            {user.isEmailVerified && (
               <span className="bg-slate-100 text-slate-600 text-[9px] md:text-[11px] font-bold px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase tracking-wider">
-                Verified Meter
+                Verified Email
               </span>
             )}
           </div>
@@ -32,12 +31,12 @@ export function ProfileHero() {
         <div className="w-full md:w-auto z-10">
           <div className="bg-slate-50 p-3 md:p-5 rounded-lg md:rounded-2xl border border-slate-100">
             <span className="text-[8px] md:text-[10px] uppercase tracking-[0.05em] text-slate-500 font-bold block mb-1.5">
-              Primary Device
+              Customer ID
             </span>
             <div className="flex items-center gap-2 md:gap-3">
               <Zap className="w-3.5 h-3.5 md:w-5 md:h-5 text-blue-600 fill-blue-600" />
               <code className="font-mono text-[10px] md:text-sm font-bold tracking-tight text-slate-800">
-                {user.deviceId}
+                #{user.id}
               </code>
             </div>
             <div className="mt-1.5 md:mt-3 flex items-center gap-1.5">

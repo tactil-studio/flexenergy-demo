@@ -18,14 +18,30 @@ export function useRecharge() {
 
   const paymentMethods: PaymentMethod[] = [
     { id: "visa_4242", type: "card", label: "Visa", details: "ending in 4242" },
-    { id: "gpay", type: "google_pay", label: "Google Pay", details: "alex.t@gmail.com" },
-    { id: "apple_pay", type: "apple_pay", label: "Apple Pay", details: "Default Card" },
+    {
+      id: "mc_8899",
+      type: "card",
+      label: "Mastercard",
+      details: "ending in 8899",
+    },
+    {
+      id: "gpay",
+      type: "google_pay",
+      label: "Google Pay",
+      details: "alex.t@gmail.com",
+    },
+    {
+      id: "apple_pay",
+      type: "apple_pay",
+      label: "Apple Pay",
+      details: "Default Card",
+    },
   ];
 
   const handleRecharge = async () => {
     const finalAmount = isCustom ? Number(customAmount) : amount;
     if (Number.isNaN(finalAmount) || finalAmount <= 0) return;
-    
+
     await recharge(finalAmount);
     setIsSuccess(true);
     setTimeout(() => setIsSuccess(false), 3000);
@@ -40,7 +56,6 @@ export function useRecharge() {
   const handleCustomAmountChange = (val: string) => {
     setCustomAmount(val);
     setIsCustom(true);
-    // We don't automatically select a predefined amount here to avoid the "10" vs "100" issue
   };
 
   const currentAmount = isCustom ? Number(customAmount) || 0 : amount;

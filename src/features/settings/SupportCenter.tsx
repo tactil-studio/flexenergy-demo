@@ -11,7 +11,9 @@ export function SupportCenter() {
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-50 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-transform">
             <HelpCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-blue-600" />
           </div>
-          <h3 className="font-bold text-xs md:text-base text-slate-900 mb-0.5">Knowledge Base</h3>
+          <h3 className="font-bold text-xs md:text-base text-slate-900 mb-0.5">
+            Knowledge Base
+          </h3>
           <p className="text-[9px] md:text-xs text-slate-500 font-medium leading-relaxed">
             Detailed guides on managing consumption and billing cycles.
           </p>
@@ -20,7 +22,9 @@ export function SupportCenter() {
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-50 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-transform">
             <MessageSquare className="w-3.5 h-3.5 md:w-5 md:h-5 text-blue-600" />
           </div>
-          <h3 className="font-bold text-xs md:text-base text-slate-900 mb-0.5">Direct Support</h3>
+          <h3 className="font-bold text-xs md:text-base text-slate-900 mb-0.5">
+            Direct Support
+          </h3>
           <p className="text-[9px] md:text-xs text-slate-500 font-medium leading-relaxed">
             24/7 technical assistance for meter connection issues.
           </p>

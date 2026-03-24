@@ -1,6 +1,7 @@
-import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
+import type React from "react";
 import { apiService } from "../services/api";
+import { formatCurrency, toMinorUnits } from "../types";
 import type { AlertSettings, AppState, Notification, ViewType } from "../types";
 
 interface AppContextType {
@@ -34,15 +35,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const recharge = async (amount: number) => {
-    if (!state) return;
-    const newBalance = state.balance + amount;
-    const updatedBalance = await apiService.updateBalance(newBalance);
+    if (!state || !state.dashboard) return;
+    
+    const amountMinor = toMinorUnits(amount);
+    const newBalanceMinor = state.dashboard.balance + amountMinor;
+    const updatedBalanceMinor = await apiService.updateBalance(newBalanceMinor);
 
     // Add notification for recharge
     const newNotification: Notification = {
       id: Math.random().toString(36).substr(2, 9),
       title: "Balance Recharged",
-      message: `Successfully added $${amount.toFixed(2)} to your account.`,
+      message: `Successfully added ${formatCurrency(amountMinor)} to your account.`,
       timestamp: new Date().toISOString(),
       read: false,
       type: "success",
@@ -52,13 +55,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     await apiService.updateNotifications(updatedNotifications);
 
     setState((prev) =>
-      prev
+      prev?.dashboard
         ? {
             ...prev,
-            balance: updatedBalance,
+            dashboard: {
+              ...prev.dashboard,
+              balance: updatedBalanceMinor,
+            },
             notifications: updatedNotifications,
           }
-        : null,
+        : prev,
     );
   };
 

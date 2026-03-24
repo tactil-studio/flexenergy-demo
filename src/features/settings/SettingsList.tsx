@@ -13,7 +13,9 @@ export function SettingsList() {
         >
           <div className="flex items-center gap-2.5 md:gap-4">
             <Lock className="w-3.5 h-3.5 md:w-5 md:h-5 text-slate-400" />
-            <span className="font-bold text-xs md:text-base text-slate-700">Privacy & Security</span>
+            <span className="font-bold text-xs md:text-base text-slate-700">
+              Privacy & Security
+            </span>
           </div>
           <ChevronRight className="w-3.5 h-3.5 md:w-5 md:h-5 text-slate-300" />
         </button>
@@ -23,7 +25,9 @@ export function SettingsList() {
         >
           <div className="flex items-center gap-2.5 md:gap-4">
             <CreditCard className="w-3.5 h-3.5 md:w-5 md:h-5 text-slate-400" />
-            <span className="font-bold text-xs md:text-base text-slate-700">Payment Methods</span>
+            <span className="font-bold text-xs md:text-base text-slate-700">
+              Payment Methods
+            </span>
           </div>
           <ChevronRight className="w-3.5 h-3.5 md:w-5 md:h-5 text-slate-300" />
         </button>
@@ -34,7 +38,9 @@ export function SettingsList() {
         >
           <div className="flex items-center gap-2.5 md:gap-4">
             <LogOut className="w-3.5 h-3.5 md:w-5 md:h-5 text-red-500" />
-            <span className="font-bold text-xs md:text-base text-red-500">Log out</span>
+            <span className="font-bold text-xs md:text-base text-red-500">
+              Log out
+            </span>
           </div>
         </button>
       </div>
