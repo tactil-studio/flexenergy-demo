@@ -48,18 +48,18 @@ export function RechargeView() {
               type="button"
               key={amt}
               onClick={() => selectPredefinedAmount(amt)}
-              className={`p-4 md:p-6 rounded-[24px] md:rounded-3xl border-2 transition-all ${amount === amt
-                  ? "border-primary bg-primary/10 text-primary shadow-sm"
-                  : "border-border bg-card text-muted-foreground hover:border-primary/30"
+              className={`p-4 md:p-6 rounded-[24px] md:rounded-3xl border-2 transition-all flex items-center justify-center min-h-[80px] md:min-h-[100px] ${amount === amt
+                ? "border-primary bg-primary/10 text-primary shadow-sm"
+                : "border-border bg-card text-muted-foreground hover:border-primary/30"
                 }`}
             >
               <span className="text-xl md:text-2xl font-bold">{formatCurrency(toMinorUnits(amt))}</span>
             </button>
           ))}
           <div
-            className={`p-3 md:p-4 rounded-[24px] md:rounded-3xl border-2 transition-all flex flex-col justify-center min-h-[80px] md:min-h-[100px] ${isCustom
-                ? "border-primary bg-primary/10 text-primary shadow-sm"
-                : "border-border bg-card text-muted-foreground hover:border-primary/30"
+            className={`p-4 md:p-6 rounded-[24px] md:rounded-3xl border-2 transition-all flex flex-col justify-center min-h-[80px] md:min-h-[100px] ${isCustom
+              ? "border-primary bg-primary/10 text-primary shadow-sm"
+              : "border-border bg-card text-muted-foreground hover:border-primary/30"
               }`}
           >
             <span className="text-[10px] text-current mb-0.5 md:mb-1 ml-1 opacity-60">
@@ -121,8 +121,8 @@ export function RechargeView() {
                       setIsMethodSelectorOpen(false);
                     }}
                     className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${selectedMethod === method.id
-                        ? "bg-primary/10 text-primary"
-                        : "hover:bg-muted/50 text-foreground"
+                      ? "bg-primary/10 text-primary"
+                      : "hover:bg-muted/50 text-foreground"
                       }`}
                   >
                     <div className="flex items-center gap-3 text-left">
