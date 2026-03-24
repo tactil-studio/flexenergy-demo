@@ -16,47 +16,47 @@ export function HistoryView() {
   return (
     <div className="space-y-6 md:space-y-8">
       <section className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-        <div className="bg-white rounded-[24px] md:rounded-[32px] p-5 md:p-6 border border-slate-100 shadow-sm">
+        <div className="bg-card rounded-[24px] md:rounded-[32px] p-5 md:p-6 border border-border shadow-sm">
           <div className="flex items-center gap-2.5 md:gap-3 mb-3 md:mb-4">
-            <div className="p-1.5 md:p-2 bg-blue-50 rounded-lg md:rounded-xl">
-              <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-600" />
+            <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg md:rounded-xl">
+              <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" />
             </div>
-            <h3 className="font-semibold text-sm text-slate-900">
+            <h3 className="font-semibold text-sm text-foreground">
               Weekly insights
             </h3>
           </div>
           <div className="space-y-3 md:space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-[11px] md:text-xs text-slate-500 font-medium">
+              <span className="text-[11px] md:text-xs text-muted-foreground font-medium">
                 Spent this week
               </span>
-              <span className="text-xs md:text-sm font-bold text-slate-900">
+              <span className="text-xs md:text-sm font-bold text-foreground">
                 {formatCurrency(weeklySpent * 100)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[11px] md:text-xs text-slate-500 font-medium">
+              <span className="text-[11px] md:text-xs text-muted-foreground font-medium">
                 Recharged
               </span>
-              <span className="text-xs md:text-sm font-bold text-emerald-600">
+              <span className="text-xs md:text-sm font-bold text-success">
                 +{formatCurrency(weeklyRecharged * 100)}
               </span>
             </div>
-            <div className="pt-1.5 md:pt-2 border-t border-slate-50">
-              <p className="text-xs text-slate-400">
-                Efficiency score: <span className="font-medium text-slate-600">84%</span>
+            <div className="pt-1.5 md:pt-2 border-t border-border">
+              <p className="text-xs text-muted-foreground">
+                Efficiency score: <span className="font-medium text-foreground">84%</span>
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-900 rounded-[24px] md:rounded-[32px] p-5 md:p-6 text-white shadow-xl relative overflow-hidden">
+        <div className="bg-foreground rounded-[24px] md:rounded-[32px] p-5 md:p-6 text-background shadow-xl relative overflow-hidden">
           <div className="relative z-10 h-full flex flex-col justify-between">
             <div className="flex justify-between items-center mb-3 md:mb-4">
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-background/50">
                 Activity trend
               </span>
-              <PieChartIcon className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400" />
+              <PieChartIcon className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary/70" />
             </div>
             <div className="h-20 md:h-24 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -71,7 +71,7 @@ export function HistoryView() {
                     content={({ active, payload }) => {
                       if (active && payload?.length) {
                         return (
-                          <div className="bg-white text-slate-900 p-2 rounded-lg text-[10px] font-bold shadow-xl border border-slate-100">
+                          <div className="bg-card text-foreground p-2 rounded-lg text-[10px] font-semibold shadow-xl border border-border">
                             {formatCurrency(Number(payload[0].value) * 100)}
                           </div>
                         );
@@ -96,21 +96,21 @@ export function HistoryView() {
 
       <section>
         <div className="flex justify-between items-center mb-4 md:mb-6 px-2">
-          <h2 className="font-bold text-lg md:text-xl text-slate-900 tracking-tight">
+          <h2 className="font-bold text-lg md:text-xl text-foreground tracking-tight">
             Recent activity
           </h2>
           <button
             type="button"
-            className="text-xs font-medium text-blue-600 hover:text-blue-700"
+            className="text-xs font-medium text-primary hover:text-primary/80"
           >
             View all
           </button>
         </div>
-        <div className="bg-white rounded-[24px] md:rounded-[32px] overflow-hidden border border-slate-100 shadow-sm">
+        <div className="bg-card rounded-[24px] md:rounded-[32px] overflow-hidden border border-border shadow-sm">
           {isLoading ? (
             <div className="p-10 md:p-12 text-center">
-              <div className="w-6 h-6 md:w-8 md:h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3 md:mb-4" />
-              <p className="text-xs text-slate-400">
+              <div className="w-6 h-6 md:w-8 md:h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3 md:mb-4" />
+              <p className="text-xs text-muted-foreground">
                 Loading history...
               </p>
             </div>
@@ -118,47 +118,41 @@ export function HistoryView() {
             transactions.map((tx) => (
               <div
                 key={tx.transactionId}
-                className="p-4 md:p-6 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors group"
+                className="p-4 md:p-6 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors group"
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3 md:gap-4">
                     <div
-                      className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${tx.amountMinor > 0 ? "bg-emerald-50" : "bg-blue-50"
-                        }`}
+                      className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${tx.amountMinor > 0 ? "bg-success/10" : "bg-primary/10"}`}
                     >
                       {tx.amountMinor > 0 ? (
-                        <ArrowDownLeft className="w-5 h-5 md:w-6 md:h-6 text-emerald-600" />
+                        <ArrowDownLeft className="w-5 h-5 md:w-6 md:h-6 text-success" />
                       ) : (
-                        <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                        <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                       )}
                     </div>
                     <div>
-                      <h3 className="font-bold text-sm md:text-base text-slate-900 capitalize tracking-tight">
+                      <h3 className="font-semibold text-sm md:text-base text-foreground capitalize tracking-tight">
                         {tx.description}
                       </h3>
                       <div className="flex items-center gap-1.5 md:gap-2">
-                        <span className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                        <span className="text-[10px] text-muted-foreground">
                           {format(parseISO(tx.transactionDate), "MMM dd, yyyy")}
                         </span>
-                        <span className="w-1 h-1 bg-slate-200 rounded-full" />
-                        <span className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                        <span className="w-1 h-1 bg-border rounded-full" />
+                        <span className="text-[10px] text-muted-foreground">
                           {tx.transactionSource}
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p
-                      className={`font-bold text-base md:text-lg tracking-tight ${tx.amountMinor > 0
-                        ? "text-emerald-600"
-                        : "text-slate-900"
-                        }`}
-                    >
+                    <p className={`font-bold text-base md:text-lg tracking-tight ${tx.amountMinor > 0 ? "text-success" : "text-foreground"}`}>
                       {tx.amountMinor > 0 ? "+" : "-"}
                       {formatCurrency(Math.abs(tx.amountMinor), tx.currency, tx.scale)}
                     </p>
-                    <p className={`text-[8px] md:text-[9px] font-bold uppercase tracking-widest ${tx.transactionStatus === 'Settled' ? 'text-slate-400' :
-                      tx.transactionStatus === 'Failed' ? 'text-red-400' : 'text-amber-400'
+                    <p className={`text-[10px] ${tx.transactionStatus === "Settled" ? "text-muted-foreground" :
+                        tx.transactionStatus === "Failed" ? "text-destructive" : "text-warning"
                       }`}>
                       {tx.transactionStatus}
                     </p>

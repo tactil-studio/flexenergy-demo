@@ -29,14 +29,15 @@ export function ProfileHero() {
         </div>
         <div className="w-full md:w-auto z-10">
           <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100">
-            <span className="text-xs text-slate-400 block mb-1.5">
+            <span className="text-xs flex gap-2 items-center text-slate-400 block mb-1.5">
               Account ID
+              <div className="flex items-center gap-2">
+                <code className="font-mono text-sm font-semibold text-slate-700">
+                  #{user.id}
+                </code>
+              </div>
             </span>
-            <div className="flex items-center gap-2">
-              <code className="font-mono text-sm font-semibold text-slate-700">
-                #{user.id}
-              </code>
-            </div>
+
             <div className="mt-2 flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               <span className="text-xs text-slate-500">

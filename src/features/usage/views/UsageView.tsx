@@ -25,51 +25,51 @@ export function UsageView() {
 
   return (
     <div className="space-y-4 md:space-y-6">
-      <section className="bg-slate-900 rounded-[24px] md:rounded-[32px] p-6 md:p-8 text-white shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full -mr-32 -mt-32 blur-3xl" />
+      <section className="bg-foreground rounded-[24px] md:rounded-[32px] p-6 md:p-8 text-background shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full -mr-32 -mt-32 blur-3xl" />
         <div className="relative z-10">
           <div className="flex justify-between items-start mb-2 md:mb-4">
-            <span className="text-slate-400 text-xs block">
+            <span className="text-background/50 text-xs block">
               Total consumption · {period}
             </span>
-            <div className="p-1.5 md:p-2 bg-blue-500/20 rounded-lg md:rounded-xl">
-              <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400" />
+            <div className="p-1.5 md:p-2 bg-primary/20 rounded-lg md:rounded-xl">
+              <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary/70" />
             </div>
           </div>
           <div className="flex items-baseline gap-1.5 md:gap-2 mb-4 md:mb-6">
             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
               {totalUsage}
             </h2>
-            <span className="text-lg md:text-xl font-bold text-slate-400">
+            <span className="text-lg md:text-xl font-bold text-background/40">
               kWh
             </span>
           </div>
           <div className="flex items-center gap-3 md:gap-4">
-            <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-medium bg-emerald-500/10 text-emerald-400 px-2.5 py-1 md:py-1.5 rounded-full border border-emerald-500/20">
+            <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-medium bg-success/10 text-success px-2.5 py-1 md:py-1.5 rounded-full border border-success/20">
               <TrendingDown className="w-3 h-3 md:w-3.5 md:h-3.5" />
               <span>8% vs last {period}</span>
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-background/40">
               Avg {avgUsage} kWh
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-white rounded-[24px] md:rounded-[32px] p-5 md:p-6 border border-slate-100 shadow-sm">
+      <section className="bg-card rounded-[24px] md:rounded-[32px] p-5 md:p-6 border border-border shadow-sm">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 mb-6 md:mb-8">
-          <h3 className="font-bold text-base md:text-lg text-slate-900 tracking-tight">
+          <h3 className="font-bold text-base md:text-lg text-foreground tracking-tight">
             Usage Analysis
           </h3>
-          <div className="flex p-1 bg-slate-100 rounded-xl md:rounded-2xl w-full sm:w-auto">
+          <div className="flex p-1 bg-muted rounded-xl md:rounded-2xl w-full sm:w-auto">
             {(["day", "week", "month"] as const).map((p) => (
               <button
                 key={p}
                 type="button"
                 onClick={() => setPeriod(p)}
-                className={`flex-1 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all ${period === p
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
+                className={`flex-1 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] font-medium transition-all ${period === p
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                   }`}
               >
                 {p}
@@ -134,18 +134,18 @@ export function UsageView() {
                     />
                     <YAxis hide />
                     <Tooltip
-                      cursor={{ fill: "#f8fafc", radius: 12 }}
+                      cursor={{ fill: "hsl(var(--muted))", radius: 12 }}
                       content={({ active, payload }) => {
                         if (active && payload?.length) {
                           return (
-                            <div className="bg-slate-900 text-white p-3 rounded-2xl shadow-xl border border-slate-800">
-                              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">
+                            <div className="bg-foreground text-background p-3 rounded-2xl shadow-xl border border-foreground/80">
+                              <p className="text-[10px] text-background/50 mb-1">
                                 {format(
                                   parseISO(payload[0].payload.timestamp),
                                   "PPP p",
                                 )}
                               </p>
-                              <p className="text-sm font-bold">
+                              <p className="text-sm font-semibold">
                                 {payload[0].value.toFixed(2)} kWh
                               </p>
                             </div>
@@ -179,13 +179,13 @@ export function UsageView() {
         </div>
 
         <div className="mt-8 grid grid-cols-2 gap-4">
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <p className="text-xs text-slate-400 mb-1">Peak hour</p>
-            <p className="text-sm font-semibold text-slate-900">14:00 – 15:00</p>
+          <div className="p-4 bg-muted/50 rounded-2xl border border-border">
+            <p className="text-xs text-muted-foreground mb-1">Peak hour</p>
+            <p className="text-sm font-semibold text-foreground">14:00 – 15:00</p>
           </div>
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <p className="text-xs text-slate-400 mb-1">Efficiency</p>
-            <p className="text-sm font-semibold text-emerald-600">+12.4%</p>
+          <div className="p-4 bg-muted/50 rounded-2xl border border-border">
+            <p className="text-xs text-muted-foreground mb-1">Efficiency</p>
+            <p className="text-sm font-semibold text-success">+12.4%</p>
           </div>
         </div>
       </section>

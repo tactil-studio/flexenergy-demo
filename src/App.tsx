@@ -25,12 +25,10 @@ function MainContent() {
 
   if (isAuthLoading || isAppLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-slate-900 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-slate-400">
-            Loading...
-          </p>
+          <div className="w-12 h-12 border-4 border-foreground border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -72,7 +70,7 @@ function MainContent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-background font-sans text-foreground selection:bg-primary/20 selection:text-primary">
       <Header />
       <main className="pt-20 md:pt-24 pb-32 px-4 md:px-6 max-w-2xl mx-auto">
         <AnimatePresence mode="wait">

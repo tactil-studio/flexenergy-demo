@@ -28,20 +28,20 @@ export function TwoFactorAuthView() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-background p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white p-8 rounded-[32px] shadow-xl border border-slate-100 text-center"
+        className="w-full max-w-md bg-card p-8 rounded-[32px] shadow-xl border border-border text-center"
       >
-        <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-          <ShieldCheck className="w-8 h-8 text-blue-600" />
+        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <ShieldCheck className="w-8 h-8 text-primary" />
         </div>
 
-        <h1 className="text-2xl font-bold text-slate-900 mb-2">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           Two-Factor Authentication
         </h1>
-        <p className="text-slate-500 text-sm mb-8">
+        <p className="text-muted-foreground text-sm mb-8">
           Enter the 6-digit code from your authenticator app to secure your
           account.
         </p>
@@ -54,10 +54,10 @@ export function TwoFactorAuthView() {
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
               placeholder="000000"
-              className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 text-center text-3xl font-bold tracking-[0.5em] focus:border-blue-600 focus:ring-0 transition-all placeholder:text-slate-200"
+              className="w-full bg-input border-2 border-border rounded-2xl p-4 text-center text-3xl font-bold tracking-[0.5em] text-foreground focus:border-primary focus:ring-0 transition-all placeholder:text-muted-foreground/30"
             />
             {error && (
-              <div className="flex items-center justify-center gap-2 text-red-500 text-xs font-bold">
+              <div className="flex items-center justify-center gap-2 text-destructive text-xs font-medium">
                 <AlertCircle className="w-4 h-4" />
                 {error}
               </div>
@@ -68,9 +68,9 @@ export function TwoFactorAuthView() {
             <button
               type="submit"
               disabled={isVerifying || code.length !== 6}
-              className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isVerifying ? "Verifying..." : "Verify Code"}
+              {isVerifying ? "Verifying..." : "Verify code"}
               {!isVerifying && <ArrowRight className="w-5 h-5" />}
             </button>
 
@@ -79,19 +79,19 @@ export function TwoFactorAuthView() {
                 type="button"
                 onClick={handleResend}
                 disabled={isResending}
-                className="flex items-center justify-center gap-2 bg-slate-50 text-slate-600 py-3 rounded-xl font-bold text-xs hover:bg-slate-100 transition-all disabled:opacity-50"
+                className="flex items-center justify-center gap-2 bg-muted text-muted-foreground py-3 rounded-xl font-medium text-xs hover:bg-muted/70 transition-all disabled:opacity-50"
               >
                 <RefreshCw
                   className={`w-3.5 h-3.5 ${isResending ? "animate-spin" : ""}`}
                 />
-                {isResending ? "Sending..." : "Resend Code"}
+                {isResending ? "Sending..." : "Resend code"}
               </button>
               <button
                 type="button"
-                className="flex items-center justify-center gap-2 bg-slate-50 text-slate-600 py-3 rounded-xl font-bold text-xs hover:bg-slate-100 transition-all"
+                className="flex items-center justify-center gap-2 bg-muted text-muted-foreground py-3 rounded-xl font-medium text-xs hover:bg-muted/70 transition-all"
               >
                 <Smartphone className="w-3.5 h-3.5" />
-                SMS Code
+                SMS code
               </button>
             </div>
           </div>
@@ -99,10 +99,10 @@ export function TwoFactorAuthView() {
           <button
             type="button"
             onClick={logout}
-            className="w-full flex items-center justify-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-widest pt-4 hover:text-slate-600 transition-colors"
+            className="w-full flex items-center justify-center gap-2 text-muted-foreground text-xs pt-4 hover:text-foreground transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            Sign Out
+            Sign out
           </button>
         </form>
       </motion.div>

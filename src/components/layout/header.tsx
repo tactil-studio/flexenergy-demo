@@ -1,5 +1,5 @@
-import * as Popover from "@radix-ui/react-popover";
 import { AlertCircle, Bell, CheckCircle2, Info, X } from "lucide-react";
+import { Popover } from "radix-ui";
 import { useApp } from "@/context/AppContext";
 import { formatCurrency } from "@/types";
 
@@ -14,22 +14,22 @@ export function Header() {
   const getIcon = (type: string) => {
     switch (type) {
       case "success":
-        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
+        return <CheckCircle2 className="w-4 h-4 text-success" />;
       case "warning":
-        return <AlertCircle className="w-4 h-4 text-amber-500" />;
+        return <AlertCircle className="w-4 h-4 text-warning" />;
       default:
-        return <Info className="w-4 h-4 text-blue-500" />;
+        return <Info className="w-4 h-4 text-primary" />;
     }
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
+    <header className="fixed top-0 w-full z-50 bg-card/80 backdrop-blur-xl border-b border-border">
       <div className="flex justify-between items-center px-6 h-16 w-full max-w-2xl mx-auto">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => setView("settings")}
-            className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 hover:ring-2 hover:ring-blue-500 transition-all active:scale-95"
+            className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border hover:ring-2 hover:ring-ring transition-all active:scale-95"
           >
             <img
               alt="User profile"
@@ -39,12 +39,10 @@ export function Header() {
             />
           </button>
           <div className="flex flex-col">
-            <span className="font-semibold text-lg tracking-tight text-slate-900">
+            <span className="font-semibold text-lg tracking-tight text-foreground">
               {formatCurrency(balanceMinor)}
             </span>
-            <span className="text-xs text-slate-400">
-              Current balance
-            </span>
+            <span className="text-xs text-muted-foreground">Current balance</span>
           </div>
         </div>
 
@@ -53,9 +51,9 @@ export function Header() {
             <Popover.Trigger asChild>
               <button
                 type="button"
-                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors active:scale-95 relative outline-none"
+                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors active:scale-95 relative outline-none"
               >
-                <Bell className="w-5 h-5 text-slate-500" />
+                <Bell className="w-5 h-5 text-muted-foreground" />
                 {unreadCount > 0 && (
                   <span className="absolute top-2 right-2 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                     {unreadCount}
@@ -66,23 +64,23 @@ export function Header() {
 
             <Popover.Portal>
               <Popover.Content
-                className="z-50 w-80 bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden outline-none animate-in fade-in zoom-in-95 duration-200"
+                className="z-50 w-80 bg-card rounded-[32px] shadow-2xl border border-border overflow-hidden outline-none animate-in fade-in zoom-in-95 duration-200"
                 align="end"
                 sideOffset={8}
               >
-                <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-                  <h3 className="font-semibold text-sm text-slate-900">
+                <div className="p-4 border-b border-border flex justify-between items-center bg-muted/30">
+                  <h3 className="font-semibold text-sm text-foreground">
                     Notifications
                   </h3>
                   <div className="flex gap-3 items-center">
                     <button
                       type="button"
                       onClick={() => clearNotifications()}
-                      className="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                      className="text-xs font-medium text-primary hover:text-primary/80 transition-colors"
                     >
                       Clear all
                     </button>
-                    <Popover.Close className="text-slate-400 hover:text-slate-600 transition-colors">
+                    <Popover.Close className="text-muted-foreground hover:text-foreground transition-colors">
                       <X className="w-4 h-4" />
                     </Popover.Close>
                   </div>
@@ -90,10 +88,10 @@ export function Header() {
                 <div className="max-h-[70vh] overflow-y-auto">
                   {notifications.length === 0 ? (
                     <div className="p-10 text-center space-y-3">
-                      <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto">
-                        <Bell className="w-6 h-6 text-slate-200" />
+                      <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto">
+                        <Bell className="w-6 h-6 text-border" />
                       </div>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-muted-foreground">
                         No new notifications
                       </p>
                     </div>
@@ -103,23 +101,23 @@ export function Header() {
                         type="button"
                         key={n.id}
                         onClick={() => markNotificationAsRead(n.id)}
-                        className={`w-full text-left p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors cursor-pointer relative group ${!n.read ? "bg-blue-50/30" : ""}`}
+                        className={`w-full text-left p-4 border-b border-border/50 hover:bg-muted/40 transition-colors cursor-pointer relative group ${!n.read ? "bg-primary/5" : ""}`}
                       >
                         {!n.read && (
-                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500" />
+                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
                         )}
                         <div className="flex gap-3">
                           <div className="mt-0.5 shrink-0">
                             {getIcon(n.type)}
                           </div>
                           <div className="space-y-1">
-                            <p className="text-xs font-semibold text-slate-900 tracking-tight">
+                            <p className="text-xs font-semibold text-foreground tracking-tight">
                               {n.title}
                             </p>
-                            <p className="text-[11px] text-slate-500 leading-relaxed">
+                            <p className="text-[11px] text-muted-foreground leading-relaxed">
                               {n.message}
                             </p>
-                            <p className="text-[10px] text-slate-400">
+                            <p className="text-[10px] text-muted-foreground/70">
                               {new Date(n.timestamp).toLocaleTimeString([], {
                                 hour: "2-digit",
                                 minute: "2-digit",

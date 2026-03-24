@@ -21,7 +21,7 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="fixed bottom-4 left-4 right-4 max-w-lg mx-auto flex justify-around items-center px-4 py-3 bg-white/80 backdrop-blur-2xl border border-slate-100/50 z-50 shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-[28px]">
+    <nav className="fixed max-md:w-full bottom-0 left-0 md:bottom-2 md:left-2 md:right-2 max-w-lg mx-auto flex justify-around items-center p-2 bg-card/80 backdrop-blur-2xl border border-border/50 z-50 shadow-xl md:rounded-[28px]">
       {navItems.map((item) => {
         const isActive = currentView === item.id;
         return (
@@ -30,10 +30,10 @@ export function BottomNav() {
             key={item.id}
             onClick={() => handleNavClick(item.id)}
             className={cn(
-              "flex flex-col items-center justify-center py-2 px-4 transition-all duration-300 rounded-2xl cursor-pointer group relative",
+              "flex flex-col flex-1 items-center justify-center py-2 px-4 transition-all duration-300 rounded-2xl cursor-pointer group relative focus:outline-primary",
               isActive
-                ? "text-blue-600"
-                : "text-slate-400 hover:text-slate-600",
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             <item.icon
@@ -57,7 +57,7 @@ export function BottomNav() {
             {isActive && (
               <motion.div
                 layoutId="active-nav"
-                className="absolute inset-0 bg-blue-50/50 rounded-2xl -z-0"
+                className="absolute inset-0 bg-primary/8 rounded-2xl z-0"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}

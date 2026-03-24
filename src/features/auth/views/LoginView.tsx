@@ -23,39 +23,39 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md space-y-8"
       >
         <div className="text-center space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             FlexEnergy
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-muted-foreground">
             EnergyDynamics Platform
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200 border border-slate-100 space-y-6">
+        <div className="bg-card p-8 rounded-3xl shadow-xl shadow-border border border-border space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-xs font-medium text-slate-500 ml-1"
+                className="text-xs font-medium text-muted-foreground ml-1"
               >
                 Email address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   id="email"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all outline-none text-sm"
+                  className="w-full pl-12 pr-4 py-4 bg-input border-none rounded-2xl focus:ring-2 focus:ring-ring transition-all outline-none text-sm text-foreground"
                   placeholder="alex@example.com"
                 />
               </div>
@@ -64,19 +64,19 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="text-xs font-medium text-slate-500 ml-1"
+                className="text-xs font-medium text-muted-foreground ml-1"
               >
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   id="password"
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all outline-none text-sm"
+                  className="w-full pl-12 pr-4 py-4 bg-input border-none rounded-2xl focus:ring-2 focus:ring-ring transition-all outline-none text-sm text-foreground"
                   placeholder="••••••••"
                 />
               </div>
@@ -88,14 +88,14 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
                   type="checkbox"
                   className="w-4 h-4 rounded border-slate-200 text-blue-600 focus:ring-blue-500 transition-all cursor-pointer"
                 />
-                <span className="text-xs text-slate-500 group-hover:text-slate-700 transition-colors">
+                <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                   Remember me
                 </span>
               </label>
               <button
                 type="button"
                 onClick={onShowForgot}
-                className="text-xs text-blue-600 hover:text-blue-700 transition-colors font-medium"
+                className="text-xs text-primary hover:text-primary/80 transition-colors font-medium"
               >
                 Forgot password?
               </button>
@@ -104,7 +104,7 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-800 active:scale-[0.98] transition-all disabled:opacity-50"
+              className="w-full py-4 bg-foreground text-background rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground/90 active:scale-[0.98] transition-all disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -122,7 +122,7 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
               <div className="w-full border-t border-slate-100"></div>
             </div>
             <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
-              <span className="bg-white px-4 text-slate-400">
+              <span className="bg-card px-4 text-muted-foreground">
                 Or continue with
               </span>
             </div>
@@ -131,18 +131,18 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
           <button
             type="button"
             onClick={() => loginWithGoogle()}
-            className="w-full py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-all"
+            className="w-full py-4 bg-card border border-border text-foreground rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-muted transition-all"
           >
             <Chrome className="w-4 h-4" />
             Google Account
           </button>
 
           <div className="text-center">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-muted-foreground">
               Don't have an account?{" "}
               <button
                 type="button"
-                className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
+                className="text-primary hover:text-primary/80 transition-colors font-medium"
               >
                 Create one
               </button>

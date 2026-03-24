@@ -24,27 +24,27 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md space-y-8"
       >
         <div className="text-center space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             FlexEnergy
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-muted-foreground">
             EnergyDynamics Platform
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200 border border-slate-100 space-y-6">
+        <div className="bg-card p-8 rounded-3xl shadow-xl shadow-border border border-border space-y-6">
           <div className="space-y-2 text-center">
-            <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-xl font-bold text-foreground tracking-tight">
               Reset Password
             </h2>
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               Enter your email address and we'll send you a link to reset your
               password.
             </p>
@@ -54,22 +54,22 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-6 bg-green-50 border border-green-100 rounded-2xl text-center space-y-4"
+              className="p-6 bg-success/10 border border-success/20 rounded-2xl text-center space-y-4"
             >
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                <Send className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-success/15 rounded-full flex items-center justify-center mx-auto">
+                <Send className="w-6 h-6 text-success" />
               </div>
-              <p className="text-sm font-semibold text-green-900">
+              <p className="text-sm font-semibold text-success">
                 Check your inbox
               </p>
-              <p className="text-xs text-green-700 leading-relaxed">
+              <p className="text-xs text-success/80 leading-relaxed">
                 We've sent a password reset link to{" "}
                 <span className="font-bold">{email}</span>.
               </p>
               <button
                 type="button"
                 onClick={onBack}
-                className="w-full py-4 bg-green-600 text-white rounded-2xl font-bold text-sm hover:bg-green-700 transition-all"
+                className="w-full py-4 bg-success text-success-foreground rounded-2xl font-bold text-sm hover:bg-success/90 transition-all"
               >
                 Back to Login
               </button>
@@ -79,19 +79,19 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
               <div className="space-y-2">
                 <label
                   htmlFor="reset-email"
-                  className="text-xs font-medium text-slate-500 ml-1"
+                  className="text-xs font-medium text-muted-foreground ml-1"
                 >
                   Email address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <input
                     id="reset-email"
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all outline-none text-sm"
+                    className="w-full pl-12 pr-4 py-4 bg-input border-none rounded-2xl focus:ring-2 focus:ring-ring transition-all outline-none text-sm text-foreground"
                     placeholder="alex@example.com"
                   />
                 </div>
@@ -101,7 +101,7 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-800 transition-all disabled:opacity-50"
+                  className="w-full py-4 bg-foreground text-background rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground/90 transition-all disabled:opacity-50"
                 >
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -116,7 +116,7 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
                 <button
                   type="button"
                   onClick={onBack}
-                  className="w-full py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-all"
+                  className="w-full py-4 bg-card border border-border text-foreground rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-muted transition-all"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Login
