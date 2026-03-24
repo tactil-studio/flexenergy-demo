@@ -30,12 +30,12 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md space-y-8"
       >
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-black tracking-tighter text-slate-900 uppercase italic">
+        <div className="text-center space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
             FlexEnergy
           </h1>
-          <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">
-            By EnergyDynamics
+          <p className="text-sm text-slate-400">
+            EnergyDynamics Platform
           </p>
         </div>
 
@@ -59,8 +59,8 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto">
                 <Send className="w-6 h-6 text-green-600" />
               </div>
-              <p className="text-sm font-bold text-green-900 uppercase tracking-widest">
-                Check your email
+              <p className="text-sm font-semibold text-green-900">
+                Check your inbox
               </p>
               <p className="text-xs text-green-700 leading-relaxed">
                 We've sent a password reset link to{" "}
@@ -79,9 +79,9 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
               <div className="space-y-2">
                 <label
                   htmlFor="reset-email"
-                  className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1"
+                  className="text-xs font-medium text-slate-500 ml-1"
                 >
-                  Email Address
+                  Email address
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -126,8 +126,8 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
           )}
         </div>
 
-        <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-          FlexEnergy • Premium Energy Management • v2.4.1
+        <p className="text-center text-xs text-slate-300">
+          © 2024 EnergyDynamics AG
         </p>
       </motion.div>
     </div>

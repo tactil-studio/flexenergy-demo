@@ -1,4 +1,3 @@
-import { Zap } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 export function ProfileHero() {
@@ -18,31 +17,30 @@ export function ProfileHero() {
             {user.companyName || "Personal Account"}
           </p>
           <div className="flex flex-wrap gap-1.5">
-            <span className="bg-blue-50 text-blue-600 text-[9px] md:text-[11px] font-bold px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase tracking-wider">
-              Active Account
+            <span className="bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-1 rounded-full">
+              Active
             </span>
             {user.isEmailVerified && (
-              <span className="bg-slate-100 text-slate-600 text-[9px] md:text-[11px] font-bold px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase tracking-wider">
-                Verified Email
+              <span className="bg-slate-100 text-slate-600 text-xs font-medium px-2.5 py-1 rounded-full">
+                Email verified
               </span>
             )}
           </div>
         </div>
         <div className="w-full md:w-auto z-10">
-          <div className="bg-slate-50 p-3 md:p-5 rounded-lg md:rounded-2xl border border-slate-100">
-            <span className="text-[8px] md:text-[10px] uppercase tracking-[0.05em] text-slate-500 font-bold block mb-1.5">
-              Customer ID
+          <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100">
+            <span className="text-xs text-slate-400 block mb-1.5">
+              Account ID
             </span>
-            <div className="flex items-center gap-2 md:gap-3">
-              <Zap className="w-3.5 h-3.5 md:w-5 md:h-5 text-blue-600 fill-blue-600" />
-              <code className="font-mono text-[10px] md:text-sm font-bold tracking-tight text-slate-800">
+            <div className="flex items-center gap-2">
+              <code className="font-mono text-sm font-semibold text-slate-700">
                 #{user.id}
               </code>
             </div>
-            <div className="mt-1.5 md:mt-3 flex items-center gap-1.5">
-              <div className="w-1 h-1 md:w-2 md:h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] md:text-xs font-semibold text-slate-600">
-                Connected & Syncing
+            <div className="mt-2 flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="text-xs text-slate-500">
+                Connected
               </span>
             </div>
           </div>

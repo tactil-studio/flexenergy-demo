@@ -39,11 +39,11 @@ export function Header() {
             />
           </button>
           <div className="flex flex-col">
-            <span className="font-bold text-lg tracking-tight text-slate-900">
+            <span className="font-semibold text-lg tracking-tight text-slate-900">
               {formatCurrency(balanceMinor)}
             </span>
-            <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
-              FlexEnergy Balance
+            <span className="text-xs text-slate-400">
+              Current balance
             </span>
           </div>
         </div>
@@ -71,16 +71,16 @@ export function Header() {
                 sideOffset={8}
               >
                 <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-                  <h3 className="font-bold text-xs text-slate-900 uppercase tracking-widest">
+                  <h3 className="font-semibold text-sm text-slate-900">
                     Notifications
                   </h3>
                   <div className="flex gap-3 items-center">
                     <button
                       type="button"
                       onClick={() => clearNotifications()}
-                      className="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors"
+                      className="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
                     >
-                      Clear All
+                      Clear all
                     </button>
                     <Popover.Close className="text-slate-400 hover:text-slate-600 transition-colors">
                       <X className="w-4 h-4" />
@@ -93,7 +93,7 @@ export function Header() {
                       <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto">
                         <Bell className="w-6 h-6 text-slate-200" />
                       </div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      <p className="text-xs text-slate-400">
                         No new notifications
                       </p>
                     </div>
@@ -113,13 +113,13 @@ export function Header() {
                             {getIcon(n.type)}
                           </div>
                           <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">
+                            <p className="text-xs font-semibold text-slate-900 tracking-tight">
                               {n.title}
                             </p>
                             <p className="text-[11px] text-slate-500 leading-relaxed">
                               {n.message}
                             </p>
-                            <p className="text-[9px] text-slate-400 font-medium">
+                            <p className="text-[10px] text-slate-400">
                               {new Date(n.timestamp).toLocaleTimeString([], {
                                 hour: "2-digit",
                                 minute: "2-digit",

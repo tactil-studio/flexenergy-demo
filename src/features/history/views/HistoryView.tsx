@@ -21,8 +21,8 @@ export function HistoryView() {
             <div className="p-1.5 md:p-2 bg-blue-50 rounded-lg md:rounded-xl">
               <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-600" />
             </div>
-            <h3 className="font-bold text-xs md:text-sm text-slate-900 uppercase tracking-tight">
-              Weekly Insights
+            <h3 className="font-semibold text-sm text-slate-900">
+              Weekly insights
             </h3>
           </div>
           <div className="space-y-3 md:space-y-4">
@@ -43,8 +43,8 @@ export function HistoryView() {
               </span>
             </div>
             <div className="pt-1.5 md:pt-2 border-t border-slate-50">
-              <p className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                Efficiency Score: 84%
+              <p className="text-xs text-slate-400">
+                Efficiency score: <span className="font-medium text-slate-600">84%</span>
               </p>
             </div>
           </div>
@@ -53,8 +53,8 @@ export function HistoryView() {
         <div className="bg-slate-900 rounded-[24px] md:rounded-[32px] p-5 md:p-6 text-white shadow-xl relative overflow-hidden">
           <div className="relative z-10 h-full flex flex-col justify-between">
             <div className="flex justify-between items-center mb-3 md:mb-4">
-              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                Activity Trend
+              <span className="text-xs text-slate-400">
+                Activity trend
               </span>
               <PieChartIcon className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400" />
             </div>
@@ -97,20 +97,20 @@ export function HistoryView() {
       <section>
         <div className="flex justify-between items-center mb-4 md:mb-6 px-2">
           <h2 className="font-bold text-lg md:text-xl text-slate-900 tracking-tight">
-            Recent Activity
+            Recent activity
           </h2>
           <button
             type="button"
-            className="text-[9px] md:text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700"
+            className="text-xs font-medium text-blue-600 hover:text-blue-700"
           >
-            View All
+            View all
           </button>
         </div>
         <div className="bg-white rounded-[24px] md:rounded-[32px] overflow-hidden border border-slate-100 shadow-sm">
           {isLoading ? (
             <div className="p-10 md:p-12 text-center">
               <div className="w-6 h-6 md:w-8 md:h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3 md:mb-4" />
-              <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <p className="text-xs text-slate-400">
                 Loading history...
               </p>
             </div>
@@ -123,9 +123,8 @@ export function HistoryView() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3 md:gap-4">
                     <div
-                      className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${
-                        tx.amountMinor > 0 ? "bg-emerald-50" : "bg-blue-50"
-                      }`}
+                      className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${tx.amountMinor > 0 ? "bg-emerald-50" : "bg-blue-50"
+                        }`}
                     >
                       {tx.amountMinor > 0 ? (
                         <ArrowDownLeft className="w-5 h-5 md:w-6 md:h-6 text-emerald-600" />
@@ -150,19 +149,17 @@ export function HistoryView() {
                   </div>
                   <div className="text-right">
                     <p
-                      className={`font-bold text-base md:text-lg tracking-tight ${
-                        tx.amountMinor > 0
-                          ? "text-emerald-600"
-                          : "text-slate-900"
-                      }`}
+                      className={`font-bold text-base md:text-lg tracking-tight ${tx.amountMinor > 0
+                        ? "text-emerald-600"
+                        : "text-slate-900"
+                        }`}
                     >
                       {tx.amountMinor > 0 ? "+" : "-"}
                       {formatCurrency(Math.abs(tx.amountMinor), tx.currency, tx.scale)}
                     </p>
-                    <p className={`text-[8px] md:text-[9px] font-bold uppercase tracking-widest ${
-                      tx.transactionStatus === 'Settled' ? 'text-slate-400' : 
+                    <p className={`text-[8px] md:text-[9px] font-bold uppercase tracking-widest ${tx.transactionStatus === 'Settled' ? 'text-slate-400' :
                       tx.transactionStatus === 'Failed' ? 'text-red-400' : 'text-amber-400'
-                    }`}>
+                      }`}>
                       {tx.transactionStatus}
                     </p>
                   </div>

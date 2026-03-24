@@ -46,7 +46,7 @@ export function BottomNav() {
             />
             <span
               className={cn(
-                "text-[9px] font-bold uppercase tracking-[0.1em] z-10 transition-all duration-300",
+                "text-[10px] font-medium z-10 transition-all duration-300",
                 isActive
                   ? "opacity-100"
                   : "opacity-0 scale-90 h-0 overflow-hidden",

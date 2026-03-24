@@ -28,8 +28,8 @@ function MainContent() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-slate-900 border-t-transparent rounded-full animate-spin" />
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-            Loading FlexEnergy...
+          <p className="text-xs text-slate-400">
+            Loading...
           </p>
         </div>
       </div>
@@ -91,8 +91,8 @@ function MainContent() {
         </AnimatePresence>
 
         <footer className="text-center py-10">
-          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-            FlexEnergy • Premium Energy Management • v2.4.1
+          <p className="text-xs text-slate-300">
+            © 2024 EnergyDynamics AG
           </p>
         </footer>
       </main>

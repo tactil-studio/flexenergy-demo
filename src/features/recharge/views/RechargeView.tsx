@@ -48,24 +48,22 @@ export function RechargeView() {
               type="button"
               key={amt}
               onClick={() => selectPredefinedAmount(amt)}
-              className={`p-4 md:p-6 rounded-[24px] md:rounded-3xl border-2 transition-all ${
-                amount === amt
-                  ? "border-blue-600 bg-blue-50 text-blue-600 shadow-sm"
-                  : "border-slate-100 bg-white text-slate-500 hover:border-blue-200"
-              }`}
+              className={`p-4 md:p-6 rounded-[24px] md:rounded-3xl border-2 transition-all ${amount === amt
+                ? "border-blue-600 bg-blue-50 text-blue-600 shadow-sm"
+                : "border-slate-100 bg-white text-slate-500 hover:border-blue-200"
+                }`}
             >
               <span className="text-xl md:text-2xl font-bold">{formatCurrency(toMinorUnits(amt))}</span>
             </button>
           ))}
           <div
-            className={`p-3 md:p-4 rounded-[24px] md:rounded-3xl border-2 transition-all flex flex-col justify-center min-h-[80px] md:min-h-[100px] ${
-              isCustom
-                ? "border-blue-600 bg-blue-50 text-blue-600 shadow-sm"
-                : "border-slate-100 bg-white text-slate-500 hover:border-blue-200"
-            }`}
+            className={`p-3 md:p-4 rounded-[24px] md:rounded-3xl border-2 transition-all flex flex-col justify-center min-h-[80px] md:min-h-[100px] ${isCustom
+              ? "border-blue-600 bg-blue-50 text-blue-600 shadow-sm"
+              : "border-slate-100 bg-white text-slate-500 hover:border-blue-200"
+              }`}
           >
-            <span className="text-[8px] md:text-[10px] uppercase font-bold mb-0.5 md:mb-1 ml-1 opacity-60">
-              Custom Amount
+            <span className="text-[10px] text-current mb-0.5 md:mb-1 ml-1 opacity-60">
+              Custom amount
             </span>
             <div className="flex items-center">
               <span className="text-lg md:text-xl font-bold mr-1">CHF</span>
@@ -122,11 +120,10 @@ export function RechargeView() {
                       setSelectedMethod(method.id);
                       setIsMethodSelectorOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all ${
-                      selectedMethod === method.id
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-slate-50 bg-slate-50/50 hover:border-slate-200"
-                    }`}
+                    className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all ${selectedMethod === method.id
+                      ? "border-blue-600 bg-blue-50"
+                      : "border-slate-50 bg-slate-50/50 hover:border-slate-200"
+                      }`}
                   >
                     <div className="flex items-center gap-3 text-left">
                       {getMethodIcon(method.type)}
@@ -171,9 +168,9 @@ export function RechargeView() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center text-emerald-600 font-bold text-sm"
+              className="flex items-center justify-center gap-2 text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-xl py-3 text-sm font-medium"
             >
-              Recharge Successful!
+              Balance updated successfully
             </motion.div>
           )}
         </div>

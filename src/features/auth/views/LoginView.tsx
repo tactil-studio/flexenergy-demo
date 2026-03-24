@@ -29,12 +29,12 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md space-y-8"
       >
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-black tracking-tighter text-slate-900 uppercase italic">
+        <div className="text-center space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
             FlexEnergy
           </h1>
-          <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">
-            By EnergyDynamics
+          <p className="text-sm text-slate-400">
+            EnergyDynamics Platform
           </p>
         </div>
 
@@ -43,9 +43,9 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1"
+                className="text-xs font-medium text-slate-500 ml-1"
               >
-                Email Address
+                Email address
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -64,7 +64,7 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1"
+                className="text-xs font-medium text-slate-500 ml-1"
               >
                 Password
               </label>
@@ -88,16 +88,16 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
                   type="checkbox"
                   className="w-4 h-4 rounded border-slate-200 text-blue-600 focus:ring-blue-500 transition-all cursor-pointer"
                 />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-slate-600 transition-colors">
+                <span className="text-xs text-slate-500 group-hover:text-slate-700 transition-colors">
                   Remember me
                 </span>
               </label>
               <button
                 type="button"
                 onClick={onShowForgot}
-                className="text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:text-blue-700 transition-colors"
+                className="text-xs text-blue-600 hover:text-blue-700 transition-colors font-medium"
               >
-                Forgot Password?
+                Forgot password?
               </button>
             </div>
 
@@ -137,12 +137,12 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
             Google Account
           </button>
 
-          <div className="text-center space-y-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+          <div className="text-center">
+            <p className="text-xs text-slate-400">
               Don't have an account?{" "}
               <button
                 type="button"
-                className="text-blue-600 hover:text-blue-700 transition-colors"
+                className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
               >
                 Create one
               </button>
@@ -150,8 +150,8 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
           </div>
         </div>
 
-        <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-          FlexEnergy • Premium Energy Management • v2.4.1
+        <p className="text-center text-xs text-slate-300">
+          © 2024 EnergyDynamics AG
         </p>
       </motion.div>
     </div>

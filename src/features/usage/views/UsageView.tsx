@@ -29,8 +29,8 @@ export function UsageView() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full -mr-32 -mt-32 blur-3xl" />
         <div className="relative z-10">
           <div className="flex justify-between items-start mb-2 md:mb-4">
-            <span className="text-slate-400 text-[9px] md:text-[10px] font-bold uppercase tracking-widest block">
-              Total Consumption ({period})
+            <span className="text-slate-400 text-xs block">
+              Total consumption · {period}
             </span>
             <div className="p-1.5 md:p-2 bg-blue-500/20 rounded-lg md:rounded-xl">
               <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400" />
@@ -49,8 +49,8 @@ export function UsageView() {
               <TrendingDown className="w-3 h-3 md:w-3.5 md:h-3.5" />
               <span>8% vs last {period}</span>
             </div>
-            <div className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-              Avg: {avgUsage} kWh
+            <div className="text-xs text-slate-500">
+              Avg {avgUsage} kWh
             </div>
           </div>
         </div>
@@ -67,11 +67,10 @@ export function UsageView() {
                 key={p}
                 type="button"
                 onClick={() => setPeriod(p)}
-                className={`flex-1 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all ${
-                  period === p
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
+                className={`flex-1 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all ${period === p
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+                  }`}
               >
                 {p}
               </button>
@@ -147,7 +146,7 @@ export function UsageView() {
                                 )}
                               </p>
                               <p className="text-sm font-bold">
-                                {payload[0].value} kWh
+                                {payload[0].value.toFixed(2)} kWh
                               </p>
                             </div>
                           );
@@ -181,16 +180,12 @@ export function UsageView() {
 
         <div className="mt-8 grid grid-cols-2 gap-4">
           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-              Peak Hour
-            </p>
-            <p className="text-sm font-bold text-slate-900">14:00 - 15:00</p>
+            <p className="text-xs text-slate-400 mb-1">Peak hour</p>
+            <p className="text-sm font-semibold text-slate-900">14:00 – 15:00</p>
           </div>
           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-              Efficiency
-            </p>
-            <p className="text-sm font-bold text-emerald-600">+12.4%</p>
+            <p className="text-xs text-slate-400 mb-1">Efficiency</p>
+            <p className="text-sm font-semibold text-emerald-600">+12.4%</p>
           </div>
         </div>
       </section>
