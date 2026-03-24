@@ -151,7 +151,7 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
         </div>
 
         <p className="text-center text-xs text-slate-300">
-          © 2024 EnergyDynamics AG
+          © 2026 EnergyDynamics AG
         </p>
       </motion.div>
     </div>

@@ -158,7 +158,7 @@ export function RechargeView() {
             type="button"
             onClick={handleRecharge}
             disabled={amount <= 0}
-            className="w-full bg-blue-600 text-white py-3.5 md:py-4 rounded-xl md:rounded-2xl font-bold shadow-lg shadow-blue-200 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-blue-800 text-white py-3.5 md:py-4 rounded-xl md:rounded-2xl font- active:scale-95 transition-all flex items-center justify-center gap-2 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="w-4 h-4 md:w-5 md:h-5" />
             Add {formatCurrency(toMinorUnits(amount))} to Balance

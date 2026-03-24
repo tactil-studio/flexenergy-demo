@@ -23,12 +23,14 @@ const MOCK_CONTRACTS: Contract[] = [
     buContractId: "BU-101-ELE",
     customerId: 1,
     description: "Residential Electricity - Main",
-    startDate: "2024-01-01T00:00:00Z",
+    startDate: "2026-01-01T00:00:00Z",
     endDate: "2025-12-31T23:59:59Z",
     serviceStatus: "Active",
-    statusDateTime: "2024-01-01T00:00:00Z",
+    statusDateTime: "2026-01-01T00:00:00Z",
     zpbs: [{ zpbId: "ZPB-001", obis: "1.8.0" }],
-    electricalRates: [{ tariffId: "T-RES-01", validFrom: "2024-01-01", validTo: "2025-12-31" }],
+    electricalRates: [
+      { tariffId: "T-RES-01", validFrom: "2026-01-01", validTo: "2025-12-31" },
+    ],
     triggerLockDays: 30,
     triggerPrelockDays: 15,
     triggerDeadlineLockDays: 5,
@@ -46,7 +48,7 @@ const MOCK_DASHBOARD: CustomerDashboard = {
       contractId: 101,
       buContractId: "BU-101-ELE",
       description: "Residential Electricity - Main",
-      startDate: "2024-01-01T00:00:00Z",
+      startDate: "2026-01-01T00:00:00Z",
       endDate: "2025-12-31T23:59:59Z",
       serviceStatus: "Active",
       customerId: 1,
@@ -65,7 +67,9 @@ const MOCK_TRANSACTIONS: Transaction[] = [
     transactionSource: "Stripe",
     transactionStatus: "Settled",
     description: "Manual Recharge",
-    transactionDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(),
+    transactionDate: new Date(
+      Date.now() - 1000 * 60 * 60 * 24 * 1,
+    ).toISOString(),
   },
   {
     transactionId: "tx_002",
@@ -77,7 +81,9 @@ const MOCK_TRANSACTIONS: Transaction[] = [
     transactionSource: "System",
     transactionStatus: "Settled",
     description: "Daily Consumption",
-    transactionDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+    transactionDate: new Date(
+      Date.now() - 1000 * 60 * 60 * 24 * 2,
+    ).toISOString(),
   },
   {
     transactionId: "tx_003",
@@ -89,7 +95,9 @@ const MOCK_TRANSACTIONS: Transaction[] = [
     transactionSource: "System",
     transactionStatus: "Settled",
     description: "Daily Consumption",
-    transactionDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
+    transactionDate: new Date(
+      Date.now() - 1000 * 60 * 60 * 24 * 3,
+    ).toISOString(),
   },
 ];
 
@@ -113,7 +121,7 @@ export const apiService = {
   async getAppState(): Promise<AppState> {
     const saved = localStorage.getItem("flex_energy_state");
     if (saved) return JSON.parse(saved);
-    
+
     return {
       dashboard: MOCK_DASHBOARD,
       contracts: MOCK_CONTRACTS,
@@ -129,7 +137,7 @@ export const apiService = {
   async getUsageData(period: "day" | "week" | "month"): Promise<MeasureData[]> {
     const points = period === "day" ? 24 : period === "week" ? 7 : 30;
     const interval = period === "day" ? 1000 * 60 * 60 : 1000 * 60 * 60 * 24;
-    
+
     return Array.from({ length: points }).map((_, i) => ({
       timestamp: new Date(Date.now() - interval * i).toISOString(),
       value: Math.random() * (period === "day" ? 2 : 20) + 0.5,

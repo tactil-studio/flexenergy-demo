@@ -92,7 +92,7 @@ function MainContent() {
 
         <footer className="text-center py-10">
           <p className="text-xs text-slate-300">
-            © 2024 EnergyDynamics AG
+            © 2026 EnergyDynamics AG
           </p>
         </footer>
       </main>
