@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import type * as React from "react";
-import { useTwoFactorAuth } from "./useTwoFactorAuth";
+import { useTwoFactorAuth } from "../hooks/useTwoFactorAuth";
 
 export function TwoFactorAuthView() {
   const {

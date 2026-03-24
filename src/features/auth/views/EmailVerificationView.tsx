@@ -1,6 +1,6 @@
 import { ArrowRight, LogOut, Mail, RefreshCw } from "lucide-react";
 import { motion } from "motion/react";
-import { useEmailVerification } from "./useEmailVerification";
+import { useEmailVerification } from "../hooks/useEmailVerification";
 
 export function EmailVerificationView() {
   const { user, isSending, isResending, handleVerify, handleResend, logout } =

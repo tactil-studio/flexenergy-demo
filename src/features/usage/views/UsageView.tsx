@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useUsage } from "./useUsage";
+import { useUsage } from "../hooks/useUsage";
 
 export function UsageView() {
   const {

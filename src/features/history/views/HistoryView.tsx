@@ -6,8 +6,8 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
-import { useHistory } from "./useHistory";
 import { formatCurrency } from "@/types";
+import { useHistory } from "../hooks/useHistory";
 
 export function HistoryView() {
   const { transactions, isLoading, weeklySpent, weeklyRecharged, chartData } =

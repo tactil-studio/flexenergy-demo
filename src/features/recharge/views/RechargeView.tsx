@@ -1,8 +1,8 @@
 import { Check, CreditCard, Plus, Smartphone, Wallet } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { type PaymentMethod, useRecharge } from "./useRecharge";
 import { formatCurrency, toMinorUnits } from "@/types";
+import { type PaymentMethod, useRecharge } from "../hooks/useRecharge";
 
 export function RechargeView() {
   const {
