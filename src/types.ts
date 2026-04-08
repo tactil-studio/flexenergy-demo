@@ -7,7 +7,7 @@ export interface LoginRequest {
 }
 
 export interface AuthResponse {
-  status: 'success' | 'error';
+  status: "success" | "error";
   token?: string;
   user?: UserInfo;
   error?: string;
@@ -80,7 +80,7 @@ export interface Contract {
   description?: string;
   startDate: string; // ISO 8601 timestamp
   endDate: string;
-  serviceStatus: 'Active' | 'Warning' | 'Grace' | 'Suspended' | 'Closed';
+  serviceStatus: "Active" | "Warning" | "Grace" | "Suspended" | "Closed";
   statusDateTime: string;
   warningStatus?: string;
   warningStatusDateTime?: string;
@@ -184,11 +184,17 @@ export interface IntentItem {
 }
 
 export interface CreatePaymentIntentResponse {
-  status: 'success' | 'error';
+  status: "success" | "error";
   operationId: string; // internal tracking ID
   paymentIntentId: string; // Stripe ID
   clientSecret: string; // per Payment Element frontend
-  status_stripe: 'requires_payment_method' | 'requires_confirmation' | 'requires_action' | 'processing' | 'requires_capture' | 'succeeded';
+  status_stripe:
+    | "requires_payment_method"
+    | "requires_confirmation"
+    | "requires_action"
+    | "processing"
+    | "requires_capture"
+    | "succeeded";
   amount: number;
   currency: string;
 }
@@ -198,9 +204,16 @@ export interface GetPaymentStatusRequest {
 }
 
 export interface GetPaymentStatusResponse {
-  status: 'success' | 'error';
+  status: "success" | "error";
   paymentIntentId: string;
-  stripe_status: 'requires_payment_method' | 'requires_confirmation' | 'requires_action' | 'processing' | 'requires_capture' | 'succeeded' | 'canceled';
+  stripe_status:
+    | "requires_payment_method"
+    | "requires_confirmation"
+    | "requires_action"
+    | "processing"
+    | "requires_capture"
+    | "succeeded"
+    | "canceled";
   amount: number;
   currency: string;
   lastError?: string; // sanitized error message
@@ -233,8 +246,13 @@ export interface Transaction {
   amountMinor: number;
   scale: number; // default 2
   currency: string;
-  transactionSource: 'Stripe' | 'Manual' | 'System' | 'Shop';
-  transactionStatus: 'Pending' | 'Settled' | 'Failed' | 'Refunded' | 'Cancelled';
+  transactionSource: "Stripe" | "Manual" | "System" | "Shop";
+  transactionStatus:
+    | "Pending"
+    | "Settled"
+    | "Failed"
+    | "Refunded"
+    | "Cancelled";
   description?: string;
   cardBrand?: string;
   cardNumber?: string;
@@ -269,13 +287,36 @@ export interface GetTransactionOrderResponse {
 /**
  * 📈 Dashboard
  */
+/** Rich contract shape returned by GetCustomerDashboard and used in the Dashboard view. */
+export interface DashboardContract {
+  contractId: number;
+  buContractId?: string;
+  serviceStatus: string;
+  customerId: number;
+  startDate: string; // ISO
+  endDate: string; // ISO
+  lastMeasure: string; // ISO — last data point recorded
+  /** Per-contract balance in minor units */
+  balanceRaw: number;
+  scale: number;
+  currency: string;
+  /** Average daily cost in minor units */
+  averageCost: number;
+  /** Forecast total cost for the billing period, minor units */
+  forecastTotalCost: number;
+  /** ISO date when the balance is expected to run out */
+  depletionDate: string;
+}
+
 export interface CustomerDashboard {
   sourceId: number;
   status: boolean;
-  balance: number; // saldo totale (minor units)
-  consume: number; // consumo totale
+  /** Aggregated balance across all contracts, in minor units */
+  balance: number;
+  /** Total consumption in kWh */
+  consume: number;
   scale: number;
-  contracts: ContractServiceReduced[];
+  contracts: DashboardContract[];
 }
 
 export interface GetCustomerDashboardRequest {
@@ -292,14 +333,21 @@ export interface GetProfileMeasuresRequest {
   obis: string;
   timestampFromUtc: string; // ISO timestamp
   timestampToUtc: string;
-  sumMethod?: 'Raw' | 'Min15' | 'Hourly' | 'Daily' | 'Monthly' | 'Yearly' | 'Total';
+  sumMethod?:
+    | "Raw"
+    | "Min15"
+    | "Hourly"
+    | "Daily"
+    | "Monthly"
+    | "Yearly"
+    | "Total";
 }
 
 export interface GetProfileMeasuresResponse {
   complete: boolean;
   zpb: string;
-  flow: 'Import' | 'Export';
-  measureBasis: 'Energy' | 'Power' | 'Other';
+  flow: "Import" | "Export";
+  measureBasis: "Energy" | "Power" | "Other";
   measures: MeasureData[];
   measureValidated: boolean;
 }
@@ -315,7 +363,7 @@ export interface MeasuresStatus {
   obis: string;
   firstSampleUtc?: string;
   lastSampleUtc?: string;
-  status: 'Present' | 'Missing' | 'Delayed';
+  status: "Present" | "Missing" | "Delayed";
 }
 
 /**
@@ -333,7 +381,7 @@ export interface ErrorResponse {
 export interface ValidationError {
   status: false;
   error: {
-    code: 'VALIDATION_ERROR';
+    code: "VALIDATION_ERROR";
     message: string;
     fields: {
       [fieldName: string]: string[]; // list of error messages per field
@@ -341,9 +389,9 @@ export interface ValidationError {
   };
 }
 
-export type ApiResponse<T> = 
+export type ApiResponse<T> =
   | ({ status: true } & T)
-  | ({ status: false; error: { code: string; message: string } });
+  | { status: false; error: { code: string; message: string } };
 
 /**
  * 🔌 Common Patterns
@@ -419,15 +467,21 @@ export function toMinorUnits(amount: number, scale: number = 2): number {
   return Math.round(amount * 10 ** scale);
 }
 
-export function formatCurrency(amountMinor: number, currency: string = 'CHF', scale: number = 2): string {
+export function formatCurrency(
+  amountMinor: number,
+  currency: string = "CHF",
+  scale: number = 2,
+): string {
   const amount = fromMinorUnits(amountMinor, scale);
-  return new Intl.NumberFormat('de-CH', {
-    style: 'currency',
+  return new Intl.NumberFormat("de-CH", {
+    style: "currency",
     currency,
   }).format(amount);
 }
 
-export function isSuccess<T>(response: ApiResponse<T>): response is T & { status: true } {
+export function isSuccess<T>(
+  response: ApiResponse<T>,
+): response is T & { status: true } {
   return response.status === true;
 }
 

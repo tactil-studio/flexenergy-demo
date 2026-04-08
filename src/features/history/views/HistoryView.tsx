@@ -10,7 +10,7 @@ import { formatCurrency } from "@/types";
 import { useHistory } from "../hooks/useHistory";
 
 export function HistoryView() {
-  const { transactions, isLoading, weeklySpent, weeklyRecharged, chartData } =
+  const { transactions, isLoading, weeklySpent, weeklyRecharged, chartData, efficiencyScore } =
     useHistory();
 
   return (
@@ -42,11 +42,14 @@ export function HistoryView() {
                 +{formatCurrency(weeklyRecharged * 100)}
               </span>
             </div>
-            <div className="pt-1.5 md:pt-2 border-t border-border">
-              <p className="text-xs text-muted-foreground">
-                Efficiency score: <span className="font-medium text-foreground">84%</span>
-              </p>
-            </div>
+            {efficiencyScore !== null && (
+              <div className="pt-1.5 md:pt-2 border-t border-border">
+                <p className="text-xs text-muted-foreground">
+                  Settlement rate:{" "}
+                  <span className="font-medium text-foreground">{efficiencyScore}%</span>
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

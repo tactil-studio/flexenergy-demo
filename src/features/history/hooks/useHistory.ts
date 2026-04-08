@@ -65,11 +65,21 @@ export function useHistory() {
       amount: fromMinorUnits(tx.amountMinor, tx.scale),
     }));
 
+  // Settled vs total as a simple efficiency proxy
+  const settledCount = transactions.filter(
+    (tx) => tx.transactionStatus === "Settled",
+  ).length;
+  const efficiencyScore =
+    transactions.length > 0
+      ? Math.round((settledCount / transactions.length) * 100)
+      : null;
+
   return {
     transactions,
     isLoading,
     weeklySpent,
     weeklyRecharged,
     chartData,
+    efficiencyScore,
   };
 }

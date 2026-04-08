@@ -178,12 +178,14 @@ export function UsageView() {
 
         <div className="mt-8 grid grid-cols-2 gap-4">
           <div className="p-4 bg-muted/50 rounded-2xl border border-border">
-            <p className="text-xs text-muted-foreground mb-1">Peak hour</p>
-            <p className="text-sm font-semibold text-foreground">14:00 – 15:00</p>
+            <p className="text-xs text-muted-foreground mb-1">
+              {period === "day" ? "Peak hour" : period === "week" ? "Peak day" : "Peak period"}
+            </p>
+            <p className="text-sm font-semibold text-foreground">{peakLabel}</p>
           </div>
           <div className="p-4 bg-muted/50 rounded-2xl border border-border">
-            <p className="text-xs text-muted-foreground mb-1">Efficiency</p>
-            <p className="text-sm font-semibold text-success">+12.4%</p>
+            <p className="text-xs text-muted-foreground mb-1">Data points</p>
+            <p className="text-sm font-semibold text-foreground">{data.length}</p>
           </div>
         </div>
       </section>
