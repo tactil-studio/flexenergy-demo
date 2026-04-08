@@ -13,7 +13,6 @@ export default defineConfig({
     },
   },
   server: {
-    hmr: process.env.DISABLE_HMR !== "true",
     proxy: {
       "/Api": { target: API_TARGET, changeOrigin: true },
       "/api": { target: API_TARGET, changeOrigin: true },
