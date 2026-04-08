@@ -6,18 +6,55 @@
 // ─── Primitive Types ───────────────────────────────────────────────────────────
 export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
-export interface JsonObject { [key: string]: JsonValue; }
+export interface JsonObject {
+  [key: string]: JsonValue;
+}
 
 export type DateInput = string | Date;
-export interface Timestamp { seconds: number; nanos: number; }
+export interface Timestamp {
+  seconds: number;
+  nanos: number;
+}
 export type TimestampInput = string | Date | Timestamp;
 
 // ─── Shared Enums ──────────────────────────────────────────────────────────────
 export type ApplicationFrequency = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type ContractFilter = 0 | 1 | 2 | 3 | 4;
 export type EnergyFlow = 0 | 1 | 2;
-export type FileFormat = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
-export type FileType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 99;
+export type FileFormat =
+  | 0
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14;
+export type FileType =
+  | 0
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 99;
 export type FilterMeterStatus = 0 | 1 | 2 | 3;
 export type LifecycleStatus = 0 | 1 | 2 | 3 | 4;
 export type MeterChangeMode = 0 | 1 | 2 | 3;
@@ -26,14 +63,35 @@ export type MeterValidationStatus = 0 | 1 | 2 | 3 | 4;
 export type Precision = 0 | 1 | 2 | 3 | 4;
 export type ReceiptGenStatus = 0 | 1 | 2 | 3;
 export type SumMethod = 0 | 1 | 2 | 3 | 4 | 5;
-export type TransactionSource = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type TransactionSource =
+  | 0
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12;
 export type TransactionStatus = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type UserRole = 0 | 1 | 10 | 11 | 20 | 30 | 31 | 40 | 41 | 50 | 51;
 
 // ─── Shared Response Shapes ────────────────────────────────────────────────────
-export interface GenericResponse { status: boolean; }
-export interface GenericMessageResponse { status: boolean; response?: string | null; }
-export interface ElectricalReply { sourceID: number; status: boolean; }
+export interface GenericResponse {
+  status: boolean;
+}
+export interface GenericMessageResponse {
+  status: boolean;
+  response?: string | null;
+}
+export interface ElectricalReply {
+  sourceID: number;
+  status: boolean;
+}
 
 // ─── Client Config ─────────────────────────────────────────────────────────────
 export interface SmartSphereClientConfig {
@@ -48,7 +106,10 @@ export interface SmartSphereClientConfig {
 export class SmartSphereApiError extends Error {
   status?: number;
   payload?: unknown;
-  constructor(message: string, options?: { status?: number; payload?: unknown }) {
+  constructor(
+    message: string,
+    options?: { status?: number; payload?: unknown },
+  ) {
     super(message);
     this.name = "SmartSphereApiError";
     this.status = options?.status;
@@ -63,7 +124,9 @@ function joinUrl(baseUrl: string, path: string): string {
   return `${baseUrl.replace(/\/+$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-function toIso(v: Date): string { return v.toISOString(); }
+function toIso(v: Date): string {
+  return v.toISOString();
+}
 
 function normalizeValue(v: unknown): unknown {
   if (v instanceof Date) return toIso(v);
@@ -101,12 +164,18 @@ function buildQuery(params?: Record<string, unknown>): string {
 export class HttpCore {
   constructor(private readonly config: SmartSphereClientConfig) {}
 
-  private get fetchImpl() { return this.config.fetch ?? fetch; }
+  private get fetchImpl() {
+    return (this.config.fetch ?? fetch).bind(globalThis);
+  }
 
   private buildHeaders(extra?: HeadersInit): Headers {
     const h = new Headers(this.config.headers);
-    if (this.config.accessToken) h.set("authorization", `Bearer ${this.config.accessToken}`);
-    if (extra) { const e = new Headers(extra); for (const [k, v] of e.entries()) h.set(k, v); }
+    if (this.config.accessToken)
+      h.set("authorization", `Bearer ${this.config.accessToken}`);
+    if (extra) {
+      const e = new Headers(extra);
+      for (const [k, v] of e.entries()) h.set(k, v);
+    }
     return h;
   }
 
@@ -129,11 +198,17 @@ export class HttpCore {
     const headers = this.buildHeaders();
     if (body !== undefined) headers.set("content-type", "application/json");
     const res = await this.fetchImpl(url, {
-      method: "POST", headers, credentials: this.config.credentials,
-      body: body !== undefined
-        ? (typeof body === "string" || body instanceof Blob || body instanceof FormData
-          ? body : JSON.stringify(normalizeValue(body)))
-        : undefined,
+      method: "POST",
+      headers,
+      credentials: this.config.credentials,
+      body:
+        body !== undefined
+          ? typeof body === "string" ||
+            body instanceof Blob ||
+            body instanceof FormData
+            ? body
+            : JSON.stringify(normalizeValue(body))
+          : undefined,
     });
     if (!res.ok) return this.handleError(res);
     return (await this.safeParseResponse(res)) as T;
@@ -142,15 +217,26 @@ export class HttpCore {
   async get<T>(path: string, query?: Record<string, unknown>): Promise<T> {
     const url = joinUrl(this.config.baseUrl, path) + buildQuery(query);
     const headers = this.buildHeaders();
-    const res = await this.fetchImpl(url, { method: "GET", headers, credentials: this.config.credentials });
+    const res = await this.fetchImpl(url, {
+      method: "GET",
+      headers,
+      credentials: this.config.credentials,
+    });
     if (!res.ok) return this.handleError(res);
     return (await this.safeParseResponse(res)) as T;
   }
 
-  async getRaw(path: string, query?: Record<string, unknown>): Promise<Response> {
+  async getRaw(
+    path: string,
+    query?: Record<string, unknown>,
+  ): Promise<Response> {
     const url = joinUrl(this.config.baseUrl, path) + buildQuery(query);
     const headers = this.buildHeaders();
-    const res = await this.fetchImpl(url, { method: "GET", headers, credentials: this.config.credentials });
+    const res = await this.fetchImpl(url, {
+      method: "GET",
+      headers,
+      credentials: this.config.credentials,
+    });
     if (!res.ok) return this.handleError(res);
     return res;
   }
