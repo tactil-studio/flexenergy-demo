@@ -20,6 +20,7 @@ export function UsageView() {
     isLoading,
     totalUsage,
     avgUsage,
+    peakLabel,
     formatXAxis,
   } = useUsage();
 
@@ -45,12 +46,9 @@ export function UsageView() {
             </span>
           </div>
           <div className="flex items-center gap-3 md:gap-4">
-            <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-medium bg-success/10 text-success px-2.5 py-1 md:py-1.5 rounded-full border border-success/20">
+            <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-medium bg-background/10 text-background/70 px-2.5 py-1 md:py-1.5 rounded-full border border-background/20">
               <TrendingDown className="w-3 h-3 md:w-3.5 md:h-3.5" />
-              <span>8% vs last {period}</span>
-            </div>
-            <div className="text-xs text-background/40">
-              Avg {avgUsage} kWh
+              <span>Avg {avgUsage} kWh</span>
             </div>
           </div>
         </div>
@@ -68,8 +66,8 @@ export function UsageView() {
                 type="button"
                 onClick={() => setPeriod(p)}
                 className={`flex-1 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] font-medium transition-all ${period === p
-                    ? "bg-card text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
                   }`}
               >
                 {p}
