@@ -1,17 +1,17 @@
 import { HttpCore, type SmartSphereClientConfig } from "./core";
-import { AuthModule } from "./modules/auth";
 import { AccountModule } from "./modules/account";
+import { AuthModule } from "./modules/auth";
 import { ContractModule } from "./modules/contract";
+import { CustomersModule } from "./modules/customers";
+import { FileManagerModule } from "./modules/file-manager";
 import { FinancialModule } from "./modules/financial";
+import { GasModule } from "./modules/gas";
 import { GraphicsModule } from "./modules/graphics";
 import { InfrastructureModule } from "./modules/infrastructure";
-import { CustomersModule } from "./modules/customers";
 import { LanguageModule } from "./modules/language";
 import { ShopModule } from "./modules/shop";
 import { StatisticsModule } from "./modules/statistics";
 import { TariffsModule } from "./modules/tariffs";
-import { GasModule } from "./modules/gas";
-import { FileManagerModule } from "./modules/file-manager";
 
 // ─── Composed Client ───────────────────────────────────────────────────────────
 export class SmartSphereApiClient {
@@ -67,5 +67,5 @@ export function clearAuthToken(): void {
   _client = new SmartSphereApiClient({ baseUrl: BASE_URL });
 }
 
-/** The source ID for this SmartSphere instance (set via VITE_API_SOURCE_ID env var). */
-export const SOURCE_ID = Number(import.meta.env.VITE_API_SOURCE_ID ?? 1);
+/** The source ID for this SmartSphere instance (set via VITE_API_SOURCE_ID env var, defaults to 0). */
+export const SOURCE_ID = Number(import.meta.env.VITE_API_SOURCE_ID ?? 0);

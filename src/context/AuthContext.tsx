@@ -66,11 +66,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Inject token into the singleton client immediately
     setAuthToken(tokenRes.access_token);
 
-    const customerId = Number(payload.sub ?? 0);
+    // Customer ID is fixed to 248 for this SmartSphere instance.
+    // The JWT sub claim may differ; this override ensures the correct
+    // customer data is loaded from GetCustomerDashboard.
+    const CUSTOMER_ID = 248;
 
     const authUser: AuthUser = {
-      id: customerId,
-      customerId,
+      id: CUSTOMER_ID,
+      customerId: CUSTOMER_ID,
       email: (payload.email as string | undefined) ?? email,
       firstName: (payload.given_name as string | undefined) ?? undefined,
       lastName: (payload.family_name as string | undefined) ?? undefined,
