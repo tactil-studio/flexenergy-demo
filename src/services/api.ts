@@ -1,172 +1,219 @@
+import { getClient, SOURCE_ID } from "../lib/smartsphere";
+import type { ApiTransaction } from "../lib/smartsphere/modules/financial";
+import type { GraphicMulti } from "../lib/smartsphere/modules/graphics";
 import type {
   AlertSettings,
   AppState,
-  Contract,
   CustomerDashboard,
   MeasureData,
   Notification,
   Transaction,
-  UserInfo,
 } from "../types";
 
-const _MOCK_USER: UserInfo = {
-  id: 1,
-  email: "alex.t@energydynamics.com",
-  firstName: "Alex",
-  lastName: "Thompson",
-  companyName: "EnergyDynamics Ltd",
+// ─── Mappers ───────────────────────────────────────────────────────────────────
+const TX_SOURCE: Record<number, Transaction["transactionSource"]> = {
+  0: "System",
+  1: "Stripe",
+  2: "Manual",
+  3: "Shop",
+};
+const TX_STATUS: Record<number, Transaction["transactionStatus"]> = {
+  0: "Pending",
+  1: "Settled",
+  2: "Failed",
+  3: "Refunded",
+  4: "Cancelled",
 };
 
-const MOCK_CONTRACTS: Contract[] = [
-  {
-    contractId: 101,
-    buContractId: "BU-101-ELE",
-    customerId: 1,
-    description: "Residential Electricity - Main",
-    startDate: "2026-01-01T00:00:00Z",
-    endDate: "2025-12-31T23:59:59Z",
-    serviceStatus: "Active",
-    statusDateTime: "2026-01-01T00:00:00Z",
-    zpbs: [{ zpbId: "ZPB-001", obis: "1.8.0" }],
-    electricalRates: [
-      { tariffId: "T-RES-01", validFrom: "2026-01-01", validTo: "2025-12-31" },
-    ],
-    triggerLockDays: 30,
-    triggerPrelockDays: 15,
-    triggerDeadlineLockDays: 5,
-  },
-];
+function mapTransaction(
+  tx: ApiTransaction,
+  scale: number,
+  currency: string,
+): Transaction {
+  return {
+    customerId: tx.customerId,
+    contractId: tx.contractId,
+    orderId: tx.orderId ?? undefined,
+    amountMinor: tx.amountRaw,
+    scale,
+    currency,
+    transactionSource: TX_SOURCE[tx.transactionSource ?? 0] ?? "System",
+    transactionStatus: TX_STATUS[tx.transactionStatus ?? 0] ?? "Settled",
+    description: tx.description ?? undefined,
+    cardBrand: tx.cardBrand ?? undefined,
+    cardNumber: tx.cardNumber ?? undefined,
+    cardHolder: tx.cardHolder ?? undefined,
+    paymentId: tx.paymentId ?? undefined,
+    transactionDate:
+      typeof tx.createdAt === "string"
+        ? tx.createdAt
+        : new Date(tx.createdAt as Date).toISOString(),
+  };
+}
 
-const MOCK_DASHBOARD: CustomerDashboard = {
-  sourceId: 1,
-  status: true,
-  balance: 14250, // 142.50 CHF in minor units
-  consume: 450.5,
-  scale: 2,
-  contracts: [
-    {
-      contractId: 101,
-      buContractId: "BU-101-ELE",
-      description: "Residential Electricity - Main",
-      startDate: "2026-01-01T00:00:00Z",
-      endDate: "2025-12-31T23:59:59Z",
-      serviceStatus: "Active",
-      customerId: 1,
-    },
-  ],
-};
+function mapGraphicMultiToMeasures(
+  data: GraphicMulti,
+  period: "day" | "week" | "month",
+): MeasureData[] {
+  const labels = data.categories?.[0]?.category ?? [];
+  const values = data.dataset?.[0]?.data ?? [];
+  const count = Math.min(labels.length, values.length);
+  if (count === 0) return [];
 
-const MOCK_TRANSACTIONS: Transaction[] = [
-  {
-    transactionId: "tx_001",
-    customerId: 1,
-    contractId: 101,
-    amountMinor: 5000,
-    scale: 2,
-    currency: "CHF",
-    transactionSource: "Stripe",
-    transactionStatus: "Settled",
-    description: "Manual Recharge",
-    transactionDate: new Date(
-      Date.now() - 1000 * 60 * 60 * 24 * 1,
-    ).toISOString(),
-  },
-  {
-    transactionId: "tx_002",
-    customerId: 1,
-    contractId: 101,
-    amountMinor: -1240,
-    scale: 2,
-    currency: "CHF",
-    transactionSource: "System",
-    transactionStatus: "Settled",
-    description: "Daily Consumption",
-    transactionDate: new Date(
-      Date.now() - 1000 * 60 * 60 * 24 * 2,
-    ).toISOString(),
-  },
-  {
-    transactionId: "tx_003",
-    customerId: 1,
-    contractId: 101,
-    amountMinor: -1520,
-    scale: 2,
-    currency: "CHF",
-    transactionSource: "System",
-    transactionStatus: "Settled",
-    description: "Daily Consumption",
-    transactionDate: new Date(
-      Date.now() - 1000 * 60 * 60 * 24 * 3,
-    ).toISOString(),
-  },
-];
+  // Generate ISO timestamps since API labels may be formatted strings ("01 Jan")
+  const interval = period === "day" ? 3_600_000 : 86_400_000;
+  const now = Date.now();
 
-const INITIAL_ALERTS: AlertSettings = {
-  lowBalance: true,
-  peakUsage: false,
-};
+  return Array.from({ length: count }, (_, i) => ({
+    timestamp: new Date(now - interval * (count - 1 - i)).toISOString(),
+    value: parseFloat(values[i]?.value ?? "0"),
+    unit: "kWh",
+  }));
+}
 
-const INITIAL_NOTIFICATIONS: Notification[] = [
-  {
-    id: "1",
-    title: "Welcome to FlexEnergy",
-    message: "Your account is active and ready to use.",
-    timestamp: new Date().toISOString(),
-    read: false,
-    type: "info",
-  },
-];
+// ─── Local-only state (alerts & notifications persist to localStorage only) ────
+const ALERTS_KEY = "flex_energy_alerts";
+const NOTIFICATIONS_KEY = "flex_energy_notifications";
 
+function loadAlerts(): AlertSettings {
+  try {
+    return (
+      JSON.parse(localStorage.getItem(ALERTS_KEY) ?? "null") ?? {
+        lowBalance: true,
+        peakUsage: false,
+      }
+    );
+  } catch {
+    return { lowBalance: true, peakUsage: false };
+  }
+}
+function loadNotifications(): Notification[] {
+  try {
+    return JSON.parse(localStorage.getItem(NOTIFICATIONS_KEY) ?? "null") ?? [];
+  } catch {
+    return [];
+  }
+}
+
+// ─── Service ───────────────────────────────────────────────────────────────────
 export const apiService = {
-  async getAppState(): Promise<AppState> {
-    const saved = localStorage.getItem("flex_energy_state");
-    if (saved) return JSON.parse(saved);
+  /**
+   * Loads the full app state from the real API.
+   * Requires the customer ID (from the authenticated JWT).
+   */
+  async getAppState(customerId: number): Promise<AppState> {
+    const client = getClient();
+
+    const dashRes = await client.contract.getCustomerDashboard({
+      sourceID: SOURCE_ID,
+      customerID: customerId,
+    });
+
+    const dashboard: CustomerDashboard = {
+      sourceId: dashRes.sourceID,
+      status: dashRes.status,
+      balance: dashRes.balanceRaw,
+      consume: dashRes.consume,
+      scale: dashRes.scale,
+      contracts: (dashRes.contracts ?? []).map((c) => ({
+        contractId: c.contractID,
+        buContractId: c.buContractID ?? undefined,
+        description: undefined,
+        startDate:
+          typeof c.startDate === "string"
+            ? c.startDate
+            : new Date(c.startDate as Date).toISOString(),
+        endDate:
+          typeof c.endDate === "string"
+            ? c.endDate
+            : new Date(c.endDate as Date).toISOString(),
+        serviceStatus:
+          (c.serviceStatus as CustomerDashboard["contracts"][number]["serviceStatus"]) ??
+          "Active",
+        customerId,
+      })),
+    };
 
     return {
-      dashboard: MOCK_DASHBOARD,
-      contracts: MOCK_CONTRACTS,
-      alerts: INITIAL_ALERTS,
-      notifications: INITIAL_NOTIFICATIONS,
+      dashboard,
+      contracts: [],
+      alerts: loadAlerts(),
+      notifications: loadNotifications(),
     };
   },
 
-  async getTransactions(): Promise<Transaction[]> {
-    return MOCK_TRANSACTIONS;
+  async getTransactions(
+    customerId: number,
+    contractId: number,
+  ): Promise<Transaction[]> {
+    const res = await getClient().financial.listTransactions({
+      customerId,
+      contractId,
+    });
+    return (res.transactions ?? []).map((tx) =>
+      mapTransaction(tx, res.scale, res.currency ?? "CHF"),
+    );
   },
 
-  async getUsageData(period: "day" | "week" | "month"): Promise<MeasureData[]> {
-    const points = period === "day" ? 24 : period === "week" ? 7 : 30;
-    const interval = period === "day" ? 1000 * 60 * 60 : 1000 * 60 * 60 * 24;
+  async getUsageData(
+    period: "day" | "week" | "month",
+    contractId: number,
+  ): Promise<MeasureData[]> {
+    const now = new Date();
+    const msBack =
+      period === "day"
+        ? 86_400_000
+        : period === "week"
+          ? 604_800_000
+          : 2_592_000_000;
+    const dateFrom = new Date(now.getTime() - msBack);
+    // SumMethod: 2 = Hourly (day), 3 = Daily (week/month)
+    const sumMethod = period === "day" ? 2 : 3;
 
-    return Array.from({ length: points }).map((_, i) => ({
-      timestamp: new Date(Date.now() - interval * i).toISOString(),
-      value: Math.random() * (period === "day" ? 2 : 20) + 0.5,
-      unit: "kWh",
-    }));
+    const res = await getClient().graphics.getMeasures({
+      contractID: contractId,
+      dateFrom: dateFrom.toISOString(),
+      dateTo: now.toISOString(),
+      sumMethod,
+    });
+
+    return mapGraphicMultiToMeasures(res, period);
   },
 
-  async updateBalance(newBalanceMinor: number): Promise<number> {
-    const state = await this.getAppState();
-    if (state.dashboard) {
-      state.dashboard.balance = newBalanceMinor;
-      localStorage.setItem("flex_energy_state", JSON.stringify(state));
-    }
-    return newBalanceMinor;
+  /**
+   * Persists a recharge transaction via the real API.
+   * Returns the new balance raw amount.
+   */
+  async rechargeBalance(
+    customerId: number,
+    contractId: number,
+    amountMinor: number,
+    scale: number,
+  ): Promise<void> {
+    const amount = amountMinor / 10 ** scale;
+    await getClient().financial.setTransaction({
+      transactionDate: new Date().toISOString(),
+      contractId,
+      customerId,
+      amount,
+      transactionSource: 1, // Stripe
+      transactionStatus: 1, // Settled
+      description: "Manual Recharge",
+    });
   },
 
+  // ─── Local-only (no API equivalent for a consumer app) ─────────────────────
   async updateAlerts(alerts: Partial<AlertSettings>): Promise<AlertSettings> {
-    const state = await this.getAppState();
-    state.alerts = { ...state.alerts, ...alerts };
-    localStorage.setItem("flex_energy_state", JSON.stringify(state));
-    return state.alerts;
+    const current = loadAlerts();
+    const updated = { ...current, ...alerts };
+    localStorage.setItem(ALERTS_KEY, JSON.stringify(updated));
+    return updated;
   },
 
   async updateNotifications(
     notifications: Notification[],
   ): Promise<Notification[]> {
-    const state = await this.getAppState();
-    state.notifications = notifications;
-    localStorage.setItem("flex_energy_state", JSON.stringify(state));
+    localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(notifications));
     return notifications;
   },
 };

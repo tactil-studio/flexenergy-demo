@@ -1,11 +1,17 @@
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
+import { clearAuthToken, getClient, setAuthToken } from "../lib/smartsphere";
 import type { UserInfo } from "../types";
 
-interface AuthUser extends UserInfo {
+// ─── Types ─────────────────────────────────────────────────────────────────────
+export interface AuthUser extends UserInfo {
   isEmailVerified: boolean;
   is2FAEnabled: boolean;
   is2FAVerified: boolean;
+  /** Numeric customer ID from the SmartSphere JWT sub claim */
+  customerId: number;
+  /** Access token for API calls */
+  accessToken: string;
 }
 
 interface AuthContextType {
@@ -19,78 +25,100 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
+// ─── Helpers ───────────────────────────────────────────────────────────────────
+function decodeJwtPayload(token: string): Record<string, unknown> {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch {
+    return {};
+  }
+}
+
+const STORAGE_KEY = "flex_energy_user";
+
+// ─── Context ───────────────────────────────────────────────────────────────────
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Rehydrate from localStorage and restore the token on page reload
   useEffect(() => {
-    const savedUser = localStorage.getItem("flex_energy_user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed: AuthUser = JSON.parse(saved);
+      if (parsed.accessToken) setAuthToken(parsed.accessToken);
+      setUser(parsed);
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, _password: string) => {
-    // Mock login - initially unverified for demo
-    const mockUser: AuthUser = {
-      id: 123921,
-      email,
-      firstName: "Alex",
-      lastName: "Thompson",
-      companyName: "EnergyDynamics Ltd",
-      isEmailVerified: false, // Set to false to trigger verification flow
-      is2FAEnabled: true, // Set to true to trigger 2FA flow
-      is2FAVerified: false,
-    };
-    setUser(mockUser);
-    localStorage.setItem("flex_energy_user", JSON.stringify(mockUser));
+  const persistUser = (u: AuthUser) => {
+    setUser(u);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
   };
 
-  const loginWithGoogle = async () => {
-    // Mock Google login
-    const mockUser: AuthUser = {
-      id: 123921,
-      email: "alex.t@energydynamics.com",
-      firstName: "Alex",
-      lastName: "Thompson",
-      companyName: "EnergyDynamics Ltd",
+  const login = async (email: string, password: string) => {
+    const tokenRes = await getClient().auth.requestToken({ userName: email, password });
+    const payload = decodeJwtPayload(tokenRes.access_token);
+
+    // Inject token into the singleton client immediately
+    setAuthToken(tokenRes.access_token);
+
+    const customerId = Number(payload.sub ?? 0);
+
+    const authUser: AuthUser = {
+      id: customerId,
+      customerId,
+      email: (payload.email as string | undefined) ?? email,
+      firstName: (payload.given_name as string | undefined) ?? undefined,
+      lastName: (payload.family_name as string | undefined) ?? undefined,
+      companyName: (payload.company as string | undefined) ?? undefined,
+      accessToken: tokenRes.access_token,
       isEmailVerified: true,
       is2FAEnabled: false,
       is2FAVerified: true,
     };
-    setUser(mockUser);
-    localStorage.setItem("flex_energy_user", JSON.stringify(mockUser));
+
+    persistUser(authUser);
+  };
+
+  const loginWithGoogle = async () => {
+    // Google OAuth not available in demo mode — falls back to a demo user
+    const demoUser: AuthUser = {
+      id: 0,
+      customerId: 0,
+      email: "alex.t@energydynamics.com",
+      firstName: "Alex",
+      lastName: "Thompson",
+      companyName: "EnergyDynamics Ltd",
+      accessToken: "",
+      isEmailVerified: true,
+      is2FAEnabled: false,
+      is2FAVerified: true,
+    };
+    persistUser(demoUser);
   };
 
   const verifyEmail = async () => {
-    if (user) {
-      const updatedUser = { ...user, isEmailVerified: true };
-      setUser(updatedUser);
-      localStorage.setItem("flex_energy_user", JSON.stringify(updatedUser));
-    }
+    if (user) persistUser({ ...user, isEmailVerified: true });
   };
 
   const verify2FA = async (code: string) => {
-    if (user && code === "123456") {
-      // Mock code
-      const updatedUser = { ...user, is2FAVerified: true };
-      setUser(updatedUser);
-      localStorage.setItem("flex_energy_user", JSON.stringify(updatedUser));
-    } else {
-      throw new Error("Invalid 2FA code");
-    }
+    if (!user) throw new Error("Not authenticated");
+    if (code.length !== 6) throw new Error("Invalid 2FA code");
+    persistUser({ ...user, is2FAVerified: true });
   };
 
   const logout = async () => {
+    clearAuthToken();
     setUser(null);
-    localStorage.removeItem("flex_energy_user");
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   const forgotPassword = async (email: string) => {
-    console.log(`Reset link sent to ${email}`);
+    await getClient().account.resetPassword({ email });
   };
 
   return (

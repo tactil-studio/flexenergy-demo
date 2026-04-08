@@ -6,20 +6,29 @@ import {
   startOfWeek,
 } from "date-fns";
 import { useEffect, useState } from "react";
+import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
 import { apiService } from "@/services/api";
 import type { Transaction } from "@/types";
 import { fromMinorUnits } from "@/types";
 
 export function useHistory() {
+  const { contractId } = useApp();
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    apiService.getTransactions().then((res) => {
-      setTransactions(res);
-      setIsLoading(false);
-    });
-  }, []);
+    if (!user?.customerId || !contractId) return;
+    setIsLoading(true);
+    apiService
+      .getTransactions(user.customerId, contractId)
+      .then((res) => {
+        setTransactions(res);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
+  }, [user?.customerId, contractId]);
 
   const now = new Date();
   const weekStart = startOfWeek(now);
@@ -34,11 +43,18 @@ export function useHistory() {
 
   const weeklySpent = weeklyTransactions
     .filter((tx) => tx.amountMinor < 0)
-    .reduce((acc, curr) => acc + Math.abs(fromMinorUnits(curr.amountMinor, curr.scale)), 0);
+    .reduce(
+      (acc, curr) =>
+        acc + Math.abs(fromMinorUnits(curr.amountMinor, curr.scale)),
+      0,
+    );
 
   const weeklyRecharged = weeklyTransactions
     .filter((tx) => tx.amountMinor > 0)
-    .reduce((acc, curr) => acc + fromMinorUnits(curr.amountMinor, curr.scale), 0);
+    .reduce(
+      (acc, curr) => acc + fromMinorUnits(curr.amountMinor, curr.scale),
+      0,
+    );
 
   // Prepare data for mini area chart (last 7 days)
   const chartData = transactions
