@@ -488,7 +488,12 @@ export function isSuccess<T>(
 /**
  * UI Specific Types (Keeping some of the old ones for compatibility)
  */
-export type ViewType = "usage" | "recharge" | "history" | "settings";
+export type ViewType =
+  | "dashboard"
+  | "usage"
+  | "recharge"
+  | "history"
+  | "settings";
 
 export interface AlertSettings {
   lowBalance: boolean;

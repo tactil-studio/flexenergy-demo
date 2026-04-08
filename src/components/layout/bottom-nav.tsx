@@ -1,15 +1,15 @@
 import type { LucideIcon } from "lucide-react";
-import { BarChart3, History, Settings, Zap } from "lucide-react";
+import { BarChart3, History, Home, Zap } from "lucide-react";
 import { motion } from "motion/react";
 import { useApp } from "@/context/AppContext";
 import { cn } from "@/lib/utils";
 import type { ViewType } from "@/types";
 
 const navItems: { icon: LucideIcon; label: string; id: ViewType }[] = [
-  { icon: BarChart3, label: "Usage", id: "usage" },
+  { icon: Home, label: "Home", id: "dashboard" },
   { icon: Zap, label: "Recharge", id: "recharge" },
+  { icon: BarChart3, label: "Usage", id: "usage" },
   { icon: History, label: "History", id: "history" },
-  { icon: Settings, label: "Settings", id: "settings" },
 ];
 
 export function BottomNav() {

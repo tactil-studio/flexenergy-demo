@@ -10,6 +10,13 @@ import type {
   Transaction,
 } from "../types";
 
+// ─── Helpers ───────────────────────────────────────────────────────────────────
+function toIsoString(v: string | Date | null | undefined): string {
+  if (!v) return new Date(0).toISOString();
+  if (typeof v === "string") return v;
+  return (v as Date).toISOString();
+}
+
 // ─── Mappers ───────────────────────────────────────────────────────────────────
 const TX_SOURCE: Record<number, Transaction["transactionSource"]> = {
   0: "System",
@@ -118,19 +125,17 @@ export const apiService = {
       contracts: (dashRes.contracts ?? []).map((c) => ({
         contractId: c.contractID,
         buContractId: c.buContractID ?? undefined,
-        description: undefined,
-        startDate:
-          typeof c.startDate === "string"
-            ? c.startDate
-            : new Date(c.startDate as Date).toISOString(),
-        endDate:
-          typeof c.endDate === "string"
-            ? c.endDate
-            : new Date(c.endDate as Date).toISOString(),
-        serviceStatus:
-          (c.serviceStatus as CustomerDashboard["contracts"][number]["serviceStatus"]) ??
-          "Active",
+        serviceStatus: c.serviceStatus ?? "Active",
         customerId,
+        startDate: toIsoString(c.startDate),
+        endDate: toIsoString(c.endDate),
+        lastMeasure: toIsoString(c.lastMeasure),
+        balanceRaw: c.balanceRaw,
+        scale: c.scale,
+        currency: c.currency ?? dashRes.currency ?? "CHF",
+        averageCost: c.averageCost,
+        forecastTotalCost: c.forecastTotalCost,
+        depletionDate: toIsoString(c.depletionDate),
       })),
     };
 

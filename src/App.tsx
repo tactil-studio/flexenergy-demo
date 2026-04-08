@@ -13,6 +13,7 @@ import { EmailVerificationView } from "@/features/auth/views/EmailVerificationVi
 import { ForgotPasswordView } from "@/features/auth/views/ForgotPasswordView";
 import { LoginView } from "@/features/auth/views/LoginView";
 import { TwoFactorAuthView } from "@/features/auth/views/TwoFactorAuthView";
+import { DashboardView } from "@/features/dashboard/views/DashboardView";
 import { HistoryView } from "@/features/history/views/HistoryView";
 import { RechargeView } from "@/features/recharge/views/RechargeView";
 import { SettingsView } from "@/features/settings/views/SettingsView";
@@ -81,10 +82,11 @@ function MainContent() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            {currentView === "settings" && <SettingsView />}
+            {currentView === "dashboard" && <DashboardView />}
             {currentView === "usage" && <UsageView />}
             {currentView === "recharge" && <RechargeView />}
             {currentView === "history" && <HistoryView />}
+            {currentView === "settings" && <SettingsView />}
           </motion.div>
         </AnimatePresence>
 

@@ -24,7 +24,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [state, setState] = useState<AppState | null>(null);
-  const [currentView, setCurrentView] = useState<ViewType>("settings");
+  const [currentView, setCurrentView] = useState<ViewType>("dashboard");
   const [isLoading, setIsLoading] = useState(true);
 
   // Reload app state whenever the authenticated user changes
