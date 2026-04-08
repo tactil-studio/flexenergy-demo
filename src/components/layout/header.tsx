@@ -1,13 +1,34 @@
 import { AlertCircle, Bell, CheckCircle2, Info, X } from "lucide-react";
 import { Popover } from "radix-ui";
 import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
 import { formatCurrency } from "@/types";
+
+function UserAvatar({ onClick }: { onClick: () => void }) {
+  const { user } = useAuth();
+  const initials = [user?.firstName, user?.lastName]
+    .filter(Boolean)
+    .map((n) => n![0].toUpperCase())
+    .join("") || "?";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-border hover:ring-2 hover:ring-ring transition-all active:scale-95 shrink-0"
+      aria-label="Open settings"
+    >
+      <span className="text-sm font-bold text-primary">{initials}</span>
+    </button>
+  );
+}
 
 export function Header() {
   const { state, markNotificationAsRead, clearNotifications, setView } =
     useApp();
 
   const balanceMinor = state?.dashboard?.balance ?? 0;
+  const scale = state?.dashboard?.scale ?? 2;
   const notifications = state?.notifications ?? [];
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -26,21 +47,10 @@ export function Header() {
     <header className="fixed top-0 w-full z-50 bg-card/80 backdrop-blur-xl border-b border-border">
       <div className="flex justify-between items-center px-6 h-16 w-full max-w-2xl mx-auto">
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setView("settings")}
-            className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border hover:ring-2 hover:ring-ring transition-all active:scale-95"
-          >
-            <img
-              alt="User profile"
-              className="w-full h-full object-cover"
-              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              referrerPolicy="no-referrer"
-            />
-          </button>
+          <UserAvatar onClick={() => setView("settings")} />
           <div className="flex flex-col">
             <span className="font-semibold text-lg tracking-tight text-foreground">
-              {formatCurrency(balanceMinor)}
+              {formatCurrency(balanceMinor, "CHF", scale)}
             </span>
             <span className="text-xs text-muted-foreground">Current balance</span>
           </div>

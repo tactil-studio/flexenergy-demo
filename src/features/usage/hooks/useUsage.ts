@@ -25,11 +25,37 @@ export function useUsage() {
   const totalUsage = data.reduce((acc, curr) => acc + curr.value, 0).toFixed(1);
   const avgUsage = (Number(totalUsage) / (data.length || 1)).toFixed(1);
 
+  // Derive peak hour from the highest-value data point
+  const peakEntry = data.length
+    ? data.reduce((max, curr) => (curr.value > max.value ? curr : max), data[0])
+    : null;
+
+  const peakLabel = peakEntry
+    ? (() => {
+        try {
+          const d = parseISO(peakEntry.timestamp);
+          if (period === "day") {
+            const h = format(d, "HH");
+            const next = String(Number(h) + 1).padStart(2, "0");
+            return `${h}:00 – ${next}:00`;
+          }
+          if (period === "week") return format(d, "EEEE");
+          return format(d, "dd MMM");
+        } catch {
+          return "—";
+        }
+      })()
+    : "—";
+
   const formatXAxis = (tickItem: string) => {
-    const date = parseISO(tickItem);
-    if (period === "day") return format(date, "HH:mm");
-    if (period === "week") return format(date, "EEE");
-    return format(date, "dd MMM");
+    try {
+      const date = parseISO(tickItem);
+      if (period === "day") return format(date, "HH:mm");
+      if (period === "week") return format(date, "EEE");
+      return format(date, "dd MMM");
+    } catch {
+      return tickItem;
+    }
   };
 
   return {
@@ -39,6 +65,7 @@ export function useUsage() {
     isLoading,
     totalUsage,
     avgUsage,
+    peakLabel,
     formatXAxis,
   };
 }

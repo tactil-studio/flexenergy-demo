@@ -114,10 +114,14 @@ export function HistoryView() {
                 Loading history...
               </p>
             </div>
+          ) : transactions.length === 0 ? (
+            <div className="p-10 text-center text-xs text-muted-foreground">
+              No transactions found.
+            </div>
           ) : (
-            transactions.map((tx) => (
+            transactions.map((tx, i) => (
               <div
-                key={tx.transactionId}
+                key={tx.orderId ?? tx.transactionDate ?? i}
                 className="p-4 md:p-6 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors group"
               >
                 <div className="flex justify-between items-center">
@@ -152,7 +156,7 @@ export function HistoryView() {
                       {formatCurrency(Math.abs(tx.amountMinor), tx.currency, tx.scale)}
                     </p>
                     <p className={`text-[10px] ${tx.transactionStatus === "Settled" ? "text-muted-foreground" :
-                        tx.transactionStatus === "Failed" ? "text-destructive" : "text-warning"
+                      tx.transactionStatus === "Failed" ? "text-destructive" : "text-warning"
                       }`}>
                       {tx.transactionStatus}
                     </p>
