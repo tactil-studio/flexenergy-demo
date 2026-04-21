@@ -11,6 +11,7 @@ interface AppContextType {
   setView: (view: ViewType) => void;
   recharge: (amount: number) => Promise<void>;
   toggleAlert: (key: keyof AlertSettings) => Promise<void>;
+  updateAlertSettings: (settings: Partial<AlertSettings>) => Promise<void>;
   addNotification: (title: string, message: string, type: Notification["type"]) => Promise<void>;
   markNotificationAsRead: (id: string) => Promise<void>;
   clearNotifications: () => Promise<void>;
@@ -74,9 +75,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const toggleAlert = async (key: keyof AlertSettings) => {
-    if (!state) return;
+    if (!state || !user) return;
     const newAlerts = { ...state.alerts, [key]: !state.alerts[key] };
-    const updatedAlerts = await apiService.updateAlerts(newAlerts);
+    const updatedAlerts = await apiService.updateAlerts(user.customerId, newAlerts);
+    setState((prev) => (prev ? { ...prev, alerts: updatedAlerts } : null));
+  };
+
+  const updateAlertSettings = async (settings: Partial<AlertSettings>) => {
+    if (!state || !user) return;
+    const newAlerts = { ...state.alerts, ...settings };
+    const updatedAlerts = await apiService.updateAlerts(user.customerId, newAlerts);
     setState((prev) => (prev ? { ...prev, alerts: updatedAlerts } : null));
   };
 
@@ -115,6 +123,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setView: setCurrentView,
         recharge,
         toggleAlert,
+        updateAlertSettings,
         addNotification,
         markNotificationAsRead,
         clearNotifications,

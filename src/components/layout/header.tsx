@@ -8,7 +8,7 @@ function UserAvatar({ onClick }: { onClick: () => void }) {
   const { user } = useAuth();
   const initials = [user?.firstName, user?.lastName]
     .filter(Boolean)
-    .map((n) => n![0].toUpperCase())
+    .map((n) => (n as string)[0].toUpperCase())
     .join("") || "?";
 
   return (
@@ -35,25 +35,26 @@ export function Header() {
   const getIcon = (type: string) => {
     switch (type) {
       case "success":
-        return <CheckCircle2 className="w-4 h-4 text-success" />;
+        return <CheckCircle2 className="size-4 text-success" />;
       case "warning":
-        return <AlertCircle className="w-4 h-4 text-warning" />;
+        return <AlertCircle className="size-4 text-warning" />;
       default:
-        return <Info className="w-4 h-4 text-primary" />;
+        return <Info className="size-4 text-primary" />;
     }
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-card/80 backdrop-blur-xl border-b border-border">
-      <div className="flex justify-between items-center px-6 h-16 w-full max-w-2xl mx-auto">
+    <header className="fixed top-0 left-0 right-0 lg:left-60 z-40 bg-card/80 backdrop-blur-xl border-b border-border">
+      <div className="flex justify-between items-center px-6 lg:px-10 h-16 lg:h-18 w-full max-w-5xl mx-auto">
         <div className="flex items-center gap-3">
           <UserAvatar onClick={() => setView("settings")} />
-          <div className="flex flex-col">
-            <span className="font-semibold text-lg tracking-tight text-foreground">
+          <dl className="flex flex-col">
+            <dt className="sr-only">Current balance</dt>
+            <dd className="font-semibold text-lg tracking-tight text-foreground">
               {formatCurrency(balanceMinor, "CHF", scale)}
-            </span>
-            <span className="text-xs text-muted-foreground">Current balance</span>
-          </div>
+            </dd>
+            <dd className="text-xs text-muted-foreground">Current balance</dd>
+          </dl>
         </div>
 
         <div className="relative">
@@ -65,7 +66,7 @@ export function Header() {
               >
                 <Bell className="w-5 h-5 text-muted-foreground" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-2 right-2 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border-2 border-white">
+                  <span className="absolute top-2 right-2 size-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                     {unreadCount}
                   </span>
                 )}
@@ -78,7 +79,7 @@ export function Header() {
                 align="end"
                 sideOffset={8}
               >
-                <div className="p-4 border-b border-border flex justify-between items-center bg-muted/30">
+                <header className="p-4 border-b border-border flex justify-between items-center bg-muted/30">
                   <h3 className="font-semibold text-sm text-foreground">
                     Notifications
                   </h3>
@@ -91,54 +92,58 @@ export function Header() {
                       Clear all
                     </button>
                     <Popover.Close className="text-muted-foreground hover:text-foreground transition-colors">
-                      <X className="w-4 h-4" />
+                      <X className="size-4" />
                     </Popover.Close>
                   </div>
-                </div>
-                <div className="max-h-[70vh] overflow-y-auto">
+                </header>
+                <ol className="max-h-[70vh] overflow-y-auto" aria-live="polite">
                   {notifications.length === 0 ? (
-                    <div className="p-10 text-center space-y-3">
-                      <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto">
-                        <Bell className="w-6 h-6 text-border" />
-                      </div>
+                    <li className="p-10 text-center space-y-3 list-none">
+                      <figure className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto">
+                        <Bell className="size-6 text-border" aria-hidden="true" />
+                      </figure>
                       <p className="text-xs text-muted-foreground">
                         No new notifications
                       </p>
-                    </div>
+                    </li>
                   ) : (
                     notifications.map((n) => (
-                      <button
-                        type="button"
-                        key={n.id}
-                        onClick={() => markNotificationAsRead(n.id)}
-                        className={`w-full text-left p-4 border-b border-border/50 hover:bg-muted/40 transition-colors cursor-pointer relative group ${!n.read ? "bg-primary/5" : ""}`}
-                      >
-                        {!n.read && (
-                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
-                        )}
-                        <div className="flex gap-3">
-                          <div className="mt-0.5 shrink-0">
-                            {getIcon(n.type)}
-                          </div>
-                          <div className="space-y-1">
-                            <p className="text-xs font-semibold text-foreground tracking-tight">
-                              {n.title}
-                            </p>
-                            <p className="text-[11px] text-muted-foreground leading-relaxed">
-                              {n.message}
-                            </p>
-                            <p className="text-[10px] text-muted-foreground/70">
-                              {new Date(n.timestamp).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </p>
-                          </div>
-                        </div>
-                      </button>
+                      <li key={n.id} className="list-none">
+                        <button
+                          type="button"
+                          onClick={() => markNotificationAsRead(n.id)}
+                          className={`w-full text-left p-4 border-b border-border/50 hover:bg-muted/40 transition-colors cursor-pointer relative group ${!n.read ? "bg-primary/5" : ""}`}
+                        >
+                          {!n.read && (
+                            <span className="absolute left-0 top-0 bottom-0 w-1 bg-primary" aria-hidden="true" />
+                          )}
+                          <article className="flex gap-3">
+                            <span className="mt-0.5 shrink-0" aria-hidden="true">
+                              {getIcon(n.type)}
+                            </span>
+                            <div className="space-y-1">
+                              <p className="text-xs font-semibold text-foreground tracking-tight">
+                                {n.title}
+                              </p>
+                              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                {n.message}
+                              </p>
+                              <time
+                                dateTime={n.timestamp}
+                                className="text-[10px] text-muted-foreground/70"
+                              >
+                                {new Date(n.timestamp).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </time>
+                            </div>
+                          </article>
+                        </button>
+                      </li>
                     ))
                   )}
-                </div>
+                </ol>
               </Popover.Content>
             </Popover.Portal>
           </Popover.Root>

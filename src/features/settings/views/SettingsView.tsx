@@ -5,11 +5,17 @@ import { SupportCenter } from "../components/SupportCenter";
 
 export function SettingsView() {
   return (
-    <>
+    <div className="space-y-0 pt-4 lg:pt-6">
       <ProfileHero />
-      <AlertSection />
-      <SupportCenter />
-      <SettingsList />
-    </>
+      <div className="lg:grid lg:grid-cols-2 lg:gap-6">
+        <div className="space-y-0">
+          <AlertSection />
+          <SettingsList />
+        </div>
+        <aside>
+          <SupportCenter />
+        </aside>
+      </div>
+    </div>
   );
 }

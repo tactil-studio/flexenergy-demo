@@ -24,23 +24,23 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
+    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md space-y-8"
       >
-        <div className="text-center space-y-1">
+        <hgroup className="text-center space-y-1">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
             FlexEnergy
           </h1>
           <p className="text-sm text-muted-foreground">
             EnergyDynamics Platform
           </p>
-        </div>
+        </hgroup>
 
-        <div className="bg-card p-8 rounded-3xl shadow-xl shadow-border border border-border space-y-6">
-          <div className="space-y-2 text-center">
+        <section className="bg-card p-8 rounded-3xl shadow-xl shadow-border border border-border space-y-6">
+          <hgroup className="space-y-2 text-center">
             <h2 className="text-xl font-bold text-foreground tracking-tight">
               Reset Password
             </h2>
@@ -48,7 +48,7 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
               Enter your email address and we'll send you a link to reset your
               password.
             </p>
-          </div>
+          </hgroup>
 
           {isSent ? (
             <motion.div
@@ -56,9 +56,9 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
               animate={{ opacity: 1, y: 0 }}
               className="p-6 bg-success/10 border border-success/20 rounded-2xl text-center space-y-4"
             >
-              <div className="w-12 h-12 bg-success/15 rounded-full flex items-center justify-center mx-auto">
-                <Send className="w-6 h-6 text-success" />
-              </div>
+              <span className="w-12 h-12 bg-success/15 rounded-full flex items-center justify-center mx-auto" aria-hidden="true">
+                <Send className="size-6 text-success" />
+              </span>
               <p className="text-sm font-semibold text-success">
                 Check your inbox
               </p>
@@ -84,7 +84,7 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
                   Email address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                   <input
                     id="reset-email"
                     type="email"
@@ -104,10 +104,10 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
                   className="w-full py-4 bg-foreground text-background rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground/90 transition-all disabled:opacity-50"
                 >
                   {isLoading ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
                   ) : (
                     <>
-                      <Send className="w-4 h-4" />
+                      <Send className="size-4" />
                       Send Reset Link
                     </>
                   )}
@@ -118,18 +118,18 @@ export function ForgotPasswordView({ onBack }: { onBack: () => void }) {
                   onClick={onBack}
                   className="w-full py-4 bg-card border border-border text-foreground rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-muted transition-all"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft className="size-4" />
                   Back to Login
                 </button>
               </div>
             </form>
           )}
-        </div>
+        </section>
 
         <p className="text-center text-xs text-slate-300">
           © 2026 EnergyDynamics AG
         </p>
       </motion.div>
-    </div>
+    </main>
   );
 }

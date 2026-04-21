@@ -9,6 +9,7 @@ import { GasModule } from "./modules/gas";
 import { GraphicsModule } from "./modules/graphics";
 import { InfrastructureModule } from "./modules/infrastructure";
 import { LanguageModule } from "./modules/language";
+import { NotificationsModule } from "./modules/notifications";
 import { ShopModule } from "./modules/shop";
 import { StatisticsModule } from "./modules/statistics";
 import { TariffsModule } from "./modules/tariffs";
@@ -23,6 +24,7 @@ export class SmartSphereApiClient {
   readonly infrastructure: InfrastructureModule;
   readonly customers: CustomersModule;
   readonly language: LanguageModule;
+  readonly notifications: NotificationsModule;
   readonly shop: ShopModule;
   readonly statistics: StatisticsModule;
   readonly tariffs: TariffsModule;
@@ -39,6 +41,7 @@ export class SmartSphereApiClient {
     this.infrastructure = new InfrastructureModule(http);
     this.customers = new CustomersModule(http);
     this.language = new LanguageModule(http);
+    this.notifications = new NotificationsModule(http);
     this.shop = new ShopModule(http);
     this.statistics = new StatisticsModule(http);
     this.tariffs = new TariffsModule(http);

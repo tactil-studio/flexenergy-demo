@@ -9,22 +9,45 @@
  *
  * All subsequent getClient() calls return a client with the token set.
  */
-export { SmartSphereApiClient, getClient, setAuthToken, clearAuthToken, SOURCE_ID } from "./client";
+export {
+  SmartSphereApiClient,
+  getClient,
+  setAuthToken,
+  clearAuthToken,
+  SOURCE_ID,
+} from "./client";
 
 // Core types
-export type { SmartSphereClientConfig, DateInput, SumMethod, TransactionSource, TransactionStatus } from "./core";
+export type {
+  SmartSphereClientConfig,
+  DateInput,
+  SumMethod,
+  TransactionSource,
+  TransactionStatus,
+} from "./core";
 export { SmartSphereApiError } from "./core";
-
-// Feature module types (re-export what the services layer needs)
-export type { TokenResponse, RestRequestToken } from "./modules/auth";
 export type { ResetPasswordRequest } from "./modules/account";
-export type { ApiCustomerDashboard, SimpleRequest, CustomerDashboardData, ContractServiceReducedDto } from "./modules/contract";
+// Feature module types (re-export what the services layer needs)
+export type { RestRequestToken, TokenResponse } from "./modules/auth";
+export type {
+  ApiCustomerDashboard,
+  ContractServiceReducedDto,
+  CustomerDashboardData,
+  SimpleRequest,
+} from "./modules/contract";
 export type {
   ApiTransaction,
+  GetCustomerBalanceResponse,
   ListTransactionsRequest,
   ListTransactionsResponse,
   SetTransactionRequest,
-  GetCustomerBalanceResponse,
 } from "./modules/financial";
-export type { GraphicMulti, GetCostsAndMeasuresRequest } from "./modules/graphics";
+export type {
+  GetCostsAndMeasuresRequest,
+  GraphicMulti,
+} from "./modules/graphics";
 export type { CompanyResponse } from "./modules/language";
+export type {
+  UpdateUserNotificationSettingsRequest,
+  UserNotificationSettingsResponse,
+} from "./modules/notifications";

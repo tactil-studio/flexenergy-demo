@@ -498,7 +498,11 @@ export type ViewType =
 export interface AlertSettings {
   lowBalance: boolean;
   peakUsage: boolean;
+  startHour: string; // "HH:MM"
+  endHour: string; // "HH:MM"
 }
+
+export type MeterState = "Online" | "Offline" | "Unknown";
 
 export interface Notification {
   id: string;
@@ -514,4 +518,5 @@ export interface AppState {
   contracts: Contract[];
   alerts: AlertSettings;
   notifications: Notification[];
+  meterState: MeterState;
 }

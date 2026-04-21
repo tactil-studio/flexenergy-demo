@@ -6,44 +6,50 @@ export function SettingsList() {
 
   return (
     <section className="mb-4 md:mb-10">
-      <div className="bg-card rounded-[20px] md:rounded-[32px] p-1 md:p-2 border border-border shadow-sm">
-        <button
-          type="button"
-          className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-muted/40 transition-colors"
-        >
-          <div className="flex items-center gap-2.5 md:gap-4">
-            <Lock className="w-3.5 h-3.5 md:w-5 md:h-5 text-muted-foreground" />
-            <span className="font-medium text-xs md:text-base text-foreground">
-              Privacy & Security
+      <ul className="bg-card rounded-[20px] md:rounded-[32px] p-1 md:p-2 border border-border shadow-sm list-none">
+        <li>
+          <button
+            type="button"
+            className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-muted/40 transition-colors"
+          >
+            <span className="flex items-center gap-2.5 md:gap-4">
+              <Lock className="w-3.5 h-3.5 md:w-5 md:h-5 text-muted-foreground" aria-hidden="true" />
+              <span className="font-medium text-xs md:text-base text-foreground">
+                Privacy & Security
+              </span>
             </span>
-          </div>
-          <ChevronRight className="w-3.5 h-3.5 md:w-5 md:h-5 text-muted-foreground/50" />
-        </button>
-        <button
-          type="button"
-          className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-muted/40 transition-colors"
-        >
-          <div className="flex items-center gap-2.5 md:gap-4">
-            <CreditCard className="w-3.5 h-3.5 md:w-5 md:h-5 text-muted-foreground" />
-            <span className="font-medium text-xs md:text-base text-foreground">
-              Payment Methods
+            <ChevronRight className="w-3.5 h-3.5 md:w-5 md:h-5 text-muted-foreground/50" aria-hidden="true" />
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-muted/40 transition-colors"
+          >
+            <span className="flex items-center gap-2.5 md:gap-4">
+              <CreditCard className="w-3.5 h-3.5 md:w-5 md:h-5 text-muted-foreground" aria-hidden="true" />
+              <span className="font-medium text-xs md:text-base text-foreground">
+                Payment Methods
+              </span>
             </span>
-          </div>
-          <ChevronRight className="w-3.5 h-3.5 md:w-5 md:h-5 text-muted-foreground/50" />
-        </button>
-        <button
-          type="button"
-          onClick={() => logout()}
-          className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-destructive/5 group transition-colors"
-        >
-          <div className="flex items-center gap-2.5 md:gap-4">
-            <LogOut className="w-3.5 h-3.5 md:w-5 md:h-5 text-destructive" />
-            <span className="font-medium text-xs md:text-base text-destructive">
-              Log out
+            <ChevronRight className="w-3.5 h-3.5 md:w-5 md:h-5 text-muted-foreground/50" aria-hidden="true" />
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            onClick={() => logout()}
+            className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-destructive/5 group transition-colors"
+          >
+            <span className="flex items-center gap-2.5 md:gap-4">
+              <LogOut className="w-3.5 h-3.5 md:w-5 md:h-5 text-destructive" aria-hidden="true" />
+              <span className="font-medium text-xs md:text-base text-destructive">
+                Log out
+              </span>
             </span>
-          </div>
-        </button>
-      </div>
+          </button>
+        </li>
+      </ul>
     </section>
   );
 }

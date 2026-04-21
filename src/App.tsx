@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Header } from "@/components/layout/header";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { AppProvider, useApp } from "@/context/AppContext";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { EmailVerificationView } from "@/features/auth/views/EmailVerificationView";
@@ -27,10 +28,10 @@ function MainContent() {
   if (isAuthLoading || isAppLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-foreground border-t-transparent rounded-full animate-spin" />
+        <output className="flex flex-col items-center gap-4" aria-label="Loading">
+          <span className="w-12 h-12 border-4 border-foreground border-t-transparent rounded-full animate-spin" aria-hidden="true" />
           <p className="text-xs text-muted-foreground">Loading...</p>
-        </div>
+        </output>
       </div>
     );
   }
@@ -72,31 +73,37 @@ function MainContent() {
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground selection:bg-primary/20 selection:text-primary">
-      <Header />
-      <main className="pt-20 md:pt-24 pb-32 px-4 md:px-6 max-w-2xl mx-auto">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentView}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            {currentView === "dashboard" && <DashboardView />}
-            {currentView === "usage" && <UsageView />}
-            {currentView === "recharge" && <RechargeView />}
-            {currentView === "history" && <HistoryView />}
-            {currentView === "settings" && <SettingsView />}
-          </motion.div>
-        </AnimatePresence>
-
-        <footer className="text-center py-10">
-          <p className="text-xs text-slate-300">
-            © 2026 EnergyDynamics AG
-          </p>
-        </footer>
-      </main>
       <BottomNav />
+      <div className="lg:ml-60 flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-1 pt-20 lg:pt-20 pb-28 lg:pb-10 px-4 lg:px-10">
+          <div className="max-w-2xl mx-auto lg:max-w-5xl lg:mx-0">
+            <ErrorBoundary>
+              <AnimatePresence mode="wait">
+                <motion.section
+                  key={currentView}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {currentView === "dashboard" && <DashboardView />}
+                  {currentView === "usage" && <UsageView />}
+                  {currentView === "recharge" && <RechargeView />}
+                  {currentView === "history" && <HistoryView />}
+                  {currentView === "settings" && <SettingsView />}
+                </motion.section>
+              </AnimatePresence>
+            </ErrorBoundary>
+
+            <footer className="text-center py-10">
+              <p className="text-xs text-slate-300">
+                © 2026 EnergyDynamics AG
+              </p>
+            </footer>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

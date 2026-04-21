@@ -6,9 +6,26 @@ import type {
   AppState,
   CustomerDashboard,
   MeasureData,
+  MeterState,
   Notification,
   Transaction,
 } from "../types";
+
+// ─── Notification settings helpers ────────────────────────────────────────────
+/** Maps backend notification settings to the frontend AlertSettings shape. */
+function notificationSettingsToAlerts(
+  emailEnabled: boolean,
+  smsEnabled: boolean,
+  startHour = "08:00",
+  endHour = "22:00",
+): AlertSettings {
+  return {
+    lowBalance: emailEnabled,
+    peakUsage: smsEnabled,
+    startHour,
+    endHour,
+  };
+}
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 function toIsoString(v: string | Date | null | undefined): string {
@@ -78,22 +95,9 @@ function mapGraphicMultiToMeasures(
   }));
 }
 
-// ─── Local-only state (alerts & notifications persist to localStorage only) ────
-const ALERTS_KEY = "flex_energy_alerts";
+// ─── Local-only state (notifications persist to localStorage) ─────────────────
 const NOTIFICATIONS_KEY = "flex_energy_notifications";
 
-function loadAlerts(): AlertSettings {
-  try {
-    return (
-      JSON.parse(localStorage.getItem(ALERTS_KEY) ?? "null") ?? {
-        lowBalance: true,
-        peakUsage: false,
-      }
-    );
-  } catch {
-    return { lowBalance: true, peakUsage: false };
-  }
-}
 function loadNotifications(): Notification[] {
   try {
     return JSON.parse(localStorage.getItem(NOTIFICATIONS_KEY) ?? "null") ?? [];
@@ -139,11 +143,50 @@ export const apiService = {
       })),
     };
 
+    // Fetch notification settings from backend; fall back to safe defaults
+    let alerts: AlertSettings = {
+      lowBalance: true,
+      peakUsage: false,
+      startHour: "08:00",
+      endHour: "22:00",
+    };
+    try {
+      const notifRes = await client.notifications.getSettings({
+        customerID: customerId,
+      });
+      alerts = notificationSettingsToAlerts(
+        notifRes.email?.enabled ?? true,
+        notifRes.sms?.enabled ?? false,
+        notifRes.startHour ?? "08:00",
+        notifRes.endHour ?? "22:00",
+      );
+    } catch {
+      // non-fatal — keep defaults
+    }
+
+    // Fetch meter state for the first contract
+    let meterState: MeterState = "Unknown";
+    const firstContractId = dashboard.contracts[0]?.contractId;
+    if (firstContractId) {
+      try {
+        const meterRes = await client.infrastructure.listMeterStatus({});
+        const meter = meterRes.meters?.find(
+          (m) => m.contractID === firstContractId,
+        );
+        if (meter) {
+          meterState = meter.warningState === 0 ? "Online" : "Offline";
+        }
+      } catch {
+        // non-fatal
+      }
+    }
+
     return {
       dashboard,
       contracts: [],
-      alerts: loadAlerts(),
+      alerts,
       notifications: loadNotifications(),
+      meterState,
     };
   },
 
@@ -186,8 +229,7 @@ export const apiService = {
   },
 
   /**
-   * Persists a recharge transaction via the real API.
-   * Returns the new balance raw amount.
+   * Two-step recharge: generate an orderId first for traceability, then settle.
    */
   async rechargeBalance(
     customerId: number,
@@ -195,11 +237,22 @@ export const apiService = {
     amountMinor: number,
     scale: number,
   ): Promise<void> {
+    const client = getClient();
     const amount = amountMinor / 10 ** scale;
-    await getClient().financial.setTransaction({
+
+    // Step 1 — reserve an orderId so the transaction is traceable
+    const orderRes = await client.financial.generateOrderId({
+      customerId,
+      contractId,
+    });
+    const orderId = orderRes.orderId ?? undefined;
+
+    // Step 2 — settle the transaction, referencing the orderId
+    await client.financial.setTransaction({
       transactionDate: new Date().toISOString(),
       contractId,
       customerId,
+      orderId,
       amount,
       transactionSource: 1, // Stripe
       transactionStatus: 1, // Settled
@@ -207,12 +260,46 @@ export const apiService = {
     });
   },
 
-  // ─── Local-only (no API equivalent for a consumer app) ─────────────────────
-  async updateAlerts(alerts: Partial<AlertSettings>): Promise<AlertSettings> {
-    const current = loadAlerts();
-    const updated = { ...current, ...alerts };
-    localStorage.setItem(ALERTS_KEY, JSON.stringify(updated));
-    return updated;
+  /**
+   * Persists notification toggles to the backend.
+   * `customerId` is required to identify the user's settings record.
+   */
+  async updateAlerts(
+    customerId: number,
+    alerts: AlertSettings,
+  ): Promise<AlertSettings> {
+    await getClient().notifications.updateSettings({
+      customerID: customerId,
+      emailEnabled: alerts.lowBalance,
+      smsEnabled: alerts.peakUsage,
+      startHour: alerts.startHour,
+      endHour: alerts.endHour,
+    });
+    return alerts;
+  },
+
+  async getCostData(
+    period: "day" | "week" | "month",
+    contractId: number,
+  ): Promise<MeasureData[]> {
+    const now = new Date();
+    const msBack =
+      period === "day"
+        ? 86_400_000
+        : period === "week"
+          ? 604_800_000
+          : 2_592_000_000;
+    const dateFrom = new Date(now.getTime() - msBack);
+    const sumMethod = period === "day" ? 2 : 3;
+
+    const res = await getClient().graphics.getCosts({
+      contractID: contractId,
+      dateFrom: dateFrom.toISOString(),
+      dateTo: now.toISOString(),
+      sumMethod,
+    });
+
+    return mapGraphicMultiToMeasures(res, period);
   },
 
   async updateNotifications(

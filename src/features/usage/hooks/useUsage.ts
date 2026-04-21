@@ -4,23 +4,29 @@ import { useApp } from "@/context/AppContext";
 import { apiService } from "@/services/api";
 import type { MeasureData } from "@/types";
 
+export type UsageMode = "kwh" | "cost";
+
 export function useUsage() {
   const { contractId } = useApp();
   const [period, setPeriod] = useState<"day" | "week" | "month">("week");
+  const [mode, setMode] = useState<UsageMode>("kwh");
   const [data, setData] = useState<MeasureData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!contractId) return;
     setIsLoading(true);
-    apiService
-      .getUsageData(period, contractId)
+    const fetch =
+      mode === "cost"
+        ? apiService.getCostData(period, contractId)
+        : apiService.getUsageData(period, contractId);
+    fetch
       .then((res) => {
         setData([...res].reverse());
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
-  }, [period, contractId]);
+  }, [period, contractId, mode]);
 
   const totalUsage = data.reduce((acc, curr) => acc + curr.value, 0).toFixed(1);
   const avgUsage = (Number(totalUsage) / (data.length || 1)).toFixed(1);
@@ -61,6 +67,8 @@ export function useUsage() {
   return {
     period,
     setPeriod,
+    mode,
+    setMode,
     data,
     isLoading,
     totalUsage,

@@ -1,7 +1,7 @@
 import { format, formatDistanceToNow, isPast, parseISO } from "date-fns";
 import { useApp } from "@/context/AppContext";
-import { formatCurrency, fromMinorUnits } from "@/types";
 import type { DashboardContract } from "@/types";
+import { formatCurrency, fromMinorUnits } from "@/types";
 
 export interface ContractSummary {
   contractId: number;
@@ -22,6 +22,10 @@ export interface ContractSummary {
   /** Last measure formatted */
   lastMeasureLabel: string;
   isLowBalance: boolean;
+  /** Days of balance remaining based on daily average cost; null if avg cost is zero */
+  daysLeft: number | null;
+  /** Balance as a % of forecastTotalCost (0-100); null if forecast is zero */
+  balancePercent: number | null;
 }
 
 function summariseContract(c: DashboardContract): ContractSummary {
@@ -36,9 +40,18 @@ function summariseContract(c: DashboardContract): ContractSummary {
 
   const dailyAvgMinor = c.averageCost;
   const balanceMinor = c.balanceRaw;
-  const daysLeft = dailyAvgMinor > 0
-    ? Math.floor(fromMinorUnits(balanceMinor, c.scale) / fromMinorUnits(dailyAvgMinor, c.scale))
-    : null;
+  const daysLeft =
+    dailyAvgMinor > 0
+      ? Math.floor(
+          fromMinorUnits(balanceMinor, c.scale) /
+            fromMinorUnits(dailyAvgMinor, c.scale),
+        )
+      : null;
+
+  const balancePercent =
+    c.forecastTotalCost > 0
+      ? Math.min(100, Math.max(0, (balanceMinor / c.forecastTotalCost) * 100))
+      : null;
 
   return {
     contractId: c.contractId,
@@ -48,12 +61,15 @@ function summariseContract(c: DashboardContract): ContractSummary {
     balanceRaw: balanceMinor,
     avgCostFormatted: formatCurrency(dailyAvgMinor, c.currency, c.scale),
     forecastFormatted: formatCurrency(c.forecastTotalCost, c.currency, c.scale),
-    depletionLabel: daysLeft !== null
-      ? `${daysLeft} day${daysLeft !== 1 ? "s" : ""} remaining`
-      : depletionLabel,
+    depletionLabel:
+      daysLeft !== null
+        ? `${daysLeft} day${daysLeft !== 1 ? "s" : ""} remaining`
+        : depletionLabel,
     depletionDate: c.depletionDate,
     lastMeasureLabel,
     isLowBalance: daysLeft !== null && daysLeft <= 7,
+    daysLeft,
+    balancePercent,
   };
 }
 
@@ -62,10 +78,16 @@ export function useDashboard() {
   const dashboard = state?.dashboard ?? null;
 
   const totalBalanceFormatted = dashboard
-    ? formatCurrency(dashboard.balance, dashboard.contracts[0]?.currency ?? "CHF", dashboard.scale)
+    ? formatCurrency(
+        dashboard.balance,
+        dashboard.contracts[0]?.currency ?? "CHF",
+        dashboard.scale,
+      )
     : "—";
 
-  const contracts: ContractSummary[] = (dashboard?.contracts ?? []).map(summariseContract);
+  const contracts: ContractSummary[] = (dashboard?.contracts ?? []).map(
+    summariseContract,
+  );
   const hasLowBalance = contracts.some((c) => c.isLowBalance);
 
   return {

@@ -1,194 +1,163 @@
-import { format, parseISO } from "date-fns";
-import { TrendingDown, Zap } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import {
-  Bar,
-  BarChart,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { useUsage } from "../hooks/useUsage";
+import { format, parseISO } from 'date-fns';
+import { BarChart3, Euro, TrendingDown, Zap } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ChartSkeleton, StatsSkeleton } from '@/components/ui/skeleton';
+import { useUsage } from '../hooks/useUsage';
+
+const BLUE_SOLID = 'oklch(0.530 0.195 258)';
+const BLUE_MUTED = 'oklch(0.900 0.012 258)';
 
 export function UsageView() {
-  const {
-    period,
-    setPeriod,
-    data,
-    isLoading,
-    totalUsage,
-    avgUsage,
-    peakLabel,
-    formatXAxis,
-  } = useUsage();
+  const { period, setPeriod, mode, setMode, data, isLoading, totalUsage, avgUsage, peakLabel, formatXAxis } = useUsage();
+  const isCost = mode === 'cost';
+  const unit = isCost ? 'CHF' : 'kWh';
 
   return (
-    <div className="space-y-4 md:space-y-6">
-      <section className="bg-foreground rounded-[24px] md:rounded-[32px] p-6 md:p-8 text-background shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full -mr-32 -mt-32 blur-3xl" />
-        <div className="relative z-10">
-          <div className="flex justify-between items-start mb-2 md:mb-4">
-            <span className="text-background/50 text-xs block">
-              Total consumption · {period}
-            </span>
-            <div className="p-1.5 md:p-2 bg-primary/20 rounded-lg md:rounded-xl">
-              <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary/70" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-1.5 md:gap-2 mb-4 md:mb-6">
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              {totalUsage}
-            </h2>
-            <span className="text-lg md:text-xl font-bold text-background/40">
-              kWh
-            </span>
-          </div>
-          <div className="flex items-center gap-3 md:gap-4">
-            <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-medium bg-background/10 text-background/70 px-2.5 py-1 md:py-1.5 rounded-full border border-background/20">
-              <TrendingDown className="w-3 h-3 md:w-3.5 md:h-3.5" />
-              <span>Avg {avgUsage} kWh</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-card rounded-[24px] md:rounded-[32px] p-5 md:p-6 border border-border shadow-sm">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 mb-6 md:mb-8">
-          <h3 className="font-bold text-base md:text-lg text-foreground tracking-tight">
-            Usage Analysis
-          </h3>
-          <div className="flex p-1 bg-muted rounded-xl md:rounded-2xl w-full sm:w-auto">
-            {(["day", "week", "month"] as const).map((p) => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => setPeriod(p)}
-                className={`flex-1 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] font-medium transition-all ${period === p
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-                  }`}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="h-56 md:h-64 w-full">
-          <AnimatePresence mode="wait">
-            {!isLoading && (
-              <motion.div
-                key={period}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="h-full w-full"
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={data}
-                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                  >
-                    <defs>
-                      <linearGradient
-                        id="barGradient"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={1} />
-                        <stop
-                          offset="100%"
-                          stopColor="#60a5fa"
-                          stopOpacity={0.8}
-                        />
-                      </linearGradient>
-                      <linearGradient
-                        id="barGradientInactive"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop offset="0%" stopColor="#e2e8f0" stopOpacity={1} />
-                        <stop
-                          offset="100%"
-                          stopColor="#f1f5f9"
-                          stopOpacity={0.8}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <XAxis
-                      dataKey="timestamp"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 600 }}
-                      tickFormatter={formatXAxis}
-                      dy={10}
-                    />
-                    <YAxis hide />
-                    <Tooltip
-                      cursor={{ fill: "hsl(var(--muted))", radius: 12 }}
-                      content={({ active, payload }) => {
-                        if (active && payload?.length) {
-                          return (
-                            <div className="bg-foreground text-background p-3 rounded-2xl shadow-xl border border-foreground/80">
-                              <p className="text-[10px] text-background/50 mb-1">
-                                {format(
-                                  parseISO(payload[0].payload.timestamp),
-                                  "PPP p",
-                                )}
-                              </p>
-                              <p className="text-sm font-semibold">
-                                {payload[0].value.toFixed(2)} kWh
-                              </p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Bar
-                      dataKey="value"
-                      radius={[6, 6, 6, 6]}
-                      animationDuration={1000}
-                    >
-                      {data.map((entry, index) => (
-                        <Cell
-                          key={entry.timestamp}
-                          fill={
-                            index === data.length - 1
-                              ? "url(#barGradient)"
-                              : "url(#barGradientInactive)"
-                          }
-                          className="hover:fill-blue-400 transition-colors duration-300"
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-8 grid grid-cols-2 gap-4">
-          <div className="p-4 bg-muted/50 rounded-2xl border border-border">
-            <p className="text-xs text-muted-foreground mb-1">
-              {period === "day" ? "Peak hour" : period === "week" ? "Peak day" : "Peak period"}
+    <main className="space-y-4 md:space-y-6 pt-4 lg:pt-6">
+      {/* Stat strip */}
+      <section className="bg-card rounded-3xl border border-border shadow-sm p-5 md:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground mb-1">
+              {isCost ? 'Total cost' : 'Total consumption'} &middot; {period}
             </p>
-            <p className="text-sm font-semibold text-foreground">{peakLabel}</p>
+            <div className="flex items-baseline gap-2">
+              {isCost && <span className="text-lg font-semibold text-muted-foreground">CHF</span>}
+              <span className="font-heading font-bold text-4xl md:text-5xl tracking-tight text-foreground tabular-nums">
+                {totalUsage}
+              </span>
+              {!isCost && <span className="text-lg font-semibold text-muted-foreground">kWh</span>}
+            </div>
+            <p className="flex items-center gap-1.5 text-xs text-muted-foreground mt-2">
+              <TrendingDown className="size-3.5" aria-hidden="true" />
+              Avg {avgUsage} {unit} per period
+            </p>
           </div>
-          <div className="p-4 bg-muted/50 rounded-2xl border border-border">
-            <p className="text-xs text-muted-foreground mb-1">Data points</p>
-            <p className="text-sm font-semibold text-foreground">{data.length}</p>
+          <div className="flex flex-col gap-2 self-start">
+            {/* Mode toggle */}
+            <div className="flex p-1 bg-muted rounded-2xl">
+              <button
+                type="button"
+                onClick={() => setMode('kwh')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${!isCost ? 'bg-card text-foreground shadow-sm border border-border' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                <Zap className="size-3" aria-hidden="true" />
+                kWh
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('cost')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${isCost ? 'bg-card text-foreground shadow-sm border border-border' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                <Euro className="size-3" aria-hidden="true" />
+                Cost
+              </button>
+            </div>
+            {/* Period toggle */}
+            <div className="flex p-1 bg-muted rounded-2xl">
+              {(['day', 'week', 'month'] as const).map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => setPeriod(p)}
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold capitalize transition-all ${period === p ? 'bg-card text-foreground shadow-sm border border-border' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* Chart card */}
+      <section className="bg-card rounded-3xl md:rounded-[32px] p-5 md:p-6 lg:p-8 border border-border shadow-sm">
+        <h3 className="font-bold text-base md:text-lg text-foreground tracking-tight mb-6">
+          Usage Analysis
+        </h3>
+
+        {isLoading ? (
+          <div className="space-y-4">
+            <ChartSkeleton height="h-56 md:h-64 lg:h-80" />
+            <StatsSkeleton />
+          </div>
+        ) : data.length === 0 ? (
+          <EmptyState
+            icon={BarChart3}
+            title="No usage data available"
+            description="There is no consumption data for this period. Try a different time range or check back later."
+            variant="plain"
+          />
+        ) : (
+          <>
+            <div className="h-56 md:h-64 lg:h-80 w-full">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={period}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="h-full w-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <XAxis
+                        dataKey="timestamp"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: 'oklch(0.555 0.018 258)', fontSize: 10, fontWeight: 600 }}
+                        tickFormatter={formatXAxis}
+                        dy={10}
+                      />
+                      <YAxis hide />
+                      <Tooltip
+                        cursor={{ fill: 'oklch(0.945 0.008 258)', radius: 12 }}
+                        content={({ active, payload }) => {
+                          if (active && payload?.length) {
+                            return (
+                              <div className="bg-foreground text-background p-3 rounded-2xl shadow-xl">
+                                <p className="text-[10px] text-background/50 mb-1">
+                                  {format(parseISO(payload[0].payload.timestamp), 'PPP p')}
+                                </p>
+                                <p className="text-sm font-semibold">{isCost ? 'CHF ' : ''}{(payload[0].value as number).toFixed(2)}{!isCost ? ' kWh' : ''}</p>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
+                      />
+                      <Bar dataKey="value" radius={[6, 6, 6, 6]} animationDuration={800}>
+                        {data.map((entry, index) => (
+                          <Cell
+                            key={entry.timestamp}
+                            fill={index === data.length - 1 ? BLUE_SOLID : BLUE_MUTED}
+                          />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <dl className="mt-6 grid grid-cols-2 gap-4">
+              <div className="p-4 bg-muted/50 rounded-2xl border border-border">
+                <dt className="text-xs text-muted-foreground mb-1">
+                  {period === 'day' ? 'Peak hour' : period === 'week' ? 'Peak day' : 'Peak period'}
+                </dt>
+                <dd className="text-sm font-semibold text-foreground">{peakLabel}</dd>
+              </div>
+              <div className="p-4 bg-muted/50 rounded-2xl border border-border">
+                <dt className="text-xs text-muted-foreground mb-1">Data points</dt>
+                <dd className="text-sm font-semibold text-foreground">{data.length}</dd>
+              </div>
+            </dl>
+          </>
+        )}
+      </section>
+    </main>
   );
 }
