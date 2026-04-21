@@ -1,11 +1,13 @@
 import { format, parseISO } from "date-fns";
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
+import type { Key } from "react";
 import { IconBox } from "@/components/ui/icon-box";
-import { formatCurrency } from "@/types";
 import type { Transaction } from "@/types";
+import { formatCurrency } from "@/types";
 
-interface TransactionRowProps {
+export interface TransactionRowProps {
   tx: Transaction;
+  key?: Key | null;
 }
 
 export function TransactionRow({ tx }: TransactionRowProps) {
@@ -46,13 +48,12 @@ export function TransactionRow({ tx }: TransactionRowProps) {
           </dd>
           <dt className="sr-only">Status</dt>
           <dd
-            className={`text-[10px] ${
-              tx.transactionStatus === "Settled"
-                ? "text-muted-foreground"
-                : tx.transactionStatus === "Failed"
-                  ? "text-destructive"
-                  : "text-warning"
-            }`}
+            className={`text-[10px] ${tx.transactionStatus === "Settled"
+              ? "text-muted-foreground"
+              : tx.transactionStatus === "Failed"
+                ? "text-destructive"
+                : "text-warning"
+              }`}
           >
             {tx.transactionStatus}
           </dd>

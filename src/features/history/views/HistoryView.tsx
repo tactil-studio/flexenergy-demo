@@ -31,9 +31,10 @@ export function HistoryView() {
             <EmptyState icon={History} title="No transactions yet" description="Your transaction history will appear here once activity is recorded." variant="plain" className="py-16" />
           ) : (
             <ol className="list-none p-0">
-              {transactions.map((tx, i) => (
-                <TransactionRow key={String(tx.orderId ?? tx.transactionDate ?? i)} tx={tx} />
-              ))}
+              {transactions.map((tx, i) => {
+                const rowKey = String(tx.orderId ?? tx.transactionDate ?? i);
+                return <TransactionRow key={rowKey} tx={tx} />;
+              })}
             </ol>
           )}
         </div>

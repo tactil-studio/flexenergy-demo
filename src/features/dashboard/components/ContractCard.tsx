@@ -13,16 +13,15 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
 
   return (
     <article
-      className={`bg-card rounded-[28px] border shadow-sm overflow-hidden ${
-        c.isLowBalance ? "border-warning/40" : "border-border"
-      }`}
+      className={`bg-card rounded-[28px] border shadow-sm overflow-hidden ${c.isLowBalance ? "border-warning/40" : "border-border"
+        }`}
     >
       {c.isLowBalance && (
         <p
           role="alert"
           className="bg-warning/8 border-b border-warning/20 px-5 py-2.5 flex items-center gap-2 text-xs font-semibold text-warning"
         >
-          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+          <AlertTriangle className="size-3.5 shrink-0" />
           {c.depletionLabel}
         </p>
       )}
@@ -49,13 +48,12 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
         {/* Days remaining pill */}
         {c.daysLeft !== null && (
           <div
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold mb-4 ${
-              c.daysLeft <= 3
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold mb-4 ${c.daysLeft <= 3
                 ? "bg-destructive/10 text-destructive"
                 : c.daysLeft <= 7
                   ? "bg-warning/10 text-warning"
                   : "bg-muted text-muted-foreground"
-            }`}
+              }`}
           >
             <Clock className="size-3" />
             {c.daysLeft} day{c.daysLeft !== 1 ? "s" : ""} remaining

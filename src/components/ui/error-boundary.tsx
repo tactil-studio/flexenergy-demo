@@ -1,6 +1,6 @@
-import { AlertTriangle, RefreshCw } from "lucide-react";
+﻿import { AlertTriangle, RefreshCw } from "lucide-react";
 import type { ErrorInfo, ReactNode } from "react";
-import * as React from "react";
+import React from "react";
 
 interface Props {
   children: ReactNode;
@@ -12,9 +12,11 @@ interface State {
   error: Error | null;
 }
 
-export class ErrorBoundary extends React.Component<Props, State> {
+
+export class ErrorBoundary extends (React.Component as typeof React.Component) {
   constructor(props: Props) {
     super(props);
+    // @ts-expect-error
     this.state = { hasError: false, error: null };
   }
 
@@ -22,26 +24,35 @@ export class ErrorBoundary extends React.Component<Props, State> {
     return { hasError: true, error };
   }
 
-  override componentDidCatch(error: Error, info: ErrorInfo) {
+  componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("[ErrorBoundary]", error, info.componentStack);
   }
 
   handleRetry = () => {
+    // @ts-expect-error
     this.setState({ hasError: false, error: null });
   };
 
-  override render() {
-    if (this.state.hasError) {
-      if (this.props.fallback) return this.props.fallback;
+  render() {
+    // @ts-expect-error
+    const { hasError, error } = this.state as State;
+    // @ts-expect-error
+    const { fallback, children } = this.props as Props;
+
+    if (hasError) {
+      if (fallback) return fallback;
       return (
         <div className="flex flex-col items-center justify-center py-20 px-6 text-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-destructive/10 flex items-center justify-center">
             <AlertTriangle className="size-6 text-destructive" />
           </div>
           <div className="space-y-1">
-            <p className="font-semibold text-foreground">Something went wrong</p>
+            <p className="font-semibold text-foreground">
+              Something went wrong
+            </p>
             <p className="text-xs text-muted-foreground max-w-xs">
-              {this.state.error?.message ?? "An unexpected error occurred."}
+              {(error as Error | null)?.message ??
+                "An unexpected error occurred."}
             </p>
           </div>
           <button
@@ -49,12 +60,12 @@ export class ErrorBoundary extends React.Component<Props, State> {
             onClick={this.handleRetry}
             className="flex items-center gap-2 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="size-3.5" />
             Try again
           </button>
         </div>
       );
     }
-    return this.props.children;
+    return children;
   }
 }

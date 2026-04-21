@@ -71,11 +71,11 @@ export function TwoFactorAuthView() {
                 disabled={isResending}
                 className="w-full justify-center"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isResending ? "animate-spin" : ""}`} aria-hidden="true" />
+                <RefreshCw className={`size-3.5 ${isResending ? "animate-spin" : ""}`} aria-hidden="true" />
                 {isResending ? "Sending..." : "Resend code"}
               </Button>
               <Button type="button" variant="secondary" size="sm" className="w-full justify-center">
-                <Smartphone className="w-3.5 h-3.5" aria-hidden="true" />
+                <Smartphone className="size-3.5" aria-hidden="true" />
                 SMS code
               </Button>
             </div>

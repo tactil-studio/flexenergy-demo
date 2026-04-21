@@ -1,4 +1,19 @@
-import { HelpCircle, MessageSquare } from "lucide-react";
+﻿import { HelpCircle, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { IconBox } from "@/components/ui/icon-box";
+
+const SUPPORT_ITEMS = [
+  {
+    icon: HelpCircle,
+    title: "Knowledge Base",
+    description: "Detailed guides on managing consumption and billing cycles.",
+  },
+  {
+    icon: MessageSquare,
+    title: "Direct Support",
+    description: "24/7 technical assistance for meter connection issues.",
+  },
+] as const;
 
 export function SupportCenter() {
   return (
@@ -7,32 +22,30 @@ export function SupportCenter() {
         Support Center
       </h2>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 list-none p-0">
-        <li>
-          <button type="button" className="w-full text-left bg-card p-4 md:p-6 rounded-[20px] md:rounded-[32px] border border-border shadow-sm hover:bg-muted/30 transition-colors group cursor-pointer">
-            <span className="size-8 md:w-10 md:h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
-              <HelpCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" />
-            </span>
-            <h3 className="font-semibold text-xs md:text-base text-foreground mb-0.5">
-              Knowledge Base
-            </h3>
-            <p className="text-[10px] md:text-xs text-muted-foreground leading-relaxed">
-              Detailed guides on managing consumption and billing cycles.
-            </p>
-          </button>
-        </li>
-        <li>
-          <button type="button" className="w-full text-left bg-card p-4 md:p-6 rounded-[20px] md:rounded-[32px] border border-border shadow-sm hover:bg-muted/30 transition-colors group cursor-pointer">
-            <span className="size-8 md:w-10 md:h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
-              <MessageSquare className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" />
-            </span>
-            <h3 className="font-semibold text-xs md:text-base text-foreground mb-0.5">
-              Direct Support
-            </h3>
-            <p className="text-[10px] md:text-xs text-muted-foreground leading-relaxed">
-              24/7 technical assistance for meter connection issues.
-            </p>
-          </button>
-        </li>
+        {SUPPORT_ITEMS.map(({ icon: Icon, title, description }) => (
+          <li key={title}>
+            <Button
+              variant="ghost"
+              className="w-full h-auto text-left flex-col items-start gap-2 md:gap-4 bg-card p-4 md:p-6 rounded-[20px] md:rounded-[32px] border border-border shadow-sm hover:bg-muted/30 group"
+            >
+              <IconBox
+                variant="primary"
+                size="lg"
+                className="group-hover:scale-110 transition-transform"
+              >
+                <Icon className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" />
+              </IconBox>
+              <div>
+                <h3 className="font-semibold text-xs md:text-base text-foreground mb-0.5">
+                  {title}
+                </h3>
+                <p className="text-[10px] md:text-xs text-muted-foreground leading-relaxed font-normal">
+                  {description}
+                </p>
+              </div>
+            </Button>
+          </li>
+        ))}
       </ul>
     </section>
   );

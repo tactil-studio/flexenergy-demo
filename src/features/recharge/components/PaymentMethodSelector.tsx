@@ -8,6 +8,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { IconBox } from "@/components/ui/icon-box";
+import { cn } from "@/lib/utils";
 import { formatCurrency, toMinorUnits } from "@/types";
 import type { PaymentMethod } from "../hooks/useRecharge";
 
@@ -71,18 +72,19 @@ export function PaymentMethodSelector({
             className="mt-3 space-y-1"
           >
             {paymentMethods.map((method) => (
-              <button
+              <Button
                 key={method.id}
-                type="button"
+                variant="ghost"
                 onClick={() => {
                   onSelectMethod(method.id);
                   setIsOpen(false);
                 }}
-                className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
+                className={cn(
+                  "w-full h-auto justify-between p-3 rounded-xl",
                   selectedMethod === method.id
                     ? "bg-primary/10 text-primary"
-                    : "hover:bg-muted/50 text-foreground"
-                }`}
+                    : "text-foreground"
+                )}
               >
                 <div className="flex items-center gap-3 text-left">
                   <span aria-hidden="true">
@@ -98,16 +100,16 @@ export function PaymentMethodSelector({
                 {selectedMethod === method.id && (
                   <Check className="size-4 text-primary" />
                 )}
-              </button>
+              </Button>
             ))}
 
-            <button
-              type="button"
-              className="w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-border text-muted-foreground hover:border-primary/30 hover:text-primary transition-all"
+            <Button
+              variant="ghost"
+              className="w-full h-auto justify-start gap-3 p-3 rounded-xl border border-dashed border-border text-muted-foreground hover:border-primary/30 hover:text-primary"
             >
               <Plus className="size-4" />
               <span className="text-xs font-medium">Add payment method</span>
-            </button>
+            </Button>
           </motion.div>
         </CollapsibleContent>
       </Collapsible>

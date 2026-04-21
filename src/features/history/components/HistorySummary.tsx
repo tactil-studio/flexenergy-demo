@@ -30,7 +30,7 @@ export function HistorySummary({
       <SectionCard className="rounded-3xl p-5">
         <header className="flex items-center gap-2 mb-3">
           <IconBox variant="primary" size="sm">
-            <TrendingUp className="w-3.5 h-3.5 text-primary" />
+            <TrendingUp className="size-3.5 text-primary" />
           </IconBox>
           <h3 className="font-semibold text-xs text-muted-foreground">
             This week
@@ -80,7 +80,7 @@ export function HistorySummary({
       <SectionCard className="rounded-3xl p-5">
         <header className="flex items-center gap-2 mb-3">
           <IconBox variant="warning" size="sm">
-            <ArrowUpRight className="w-3.5 h-3.5 text-warning" />
+            <ArrowUpRight className="size-3.5 text-warning" />
           </IconBox>
           <h3 className="font-semibold text-xs text-muted-foreground">
             Net balance
@@ -92,9 +92,8 @@ export function HistorySummary({
         ) : (
           <>
             <p
-              className={`text-2xl font-bold tracking-tight font-heading ${
-                net >= 0 ? "text-success" : "text-destructive"
-              }`}
+              className={`text-2xl font-bold tracking-tight font-heading ${net >= 0 ? "text-success" : "text-destructive"
+                }`}
             >
               {net >= 0 ? "+" : "-"}
               {formatCurrency(Math.abs(net * 100))}
