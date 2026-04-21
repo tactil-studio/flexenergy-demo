@@ -56,10 +56,10 @@ export function ContractCardSkeleton() {
 export function ChartSkeleton({ height = "h-56" }: { height?: string }) {
   return (
     <div className={cn("w-full flex items-end gap-1.5 px-2", height)}>
-      {Array.from({ length: 7 }, (_, i) => (
-        <Skeleton
+      {Array.from({ length: 7 }).map((_, i) => (
+        <div
           key={i}
-          className="flex-1 rounded-t-lg"
+          className={cn("flex-1 rounded-t-lg animate-pulse bg-muted")}
           style={{ height: `${30 + Math.random() * 60}%` }}
         />
       ))}

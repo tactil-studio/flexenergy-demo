@@ -5,24 +5,19 @@ import { cn } from "@/lib/utils";
 type ButtonVariant = "primary" | "secondary" | "ghost" | "destructive" | "outline";
 type ButtonSize = "sm" | "md" | "lg" | "icon";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
   asChild?: boolean;
   loading?: boolean;
-}
+};
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
-  secondary:
-    "bg-muted text-foreground hover:bg-muted/80",
-  ghost:
-    "text-foreground hover:bg-muted/60",
-  destructive:
-    "bg-destructive/10 text-destructive hover:bg-destructive/20",
-  outline:
-    "border border-border bg-card text-foreground hover:bg-muted/40",
+  primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
+  secondary: "bg-muted text-foreground hover:bg-muted/80",
+  ghost: "text-foreground hover:bg-muted/60",
+  destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
+  outline: "border border-border bg-card text-foreground hover:bg-muted/40",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -46,7 +41,9 @@ export const Button = ({
   return (
     <Comp
       className={cn(
-        "inline-flex items-center justify-center font-semibold transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+        "inline-flex items-center justify-center font-semibold transition-all active:scale-[0.97]",
+        "disabled:opacity-40 disabled:cursor-not-allowed",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
         variantClasses[variant],
         sizeClasses[size],
         className,

@@ -1,9 +1,9 @@
 ﻿import type * as React from "react";
 import { cn } from "@/lib/utils";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+type InputProps = React.ComponentPropsWithoutRef<"input"> & {
   icon?: React.ReactNode;
-}
+};
 
 export const Input = ({ icon, className, ...props }: InputProps) => (
   <div className="relative">

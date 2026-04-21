@@ -2,11 +2,14 @@
 import type * as React from "react";
 import { cn } from "@/lib/utils";
 
-interface SeparatorProps extends React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root> {
-  className?: string;
-}
+type SeparatorProps = React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>;
 
-export const Separator = ({ className, orientation = "horizontal", decorative = true, ...props }: SeparatorProps) => (
+export const Separator = ({
+  className,
+  orientation = "horizontal",
+  decorative = true,
+  ...props
+}: SeparatorProps) => (
   <SeparatorPrimitive.Root
     decorative={decorative}
     orientation={orientation}
