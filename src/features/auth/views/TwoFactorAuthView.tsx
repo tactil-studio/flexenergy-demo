@@ -1,26 +1,11 @@
-import {
-  AlertCircle,
-  ArrowRight,
-  LogOut,
-  RefreshCw,
-  ShieldCheck,
-  Smartphone,
-} from "lucide-react";
+﻿import { AlertCircle, ArrowRight, LogOut, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
 import { motion } from "motion/react";
 import type * as React from "react";
+import { Button } from "@/components/ui/button";
 import { useTwoFactorAuth } from "../hooks/useTwoFactorAuth";
 
 export function TwoFactorAuthView() {
-  const {
-    code,
-    setCode,
-    error,
-    isVerifying,
-    isResending,
-    handleVerify,
-    handleResend,
-    logout,
-  } = useTwoFactorAuth();
+  const { code, setCode, error, isVerifying, isResending, handleVerify, handleResend, logout } = useTwoFactorAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,18 +17,15 @@ export function TwoFactorAuthView() {
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-card p-8 rounded-4xl shadow-xl border border-border text-center"
+        className="w-full max-w-md bg-card p-8 rounded-3xl shadow-xl border border-border text-center"
       >
         <span className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6" aria-hidden="true">
           <ShieldCheck className="size-8 text-primary" />
         </span>
 
-        <h1 className="text-2xl font-bold text-foreground mb-2">
-          Two-Factor Authentication
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground mb-2">Two-Factor Authentication</h1>
         <p className="text-muted-foreground text-sm mb-8">
-          Enter the 6-digit code from your authenticator app to secure your
-          account.
+          Enter the 6-digit code from your authenticator app to secure your account.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -68,47 +50,47 @@ export function TwoFactorAuthView() {
             )}
           </div>
 
-          <div className="space-y-4">
-            <button
+          <div className="space-y-3">
+            <Button
               type="submit"
+              variant="primary"
+              size="lg"
               disabled={isVerifying || code.length !== 6}
-              className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full shadow-lg shadow-primary/20"
             >
               {isVerifying ? "Verifying..." : "Verify code"}
               {!isVerifying && <ArrowRight className="w-5 h-5" aria-hidden="true" />}
-            </button>
+            </Button>
 
             <div className="grid grid-cols-2 gap-3">
-              <button
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={handleResend}
                 disabled={isResending}
-                className="flex items-center justify-center gap-2 bg-muted text-muted-foreground py-3 rounded-xl font-medium text-xs hover:bg-muted/70 transition-all disabled:opacity-50"
+                className="w-full justify-center"
               >
-                <RefreshCw
-                  className={`w-3.5 h-3.5 ${isResending ? "animate-spin" : ""}`}
-                  aria-hidden="true"
-                />
+                <RefreshCw className={`w-3.5 h-3.5 ${isResending ? "animate-spin" : ""}`} aria-hidden="true" />
                 {isResending ? "Sending..." : "Resend code"}
-              </button>
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2 bg-muted text-muted-foreground py-3 rounded-xl font-medium text-xs hover:bg-muted/70 transition-all"
-              >
+              </Button>
+              <Button type="button" variant="secondary" size="sm" className="w-full justify-center">
                 <Smartphone className="w-3.5 h-3.5" aria-hidden="true" />
                 SMS code
-              </button>
+              </Button>
             </div>
           </div>
 
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={logout}
-            className="w-full flex items-center justify-center gap-2 text-muted-foreground text-xs pt-4 hover:text-foreground transition-colors"
+            className="w-full text-muted-foreground"
           >
             <LogOut className="size-4" aria-hidden="true" />
             Sign out
-          </button>
+          </Button>
         </form>
       </motion.article>
     </main>

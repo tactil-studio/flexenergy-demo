@@ -2,6 +2,9 @@
 import { motion } from "motion/react";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/context/AuthContext";
 
 export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
@@ -24,7 +27,7 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
 
   return (
     <div className="min-h-screen flex">
-      {/* Brand panel - desktop only */}
+      {/* Brand panel — desktop only */}
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-primary p-12 text-primary-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/80" />
         <div className="relative z-10">
@@ -79,36 +82,30 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
                 <label htmlFor="email" className="text-xs font-semibold text-muted-foreground">
                   Email address
                 </label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-input border border-border rounded-2xl focus:ring-2 focus:ring-ring focus:border-transparent transition-all outline-none text-sm text-foreground"
-                    placeholder="alex@example.com"
-                  />
-                </div>
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="alex@example.com"
+                  icon={<Mail className="size-4" />}
+                />
               </div>
 
               <div className="space-y-1.5">
                 <label htmlFor="password" className="text-xs font-semibold text-muted-foreground">
                   Password
                 </label>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                  <input
-                    id="password"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-input border border-border rounded-2xl focus:ring-2 focus:ring-ring focus:border-transparent transition-all outline-none text-sm text-foreground"
-                    placeholder="••••••••"
-                  />
-                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  icon={<Lock className="size-4" />}
+                />
               </div>
 
               <div className="flex items-center justify-between">
@@ -121,51 +118,51 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
                     Remember me
                   </span>
                 </label>
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={onShowForgot}
-                  className="text-xs text-primary hover:text-primary/80 transition-colors font-semibold"
+                  className="text-primary hover:text-primary/80 px-0"
                 >
                   Forgot password?
-                </button>
+                </Button>
               </div>
 
-              <button
+              <Button
                 type="submit"
-                disabled={isLoading}
-                className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm"
+                variant="primary"
+                size="lg"
+                loading={isLoading}
+                className="w-full"
               >
-                {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <LogIn className="size-4" />
-                    Sign in
-                  </>
-                )}
-              </button>
+                <LogIn className="size-4" />
+                Sign in
+              </Button>
             </form>
 
             <div className="relative flex items-center gap-3">
-              <div className="flex-1 h-px bg-border" />
+              <Separator className="flex-1" />
               <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">or</span>
-              <div className="flex-1 h-px bg-border" />
+              <Separator className="flex-1" />
             </div>
 
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="lg"
               onClick={() => loginWithGoogle()}
-              className="w-full py-4 bg-card border border-border text-foreground rounded-2xl font-semibold text-sm flex items-center justify-center gap-2.5 hover:bg-muted transition-all"
+              className="w-full"
             >
               <Chrome className="size-4" />
               Continue with Google
-            </button>
+            </Button>
 
             <p className="text-center text-xs text-muted-foreground">
               Don&apos;t have an account?{" "}
-              <button type="button" className="text-primary hover:text-primary/80 transition-colors font-semibold">
+              <Button type="button" variant="ghost" size="sm" className="text-primary hover:text-primary/80 px-0">
                 Create one
-              </button>
+              </Button>
             </p>
           </div>
 
