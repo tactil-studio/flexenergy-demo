@@ -52,15 +52,17 @@ export function ContractCardSkeleton() {
   );
 }
 
+const CHART_SKELETON_HEIGHTS = [52, 35, 70, 48, 85, 60, 42];
+
 /** Chart area skeleton */
 export function ChartSkeleton({ height = "h-56" }: { height?: string }) {
   return (
     <div className={cn("w-full flex items-end gap-1.5 px-2", height)}>
-      {Array.from({ length: 7 }).map((_, i) => (
+      {CHART_SKELETON_HEIGHTS.map((h, i) => (
         <div
           key={i}
-          className={cn("flex-1 rounded-t-lg animate-pulse bg-muted")}
-          style={{ height: `${30 + Math.random() * 60}%` }}
+          className="flex-1 rounded-t-lg animate-pulse bg-muted"
+          style={{ height: `${h}%` }}
         />
       ))}
     </div>

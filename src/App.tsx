@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Header } from "@/components/layout/header";
+import { AppLoadingScreen } from "@/components/ui/app-loading-screen";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { AppProvider, useApp } from "@/context/AppContext";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
@@ -26,14 +27,7 @@ function MainContent() {
   const [authView, setAuthView] = useState<"login" | "forgot">("login");
 
   if (isAuthLoading || isAppLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <output className="flex flex-col items-center gap-4" aria-label="Loading">
-          <span className="w-12 h-12 border-4 border-foreground border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-          <p className="text-xs text-muted-foreground">Loading...</p>
-        </output>
-      </div>
-    );
+    return <AppLoadingScreen />;
   }
 
   if (!user) {

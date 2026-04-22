@@ -1,5 +1,4 @@
-﻿import { BarChart3, Euro, Zap } from 'lucide-react';
-import { TrendingDown } from 'lucide-react';
+﻿import { BarChart3, Euro, TrendingDown, Zap } from 'lucide-react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PeriodToggle } from '@/components/ui/period-toggle';
 import { ChartSkeleton, StatsSkeleton } from '@/components/ui/skeleton';
@@ -32,7 +31,7 @@ export function UsageView() {
               Avg {avgUsage} {unit} per period
             </p>
           </div>
-          <div className="flex flex-col gap-2 self-start">
+          <div className="flex flex-col gap-2 self-start items-start">
             {/* Mode toggle */}
             <div className="flex p-1 bg-muted rounded-2xl">
               <button
