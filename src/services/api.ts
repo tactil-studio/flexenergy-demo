@@ -157,8 +157,8 @@ export const apiService = {
       alerts = notificationSettingsToAlerts(
         notifRes.email?.enabled ?? true,
         notifRes.sms?.enabled ?? false,
-        notifRes.startHour ?? "08:00",
-        notifRes.endHour ?? "22:00",
+        notifRes.startHour || "08:00",
+        notifRes.endHour || "22:00",
       );
     } catch {
       // non-fatal — keep defaults
@@ -272,8 +272,8 @@ export const apiService = {
       customerID: customerId,
       emailEnabled: alerts.lowBalance,
       smsEnabled: alerts.peakUsage,
-      startHour: alerts.startHour,
-      endHour: alerts.endHour,
+      startHour: alerts.startHour || "08:00",
+      endHour: alerts.endHour || "22:00",
     });
     return alerts;
   },
