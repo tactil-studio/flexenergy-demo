@@ -110,33 +110,41 @@ export function AlertSection() {
         Threshold & Alerts
       </h2>
       <div className="bg-card rounded-[20px] md:rounded-4xl border border-border shadow-sm overflow-hidden">
-        <label className="flex justify-between items-center gap-4 p-4 md:p-6 cursor-pointer hover:bg-muted/30 transition-colors">
+        <div className="flex justify-between items-center gap-4 p-4 md:p-6 hover:bg-muted/30 transition-colors">
           <div className="flex items-center gap-3 md:gap-4">
             <IconBox variant="primary" size="md">
               <Mail className="w-4 h-4 md:w-5 md:h-5 text-primary" />
             </IconBox>
             <div>
-              <p className="font-semibold text-xs md:text-base text-foreground">Email Notifications</p>
+              <p id="alert-email-label" className="font-semibold text-xs md:text-base text-foreground">Email Notifications</p>
               <p className="text-[10px] md:text-xs text-muted-foreground">Receive alerts and updates via email</p>
             </div>
           </div>
-          <Switch checked={state.alerts.lowBalance} onCheckedChange={() => toggleAlert("lowBalance")} />
-        </label>
+          <Switch
+            aria-labelledby="alert-email-label"
+            checked={state.alerts.lowBalance}
+            onCheckedChange={() => toggleAlert("lowBalance")}
+          />
+        </div>
 
         <Separator />
 
-        <label className="flex justify-between items-center gap-4 p-4 md:p-6 cursor-pointer hover:bg-muted/30 transition-colors">
+        <div className="flex justify-between items-center gap-4 p-4 md:p-6 hover:bg-muted/30 transition-colors">
           <div className="flex items-center gap-3 md:gap-4">
             <IconBox variant="warning" size="md">
               <MessageSquare className="w-4 h-4 md:w-5 md:h-5 text-warning" />
             </IconBox>
             <div>
-              <p className="font-semibold text-xs md:text-base text-foreground">SMS Notifications</p>
+              <p id="alert-sms-label" className="font-semibold text-xs md:text-base text-foreground">SMS Notifications</p>
               <p className="text-[10px] md:text-xs text-muted-foreground">Receive alerts and updates via SMS</p>
             </div>
           </div>
-          <Switch checked={state.alerts.peakUsage} onCheckedChange={() => toggleAlert("peakUsage")} />
-        </label>
+          <Switch
+            aria-labelledby="alert-sms-label"
+            checked={state.alerts.peakUsage}
+            onCheckedChange={() => toggleAlert("peakUsage")}
+          />
+        </div>
 
         <Separator />
 
