@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Download, FileText, Loader2, RefreshCw } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { Download, FileText, Loader2, RefreshCw } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { getClient } from "@/lib/smartsphere";
@@ -34,7 +34,8 @@ export function ExportsSection() {
     if (!item.id) return;
     setDownloadingId(item.id);
     try {
-      const blob = await getClient().fileManager.downloadExport(item.id);
+      const response = await getClient().fileManager.downloadExport(item.id);
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;

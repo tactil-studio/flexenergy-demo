@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import { Check, Loader2, Pencil } from "lucide-react";
+import { type ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
@@ -41,7 +41,7 @@ export function ProfileEditForm() {
     }
   }, [user]);
 
-  const handleChange = (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof FormState) => (e: ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
     setError(null);
   };

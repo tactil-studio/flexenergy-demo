@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { Loader2, Zap } from "lucide-react";
+import { type ReactNode, useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,15 +10,18 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { getClient } from "@/lib/smartsphere";
-import type { TariffDataDto, TariffRateDataDto } from "@/lib/smartsphere/modules/tariffs";
+import type {
+  TariffDataDto,
+  TariffRateDataDto,
+} from "@/lib/smartsphere/modules/tariffs";
 
 interface TariffDrawerProps {
   contractLabel: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 function formatAmount(minor: number, scale: number): string {
-  return (minor / Math.pow(10, scale)).toFixed(scale);
+  return (minor / 10 ** scale).toFixed(scale);
 }
 
 function RateRow({ rate }: { rate: TariffRateDataDto }) {
@@ -26,7 +29,7 @@ function RateRow({ rate }: { rate: TariffRateDataDto }) {
   const validFrom = format(parseISO(rate.validFrom as string), "d MMM yyyy");
   const validTo = format(parseISO(rate.validTo as string), "d MMM yyyy");
   return (
-    <div className="px-5 py-3.5 flex items-start justify-between gap-3 border-b border-border last:border-0">
+    <div className="px-5 py-3.5 flex items-start justify-between gap-3">
       <div className="min-w-0">
         <p className="text-sm font-semibold text-foreground">
           {formatted} {rate.unitOfMeasure ?? "CHF/kWh"}
@@ -99,12 +102,16 @@ export function TariffDrawer({ contractLabel, children }: TariffDrawerProps) {
             <>
               {activeTariff && (
                 <div className="mb-4 bg-muted/50 rounded-2xl px-4 py-3 border border-border">
-                  <p className="text-[10px] text-muted-foreground mb-0.5 font-medium uppercase tracking-wider">Plan</p>
+                  <p className="text-[10px] text-muted-foreground mb-0.5 font-medium uppercase tracking-wider">
+                    Plan
+                  </p>
                   <p className="text-sm font-bold text-foreground">
                     {activeTariff.tariffName ?? activeTariff.tariffId}
                   </p>
                   {activeTariff.currency && (
-                    <p className="text-[11px] text-muted-foreground">{activeTariff.currency}</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {activeTariff.currency}
+                    </p>
                   )}
                 </div>
               )}
@@ -113,12 +120,16 @@ export function TariffDrawer({ contractLabel, children }: TariffDrawerProps) {
                   <p className="px-5 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider bg-muted/30 border-b border-border">
                     Rate schedule
                   </p>
-                  {rates.map((r) => (
-                    <RateRow key={r.tariffRateId} rate={r} />
+                  {rates.map((r, i) => (
+                    <div key={r.tariffRateId ?? i} className="border-b border-border last:border-0">
+                      <RateRow rate={r} />
+                    </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-muted-foreground text-center py-4">No rate schedule available.</p>
+                <p className="text-xs text-muted-foreground text-center py-4">
+                  No rate schedule available.
+                </p>
               )}
             </>
           )}

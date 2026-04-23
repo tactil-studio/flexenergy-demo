@@ -1,6 +1,6 @@
+import { X } from "lucide-react";
 import { Dialog } from "radix-ui";
 import type * as React from "react";
-import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Sheet = Dialog.Root;
@@ -21,16 +21,16 @@ const SheetOverlay = ({
   />
 );
 
-interface SheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof Dialog.Content> {
+interface SheetContentProps {
   side?: "bottom" | "right";
+  className?: string;
+  children?: React.ReactNode;
 }
 
 const SheetContent = ({
   side = "bottom",
   className,
   children,
-  ...props
 }: SheetContentProps) => (
   <SheetPortal>
     <SheetOverlay />
@@ -48,7 +48,6 @@ const SheetContent = ({
         ],
         className,
       )}
-      {...props}
     >
       {/* Drag handle (bottom sheet) */}
       {side === "bottom" && (
@@ -94,10 +93,10 @@ const SheetDescription = ({
 
 export {
   Sheet,
-  SheetTrigger,
   SheetClose,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetDescription,
+  SheetTrigger,
 };
