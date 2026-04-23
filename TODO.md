@@ -56,3 +56,6 @@ Consiglio: tieni a portata il numero del tuo contatore. Controlla che gli appare
  
 11. E se la corrente non torna dopo aver ricaricato?
 Se dopo aver effettuato correttamente la ricarica e aver premuto il tasto -1- la corrente non ritorna entro 5-10 minuti, contatta subito il Supporto Clienti per assistenza. 
+
+---
+En la card de un contrato, cuando days remaining es negativo, habría que poner otra cosa para que se entienda mejor, por ejemplo "Recharge needed" o algo así, y el color del texto en rojo.
