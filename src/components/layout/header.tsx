@@ -1,5 +1,6 @@
 import { AlertCircle, Bell, CheckCircle2, Info, X } from "lucide-react";
 import { Popover } from "radix-ui";
+import { useNavigate } from "react-router-dom";
 import { useApp } from "@/context/AppContext";
 import { useAuth } from "@/context/AuthContext";
 import { formatCurrency } from "@/types";
@@ -24,8 +25,8 @@ function UserAvatar({ onClick }: { onClick: () => void }) {
 }
 
 export function Header() {
-  const { state, markNotificationAsRead, clearNotifications, setView } =
-    useApp();
+  const navigate = useNavigate();
+  const { state, markNotificationAsRead, clearNotifications } = useApp();
 
   const balanceMinor = state?.dashboard?.balance ?? 0;
   const scale = state?.dashboard?.scale ?? 2;
@@ -44,10 +45,10 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 lg:left-60 z-40 bg-card/80 backdrop-blur-xl border-b border-border">
-      <div className="flex justify-between items-center px-6 lg:px-10 h-16 lg:h-18 w-full max-w-5xl mx-auto">
+    <header className="fixed top-0 left-0 right-0  z-40 bg-card/80 backdrop-blur-xl border-b border-border">
+      <div className="flex justify-between lg:ml-40 items-center px-6 lg:px-10 h-16 lg:h-18 w-full max-w-5xl mx-auto">
         <div className="flex items-center gap-3">
-          <UserAvatar onClick={() => setView("settings")} />
+          <UserAvatar onClick={() => navigate("/settings")} />
           <dl className="flex flex-col">
             <dt className="sr-only">Current balance</dt>
             <dd className="font-semibold text-lg tracking-tight text-foreground">
@@ -75,7 +76,7 @@ export function Header() {
 
             <Popover.Portal>
               <Popover.Content
-                className="z-50 w-80 bg-card rounded-[32px] shadow-2xl border border-border overflow-hidden outline-none animate-in fade-in zoom-in-95 duration-200"
+                className="z-50 w-80 bg-card rounded-4xl shadow-2xl border border-border overflow-hidden outline-none animate-in fade-in zoom-in-95 duration-200"
                 align="end"
                 sideOffset={8}
               >
@@ -125,7 +126,7 @@ export function Header() {
                               <p className="text-xs font-semibold text-foreground tracking-tight">
                                 {n.title}
                               </p>
-                              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                              <p className="text-xs truncate text-muted-foreground leading-relaxed">
                                 {n.message}
                               </p>
                               <time

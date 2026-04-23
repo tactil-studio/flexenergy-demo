@@ -4,6 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { getClient } from "@/lib/smartsphere";
+import { CustomerApiError } from "@/lib/smartsphere/modules/customers";
+
+function resolveCustomerError(err: unknown): string {
+  if (err instanceof CustomerApiError) {
+    if (err.errorCode === "DUPLICATE_EMAIL") return "This email is already in use.";
+    return err.message || "Failed to save. Please try again.";
+  }
+  return "Failed to save. Please try again.";
+}
 
 interface FormState {
   firstName: string;
@@ -61,8 +70,8 @@ export function ProfileEditForm() {
       setSaved(true);
       setIsOpen(false);
       setTimeout(() => setSaved(false), 2000);
-    } catch {
-      setError("Failed to save. Please try again.");
+    } catch (err) {
+      setError(resolveCustomerError(err));
     } finally {
       setIsSaving(false);
     }

@@ -7,28 +7,26 @@ import {
 } from "date-fns";
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppContext";
-import { useAuth } from "@/context/AuthContext";
 import { apiService } from "@/services/api";
 import type { Transaction } from "@/types";
 import { fromMinorUnits } from "@/types";
 
 export function useHistory() {
   const { contractId } = useApp();
-  const { user } = useAuth();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.customerId || !contractId) return;
+    if (!contractId) return;
     setIsLoading(true);
     apiService
-      .getTransactions(user.customerId, contractId)
+      .getTransactions(271, contractId)
       .then((res) => {
         setTransactions(res);
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
-  }, [user?.customerId, contractId]);
+  }, [contractId]);
 
   const now = new Date();
   const weekStart = startOfWeek(now);

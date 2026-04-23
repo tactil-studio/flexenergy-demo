@@ -46,7 +46,7 @@ function QuietHoursForm() {
       </IconBox>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-0.5">
-          <p className="font-semibold text-xs md:text-base text-foreground">Quiet Hours</p>
+          <p className="font-semibold text-xs md:text-base text-foreground">Available Hours</p>
           {saved && (
             <span className="flex items-center gap-1 text-[10px] font-semibold text-success">
               <Check className="size-3" />
@@ -109,7 +109,7 @@ export function AlertSection() {
       <h2 className="font-bold text-base md:text-xl mb-3 md:mb-6 px-2 text-foreground">
         Threshold & Alerts
       </h2>
-      <div className="bg-card rounded-[20px] md:rounded-[32px] border border-border shadow-sm overflow-hidden">
+      <div className="bg-card rounded-[20px] md:rounded-4xl border border-border shadow-sm overflow-hidden">
         <label className="flex justify-between items-center gap-4 p-4 md:p-6 cursor-pointer hover:bg-muted/30 transition-colors">
           <div className="flex items-center gap-3 md:gap-4">
             <IconBox variant="primary" size="md">

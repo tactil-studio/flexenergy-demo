@@ -1,29 +1,29 @@
 import type { LucideIcon } from "lucide-react";
 import { BarChart3, History, Home, Settings, Zap } from "lucide-react";
 import { motion } from "motion/react";
-import { useApp } from "@/context/AppContext";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
-import type { ViewType } from "@/types";
 
-const mobileNavItems: { icon: LucideIcon; label: string; id: ViewType }[] = [
-  { icon: Home, label: "Home", id: "dashboard" },
-  { icon: Zap, label: "Recharge", id: "recharge" },
-  { icon: BarChart3, label: "Usage", id: "usage" },
-  { icon: History, label: "History", id: "history" },
+const mobileNavItems: { icon: LucideIcon; label: string; path: string }[] = [
+  { icon: Home, label: "Home", path: "/" },
+  { icon: Zap, label: "Recharge", path: "/recharge" },
+  { icon: BarChart3, label: "Usage", path: "/usage" },
+  { icon: History, label: "History", path: "/history" },
 ];
 
-const sidebarNavItems: { icon: LucideIcon; label: string; id: ViewType }[] = [
+const sidebarNavItems: { icon: LucideIcon; label: string; path: string }[] = [
   ...mobileNavItems,
-  { icon: Settings, label: "Settings", id: "settings" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 export function BottomNav() {
-  const { currentView, setView } = useApp();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { user } = useAuth();
 
-  const handleNavClick = (viewId: ViewType) => {
-    setView(viewId);
+  const handleNavClick = (path: string) => {
+    navigate(path);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -49,12 +49,12 @@ export function BottomNav() {
         {/* Nav items */}
         <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
           {sidebarNavItems.map((item) => {
-            const isActive = currentView === item.id;
+            const isActive = pathname === item.path;
             return (
               <button
-                key={item.id}
+                key={item.path}
                 type="button"
-                onClick={() => handleNavClick(item.id)}
+                onClick={() => handleNavClick(item.path)}
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer",
                   isActive
@@ -96,12 +96,12 @@ export function BottomNav() {
       {/* ── Mobile bottom nav ───────────────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 flex justify-around items-center p-2 bg-card/80 backdrop-blur-2xl border-t border-border/50 z-50 shadow-xl">
         {mobileNavItems.map((item) => {
-          const isActive = currentView === item.id;
+          const isActive = pathname === item.path;
           return (
             <button
               type="button"
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
+              key={item.path}
+              onClick={() => handleNavClick(item.path)}
               className={cn(
                 "flex flex-col flex-1 items-center justify-center py-2 px-4 transition-all duration-300 rounded-2xl cursor-pointer group relative focus:outline-primary",
                 isActive

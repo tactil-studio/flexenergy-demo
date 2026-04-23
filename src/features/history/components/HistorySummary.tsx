@@ -46,13 +46,13 @@ export function HistorySummary({
           <dl className="space-y-2">
             <div className="flex justify-between items-center">
               <dt className="text-xs text-muted-foreground">Spent</dt>
-              <dd className="text-sm font-bold text-foreground">
+              <dd className="text-xs font-bold text-foreground">
                 {formatCurrency(weeklySpent * 100)}
               </dd>
             </div>
             <div className="flex justify-between items-center">
               <dt className="text-xs text-muted-foreground">Recharged</dt>
-              <dd className="text-sm font-bold text-success">
+              <dd className="text-xs font-bold text-success">
                 +{formatCurrency(weeklyRecharged * 100)}
               </dd>
             </div>
@@ -92,7 +92,7 @@ export function HistorySummary({
         ) : (
           <>
             <p
-              className={`text-2xl font-bold tracking-tight font-heading ${net >= 0 ? "text-success" : "text-destructive"
+              className={`text-lg font-bold tracking-tight font-heading ${net >= 0 ? "text-success" : "text-destructive"
                 }`}
             >
               {net >= 0 ? "+" : "-"}

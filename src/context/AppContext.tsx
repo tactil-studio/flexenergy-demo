@@ -1,14 +1,12 @@
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiService } from "../services/api";
-import type { AlertSettings, AppState, Notification, ViewType } from "../types";
+import type { AlertSettings, AppState, Notification } from "../types";
 import { formatCurrency, toMinorUnits } from "../types";
 import { useAuth } from "./AuthContext";
 
 interface AppContextType {
   state: AppState | null;
-  currentView: ViewType;
-  setView: (view: ViewType) => void;
   recharge: (amount: number) => Promise<void>;
   toggleAlert: (key: keyof AlertSettings) => Promise<void>;
   updateAlertSettings: (settings: Partial<AlertSettings>) => Promise<void>;
@@ -25,7 +23,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [state, setState] = useState<AppState | null>(null);
-  const [currentView, setCurrentView] = useState<ViewType>("dashboard");
   const [isLoading, setIsLoading] = useState(true);
 
   // Reload app state whenever the authenticated user changes
@@ -37,7 +34,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     setIsLoading(true);
     apiService
-      .getAppState(user.customerId)
+      .getAppState(271)
       .then((data) => setState(data))
       .catch(() => setState(null))
       .finally(() => setIsLoading(false));
@@ -50,7 +47,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (!state?.dashboard || !user) return;
     const amountMinor = toMinorUnits(amount, state.dashboard.scale);
 
-    await apiService.rechargeBalance(user.customerId, contractId, amountMinor, state.dashboard.scale);
+    await apiService.rechargeBalance(271, contractId, amountMinor, state.dashboard.scale);
 
     const newNotification: Notification = {
       id: Math.random().toString(36).substr(2, 9),
@@ -77,14 +74,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const toggleAlert = async (key: keyof AlertSettings) => {
     if (!state || !user) return;
     const newAlerts = { ...state.alerts, [key]: !state.alerts[key] };
-    const updatedAlerts = await apiService.updateAlerts(user.customerId, newAlerts);
+    const updatedAlerts = await apiService.updateAlerts(271, newAlerts);
     setState((prev) => (prev ? { ...prev, alerts: updatedAlerts } : null));
   };
 
   const updateAlertSettings = async (settings: Partial<AlertSettings>) => {
     if (!state || !user) return;
     const newAlerts = { ...state.alerts, ...settings };
-    const updatedAlerts = await apiService.updateAlerts(user.customerId, newAlerts);
+    const updatedAlerts = await apiService.updateAlerts(271, newAlerts);
     setState((prev) => (prev ? { ...prev, alerts: updatedAlerts } : null));
   };
 
@@ -119,8 +116,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     <AppContext.Provider
       value={{
         state,
-        currentView,
-        setView: setCurrentView,
         recharge,
         toggleAlert,
         updateAlertSettings,
