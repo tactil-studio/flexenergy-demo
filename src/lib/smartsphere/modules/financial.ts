@@ -1,4 +1,11 @@
-import type { HttpCore, DateInput, TransactionSource, TransactionStatus, ReceiptGenStatus, Precision } from "../core";
+import type {
+  DateInput,
+  HttpCore,
+  Precision,
+  ReceiptGenStatus,
+  TransactionSource,
+  TransactionStatus,
+} from "../core";
 
 // ─── DTOs ──────────────────────────────────────────────────────────────────────
 export interface GetCustomerBalanceRequest {
@@ -37,6 +44,7 @@ export interface GetContractBalanceResponse {
 export interface ApiTransaction {
   buContractID?: string | null;
   orderId?: string | null;
+  exportId?: string | null;
   amountRaw: number;
   amount: number;
   transactionSource?: TransactionSource;
@@ -64,8 +72,14 @@ export interface ListTransactionsResponse {
   transactions?: ApiTransaction[] | null;
 }
 
-export interface GenerateOrderIdRequest { customerId?: number; contractId?: number; }
-export interface GenerateOrderIdResponse { status: boolean; orderId?: string | null; }
+export interface GenerateOrderIdRequest {
+  customerId?: number;
+  contractId?: number;
+}
+export interface GenerateOrderIdResponse {
+  status: boolean;
+  orderId?: string | null;
+}
 
 export interface SetTransactionRequest {
   transactionDate: DateInput;
@@ -101,7 +115,9 @@ export interface UpdateTransactionRequest {
   cardHolder?: string | null;
   paymentId?: string | null;
 }
-export interface UpdateTransactionResponse { status: boolean; }
+export interface UpdateTransactionResponse {
+  status: boolean;
+}
 
 export interface SetIncomeStatementRequestDto {
   entryDate?: DateInput;
@@ -113,7 +129,9 @@ export interface SetIncomeStatementRequestDto {
   opeMode?: string | null;
   groupID?: string | null;
 }
-export interface SetIncomeStatementResponseDto { status: boolean; }
+export interface SetIncomeStatementResponseDto {
+  status: boolean;
+}
 
 export interface ListRevenuesRequest {
   precision: Precision;
@@ -127,24 +145,45 @@ export class FinancialModule {
   constructor(private readonly http: HttpCore) {}
 
   getCustomerBalance(body: GetCustomerBalanceRequest) {
-    return this.http.post<GetCustomerBalanceResponse>("/Api/v1/Financial/GetCustomerBalance", body);
+    return this.http.post<GetCustomerBalanceResponse>(
+      "/Api/v1/Financial/GetCustomerBalance",
+      body,
+    );
   }
   getContractBalance(body: GetContractBalanceRequestDto) {
-    return this.http.post<GetContractBalanceResponse>("/Api/v1/Financial/GetContractBalance", body);
+    return this.http.post<GetContractBalanceResponse>(
+      "/Api/v1/Financial/GetContractBalance",
+      body,
+    );
   }
   listTransactions(body: ListTransactionsRequest) {
-    return this.http.post<ListTransactionsResponse>("/Api/v1/Financial/ListTransactions", body);
+    return this.http.post<ListTransactionsResponse>(
+      "/Api/v1/Financial/ListTransactions",
+      body,
+    );
   }
   setTransaction(body: SetTransactionRequest) {
-    return this.http.post<SetTransactionResponseDto>("/Api/v1/Financial/SetTransaction", body);
+    return this.http.post<SetTransactionResponseDto>(
+      "/Api/v1/Financial/SetTransaction",
+      body,
+    );
   }
   updateTransaction(body: UpdateTransactionRequest) {
-    return this.http.post<UpdateTransactionResponse>("/Api/v1/Financial/UpdateTransaction", body);
+    return this.http.post<UpdateTransactionResponse>(
+      "/Api/v1/Financial/UpdateTransaction",
+      body,
+    );
   }
   generateOrderId(body: GenerateOrderIdRequest) {
-    return this.http.post<GenerateOrderIdResponse>("/Api/v1/Financial/GenerateOrderId", body);
+    return this.http.post<GenerateOrderIdResponse>(
+      "/Api/v1/Financial/GenerateOrderId",
+      body,
+    );
   }
   setIncomeStatement(body: SetIncomeStatementRequestDto) {
-    return this.http.post<SetIncomeStatementResponseDto>("/Api/v1/Financial/SetIncomeStatement", body);
+    return this.http.post<SetIncomeStatementResponseDto>(
+      "/Api/v1/Financial/SetIncomeStatement",
+      body,
+    );
   }
 }

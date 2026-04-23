@@ -18,6 +18,7 @@ interface UsageChartProps {
   period: string;
   peakLabel: string;
   formatXAxis: (value: string) => string;
+  mode?: "kwh" | "cost";
 }
 
 export function UsageChart({
@@ -25,7 +26,9 @@ export function UsageChart({
   period,
   peakLabel,
   formatXAxis,
+  mode = "kwh",
 }: UsageChartProps) {
+  const unit = mode === "cost" ? "CHF" : "kWh";
   return (
     <>
       <div className="h-56 md:h-64 lg:h-80 w-full">
@@ -69,7 +72,7 @@ export function UsageChart({
                             )}
                           </p>
                           <p className="text-sm font-semibold">
-                            {(payload[0].value as number).toFixed(2)} kWh
+                            {mode === "cost" ? `CHF ${(payload[0].value as number).toFixed(2)}` : `${(payload[0].value as number).toFixed(2)} kWh`}
                           </p>
                         </div>
                       );

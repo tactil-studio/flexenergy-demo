@@ -229,9 +229,10 @@ export class HttpCore {
   async getRaw(
     path: string,
     query?: Record<string, unknown>,
+    extraHeaders?: HeadersInit,
   ): Promise<Response> {
     const url = joinUrl(this.config.baseUrl, path) + buildQuery(query);
-    const headers = this.buildHeaders();
+    const headers = this.buildHeaders(extraHeaders);
     const res = await this.fetchImpl(url, {
       method: "GET",
       headers,

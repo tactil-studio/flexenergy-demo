@@ -241,6 +241,8 @@ export interface HandleWebhookResponse {
 export interface Transaction {
   transactionId?: string;
   orderId?: string;
+  buContractId?: string;
+  exportId?: string;
   customerId: number;
   contractId: number;
   amountMinor: number;

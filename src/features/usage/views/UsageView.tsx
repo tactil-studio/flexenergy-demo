@@ -1,12 +1,20 @@
-﻿import { BarChart3, Euro, TrendingDown, Zap } from 'lucide-react';
+﻿import { BarChart3, ChevronDown, Euro, TrendingDown, Zap } from 'lucide-react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PeriodToggle } from '@/components/ui/period-toggle';
 import { ChartSkeleton, StatsSkeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 import { UsageChart } from '../components/UsageChart';
 import { useUsage } from '../hooks/useUsage';
 
 export function UsageView() {
-  const { period, setPeriod, mode, setMode, data, isLoading, totalUsage, avgUsage, peakLabel, formatXAxis } = useUsage();
+  const {
+    period, setPeriod,
+    mode, setMode,
+    selectedContract, setSelectedContract,
+    contracts,
+    data, isLoading,
+    totalUsage, avgUsage, peakLabel, formatXAxis,
+  } = useUsage();
   const isCost = mode === 'cost';
   const unit = isCost ? 'CHF' : 'kWh';
 
@@ -32,6 +40,28 @@ export function UsageView() {
             </p>
           </div>
           <div className="flex flex-col gap-2 self-start items-start">
+            {/* Contract selector */}
+            {contracts.length > 1 && (
+              <div className="relative flex items-center w-full">
+                <ChevronDown className="absolute right-3 size-3.5 text-muted-foreground pointer-events-none" />
+                <select
+                  value={selectedContract === 'all' ? 'all' : String(selectedContract)}
+                  onChange={(e) =>
+                    setSelectedContract(e.target.value === 'all' ? 'all' : Number(e.target.value))
+                  }
+                  className={cn(
+                    'w-full pl-3 pr-8 py-2 rounded-2xl text-xs font-semibold bg-muted border border-transparent',
+                    'transition-all outline-none appearance-none cursor-pointer focus:ring-2 focus:ring-ring',
+                    selectedContract !== 'all' ? 'text-foreground border-border bg-card shadow-sm' : 'text-muted-foreground',
+                  )}
+                >
+                  <option value="all">All contracts</option>
+                  {contracts.map((c) => (
+                    <option key={c.contractId} value={String(c.contractId)}>{c.label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             {/* Mode toggle */}
             <div className="flex p-1 bg-muted rounded-2xl">
               <button
@@ -84,6 +114,7 @@ export function UsageView() {
             period={period}
             peakLabel={peakLabel}
             formatXAxis={formatXAxis}
+            mode={mode}
           />
         )}
       </section>

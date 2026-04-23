@@ -58,6 +58,8 @@ function mapTransaction(
     customerId: tx.customerId,
     contractId: tx.contractId,
     orderId: tx.orderId ?? undefined,
+    buContractId: tx.buContractID ?? undefined,
+    exportId: tx.exportId ?? undefined,
     amountMinor: tx.amountRaw,
     scale,
     currency,
@@ -93,6 +95,31 @@ function mapGraphicMultiToMeasures(
     value: parseFloat(values[i]?.value ?? "0"),
     unit: "kWh",
   }));
+}
+
+/** Aggregates all datasets from GetGroupedCosts into a single MeasureData[]. */
+function mapGroupedCostsToMeasures(
+  data: GraphicMulti,
+  period: "day" | "week" | "month",
+): MeasureData[] {
+  const labels = data.categories?.[0]?.category ?? [];
+  const datasets = data.dataset ?? [];
+  const count = labels.length;
+  if (count === 0 || datasets.length === 0) return [];
+
+  const interval = period === "day" ? 3_600_000 : 86_400_000;
+  const now = Date.now();
+
+  return Array.from({ length: count }, (_, i) => {
+    const value = datasets.reduce((sum, ds) => {
+      return sum + parseFloat(ds.data?.[i]?.value ?? "0");
+    }, 0);
+    return {
+      timestamp: new Date(now - interval * (count - 1 - i)).toISOString(),
+      value,
+      unit: "CHF",
+    };
+  });
 }
 
 // ─── Local-only state (notifications persist to localStorage) ─────────────────
@@ -300,6 +327,30 @@ export const apiService = {
     });
 
     return mapGraphicMultiToMeasures(res, period);
+  },
+
+  async getGroupedCostsData(
+    period: "day" | "week" | "month",
+    contractIDs: number[],
+  ): Promise<MeasureData[]> {
+    const now = new Date();
+    const msBack =
+      period === "day"
+        ? 86_400_000
+        : period === "week"
+          ? 604_800_000
+          : 2_592_000_000;
+    const dateFrom = new Date(now.getTime() - msBack);
+    const sumMethod = period === "day" ? 2 : 3;
+
+    const res = await getClient().graphics.getGroupedCosts({
+      contractIDs,
+      dateFrom: dateFrom.toISOString(),
+      dateTo: now.toISOString(),
+      sumMethod,
+    });
+
+    return mapGroupedCostsToMeasures(res, period);
   },
 
   async updateNotifications(

@@ -11,7 +11,7 @@ interface QuickActionsProps {
 }
 
 const actionCls =
-  "flex flex-col items-start gap-2 h-auto bg-card border border-border rounded-2xl px-4 py-3.5 hover:bg-muted/40 text-foreground justify-start";
+  "flex flex-col items-center gap-2 ";
 
 export function QuickActions({
   onRecharge,
@@ -22,50 +22,41 @@ export function QuickActions({
   return (
     <motion.nav
       aria-label="Quick actions"
-      className="grid xs:grid-cols-2 lg:grid-cols-4 gap-3"
+      className="grid grid-cols-4 gap-3"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
     >
       {/* Primary CTA — full width on mobile */}
       <Button
-        variant="primary"
+        variant="outline"
         onClick={onRecharge}
-        className="flex max-md:flex-col items-start gap-2 h-auto rounded-2xl px-4 py-3.5 justify-start"
+        className="flex flex-col items-center gap-2"
       >
-        <IconBox variant="on-dark">
-          <Zap className="size-4" />
+        <IconBox size="lg" variant="primary" >
+          <Zap className="size-5" />
         </IconBox>
-        <div className="flex items-center justify-between gap-4 w-full">
-          <span className="text-sm font-semibold">Recharge</span>
-          <span className="text-xs opacity-70">Top up →</span>
-        </div>
+        <span className="text-xs">Recharge</span>
       </Button>
 
       <Button variant="ghost" onClick={onUsage} className={actionCls}>
-        <IconBox variant="primary">
+        <IconBox>
           <BarChart3 className="size-4 text-primary" />
         </IconBox>
         <span className="text-sm font-semibold">Usage</span>
       </Button>
 
-      {/* History — hidden on lg */}
-      <Button variant="ghost" onClick={onHistory} className={`${actionCls} lg:hidden`}>
+      {/* History — hidden  lg */}
+      <Button variant="ghost" onClick={onHistory} className={`${actionCls}`}>
         <IconBox variant="primary">
           <Clock className="size-4 text-primary" />
         </IconBox>
         <span className="text-sm font-semibold">History</span>
       </Button>
 
-      {/* History — shown on lg only */}
-      <Button variant="ghost" onClick={onHistory} className={`${actionCls} max-lg:hidden`}>
-        <IconBox variant="primary">
-          <Clock className="size-4 text-primary" />
-        </IconBox>
-        <span className="text-sm font-semibold">History</span>
-      </Button>
 
-      <Button variant="ghost" onClick={onSettings} className={`${actionCls} hidden lg:flex`}>
+
+      <Button variant="ghost" onClick={onSettings} className={`${actionCls}`}>
         <IconBox variant="muted">
           <Settings className="size-4 text-muted-foreground" />
         </IconBox>

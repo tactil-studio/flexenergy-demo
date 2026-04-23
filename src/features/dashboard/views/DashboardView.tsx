@@ -7,7 +7,6 @@ import { useAuth } from '@/context/AuthContext';
 import { ContractCard } from '../components/ContractCard';
 import { DashboardHero } from '../components/DashboardHero';
 import { DashboardUsagePreview } from '../components/DashboardUsagePreview';
-import { QuickActions } from '../components/QuickActions';
 import { useDashboard } from '../hooks/useDashboard';
 import { useDashboardChart } from '../hooks/useDashboardChart';
 
@@ -36,12 +35,12 @@ export function DashboardView() {
         />
       )}
 
-      <QuickActions
+      {/* <QuickActions
         onRecharge={() => setView('recharge')}
         onUsage={() => setView('usage')}
         onHistory={() => setView('history')}
         onSettings={() => setView('settings')}
-      />
+      /> */}
 
       <DashboardUsagePreview
         data={chartData}

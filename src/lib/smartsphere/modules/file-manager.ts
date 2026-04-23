@@ -1,4 +1,4 @@
-import type { HttpCore, DateInput, FileType, FileFormat } from "../core";
+import type { DateInput, FileFormat, FileType, HttpCore } from "../core";
 
 // ─── DTOs ──────────────────────────────────────────────────────────────────────
 export interface ExportItemDto {
@@ -50,25 +50,42 @@ export class FileManagerModule {
   constructor(private readonly http: HttpCore) {}
 
   listExports(query: ListExportsQuery = {}) {
-    return this.http.get<ListExportsResponseDto>("/Api/v1/FileManager/Exports", query);
+    return this.http.get<ListExportsResponseDto>(
+      "/Api/v1/FileManager/Exports",
+      query,
+    );
   }
 
   downloadExport(id: string) {
-    return this.http.getRaw(`/Api/v1/FileManager/Exports/${encodeURIComponent(id)}/Download`);
+    return this.http.getRaw(
+      `/Api/v1/FileManager/Exports/${encodeURIComponent(id)}/Download`,
+      undefined,
+      { Accept: "application/pdf, application/octet-stream, */*" },
+    );
   }
 
   downloadLatestImport(fileType?: FileType, fileFormat?: FileFormat) {
-    return this.http.getRaw("/Api/v1/FileManager/Imports/Latest/Download", { fileType, fileFormat });
+    return this.http.getRaw(
+      "/Api/v1/FileManager/Imports/Latest/Download",
+      { fileType, fileFormat },
+      { Accept: "application/pdf, application/octet-stream, */*" },
+    );
   }
 
   uploadFile(body: UploadInboxRequest) {
     const form = new FormData();
     form.append("File", body.file);
-    if (body.fileType !== undefined) form.append("FileType", String(body.fileType));
-    if (body.fileFormat !== undefined) form.append("FileFormat", String(body.fileFormat));
+    if (body.fileType !== undefined)
+      form.append("FileType", String(body.fileType));
+    if (body.fileFormat !== undefined)
+      form.append("FileFormat", String(body.fileFormat));
     if (body.groupId !== undefined) form.append("GroupId", body.groupId);
     if (body.uploader !== undefined) form.append("Uploader", body.uploader);
-    if (body.sourceEndpoint !== undefined) form.append("SourceEndpoint", body.sourceEndpoint);
-    return this.http.postForm<UploadInboxResponseDto>("/Api/v1/FileManager/Uploads", form);
+    if (body.sourceEndpoint !== undefined)
+      form.append("SourceEndpoint", body.sourceEndpoint);
+    return this.http.postForm<UploadInboxResponseDto>(
+      "/Api/v1/FileManager/Uploads",
+      form,
+    );
   }
 }

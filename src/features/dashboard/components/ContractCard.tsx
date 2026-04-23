@@ -1,5 +1,6 @@
-import { AlertTriangle, ChevronRight, Clock } from "lucide-react";
+import { AlertTriangle, ChevronRight, Clock, Zap } from "lucide-react";
 import { StatusBadge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { ContractSummary } from "../hooks/useDashboard";
 import { RadialRing } from "./RadialRing";
 import { TariffDrawer } from "./TariffDrawer";
@@ -14,7 +15,7 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
 
   return (
     <article
-      className={`bg-card rounded-[28px] border shadow-sm overflow-hidden ${c.isLowBalance ? "border-warning/40" : "border-border"
+      className={`bg-card rounded-2xl border shadow-sm overflow-hidden ${c.isLowBalance ? "border-warning/40" : "border-border"
         }`}
     >
       {c.isLowBalance && (
@@ -49,15 +50,19 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
         {/* Days remaining pill */}
         {c.daysLeft !== null && (
           <div
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold mb-4 ${c.daysLeft <= 3
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold mb-4 ${c.daysLeft < 0
               ? "bg-destructive/10 text-destructive"
-              : c.daysLeft <= 7
-                ? "bg-warning/10 text-warning"
-                : "bg-muted text-muted-foreground"
+              : c.daysLeft <= 3
+                ? "bg-destructive/10 text-destructive"
+                : c.daysLeft <= 7
+                  ? "bg-warning/10 text-warning"
+                  : "bg-muted text-muted-foreground"
               }`}
           >
             <Clock className="size-3" />
-            {c.daysLeft} day{c.daysLeft !== 1 ? "s" : ""} remaining
+            {c.daysLeft < 0
+              ? "Recharge needed"
+              : `${c.daysLeft} day${c.daysLeft !== 1 ? "s" : ""} remaining`}
           </div>
         )}
 
@@ -73,28 +78,29 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
           </div>
         </div>
 
-        {/* Tariff detail trigger */}
-        <TariffDrawer
-          contractLabel={c.buContractId ? `Contract · ${c.buContractId}` : `Contract #${c.contractId}`}
-        >
-          <button
-            type="button"
-            className="mt-3 w-full flex items-center justify-between px-3 py-2.5 rounded-2xl bg-muted/50 hover:bg-muted border border-border text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+        <footer className="flex flex-center w-full gap-4 pt-4">
+          {/* Tariff detail trigger */}
+          <TariffDrawer
+            contractLabel={c.buContractId ? `Contract · ${c.buContractId}` : `Contract #${c.contractId}`}
           >
-            <span>View tariff details</span>
-            <ChevronRight className="size-3.5" />
-          </button>
-        </TariffDrawer>
+            <Button
+              variant="secondary"             >
+              <span>View tariff details</span>
+              <ChevronRight className="size-3.5" />
+            </Button>
+          </TariffDrawer>
 
-        {c.isLowBalance && (
-          <button
-            type="button"
-            onClick={onRecharge}
-            className="mt-4 w-full py-3 rounded-2xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 active:scale-[0.98] transition-all"
-          >
-            Top up now
-          </button>
-        )}
+          {c.isLowBalance && (
+            <Button
+              className="flex-1"
+              onClick={onRecharge}
+            >
+              <Zap className="size-3.5" />
+              Top up now
+
+            </Button>
+          )}
+        </footer>
       </div>
     </article>
   );

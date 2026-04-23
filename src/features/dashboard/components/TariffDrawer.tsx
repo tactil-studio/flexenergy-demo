@@ -1,14 +1,8 @@
 import { format, parseISO } from "date-fns";
-import { Loader2, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Drawer } from "vaul";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getClient } from "@/lib/smartsphere";
 import type {
   TariffDataDto,
@@ -80,61 +74,93 @@ export function TariffDrawer({ contractLabel, children }: TariffDrawerProps) {
   const activeTariff = tariffs.find((t) => t.assigned) ?? tariffs[0];
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent side="bottom">
-        <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <Zap className="size-4 text-primary" />
-            Tariff details
-          </SheetTitle>
-          <SheetDescription>{contractLabel}</SheetDescription>
-        </SheetHeader>
+    <Drawer.Root open={open} onOpenChange={setOpen}>
+      <Drawer.Trigger asChild>{children}</Drawer.Trigger>
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" />
+        <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-[28px] bg-background shadow-xl max-h-[90vh] focus:outline-none">
+          {/* Drag handle */}
+          <div className="flex justify-center pt-3 pb-1 shrink-0">
+            <div className="w-10 h-1 rounded-full bg-border" />
+          </div>
 
-        <div className="pb-6 px-5 pt-2">
-          {isLoading ? (
-            <div className="flex justify-center py-8">
-              <Loader2 className="size-5 animate-spin text-muted-foreground" />
-            </div>
-          ) : error ? (
-            <p className="text-xs text-destructive text-center py-6">{error}</p>
-          ) : (
-            <>
-              {activeTariff && (
-                <div className="mb-4 bg-muted/50 rounded-2xl px-4 py-3 border border-border">
-                  <p className="text-[10px] text-muted-foreground mb-0.5 font-medium uppercase tracking-wider">
-                    Plan
-                  </p>
-                  <p className="text-sm font-bold text-foreground">
-                    {activeTariff.tariffName ?? activeTariff.tariffId}
-                  </p>
-                  {activeTariff.currency && (
-                    <p className="text-[11px] text-muted-foreground">
-                      {activeTariff.currency}
-                    </p>
-                  )}
+          {/* Header */}
+          <div className="px-5 pb-4 pt-2 shrink-0">
+            <Drawer.Title className="flex items-center gap-2 text-lg font-bold text-foreground">
+              <Zap className="size-4 text-primary" />
+              Tariff details
+            </Drawer.Title>
+            <Drawer.Description className="text-sm text-muted-foreground mt-0.5">
+              {contractLabel}
+            </Drawer.Description>
+          </div>
+
+          {/* Body */}
+          <div className="pb-8 px-5 pt-2 overflow-y-auto">
+            {isLoading ? (
+              <div className="space-y-3">
+                {/* Plan card skeleton */}
+                <div className="bg-muted/50 rounded-2xl px-4 py-3 border border-border space-y-2">
+                  <Skeleton className="h-2.5 w-8" />
+                  <Skeleton className="h-4 w-36" />
+                  <Skeleton className="h-2.5 w-16" />
                 </div>
-              )}
-              {rates.length > 0 ? (
+                {/* Rate schedule skeleton */}
                 <div className="rounded-2xl border border-border overflow-hidden bg-card">
-                  <p className="px-5 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider bg-muted/30 border-b border-border">
-                    Rate schedule
-                  </p>
-                  {rates.map((r, i) => (
-                    <div key={r.tariffRateId ?? i} className="border-b border-border last:border-0">
-                      <RateRow rate={r} />
+                  <div className="px-5 py-2.5 bg-muted/30 border-b border-border">
+                    <Skeleton className="h-2.5 w-24" />
+                  </div>
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="px-5 py-3.5 flex justify-between items-center border-b border-border last:border-0">
+                      <div className="space-y-1.5">
+                        <Skeleton className="h-3.5 w-24" />
+                        <Skeleton className="h-2.5 w-36" />
+                      </div>
+                      <Skeleton className="h-5 w-12 rounded-full" />
                     </div>
                   ))}
                 </div>
-              ) : (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  No rate schedule available.
-                </p>
-              )}
-            </>
-          )}
-        </div>
-      </SheetContent>
-    </Sheet>
+              </div>
+            ) : error ? (
+              <p className="text-xs text-destructive text-center py-6">{error}</p>
+            ) : (
+              <>
+                {activeTariff && (
+                  <div className="mb-4 bg-muted/50 rounded-2xl px-4 py-3 border border-border">
+                    <p className="text-[10px] text-muted-foreground mb-0.5 font-medium uppercase tracking-wider">
+                      Plan
+                    </p>
+                    <p className="text-sm font-bold text-foreground">
+                      {activeTariff.tariffName ?? activeTariff.tariffId}
+                    </p>
+                    {activeTariff.currency && (
+                      <p className="text-[11px] text-muted-foreground">
+                        {activeTariff.currency}
+                      </p>
+                    )}
+                  </div>
+                )}
+                {rates.length > 0 ? (
+                  <div className="rounded-2xl border border-border overflow-hidden bg-card">
+                    <p className="px-5 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider bg-muted/30 border-b border-border">
+                      Rate schedule
+                    </p>
+                    {rates.map((r, i) => (
+                      <div key={r.tariffRateId ?? i} className="border-b border-border last:border-0">
+                        <RateRow rate={r} />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground text-center py-4">
+                    No rate schedule available.
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 }

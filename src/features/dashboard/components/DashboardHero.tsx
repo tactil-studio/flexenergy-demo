@@ -1,6 +1,5 @@
 import { Clock, TrendingDown, TrendingUp, Zap } from "lucide-react";
 import { motion } from "motion/react";
-import { StatChip } from "@/components/ui/stat-chip";
 import { MiniSparkline } from "./MiniSparkline";
 
 interface DashboardHeroProps {
@@ -28,47 +27,71 @@ export function DashboardHero({
   firstDaysLeft,
 }: DashboardHeroProps) {
   const timeOfDay = getGreeting();
-  const TrendIcon = trend <= 0 ? TrendingDown : TrendingUp;
-  const trendVariant = trend <= 0 ? "success" : "warning";
+  const isPositiveTrend = trend > 0;
+  const TrendIcon = isPositiveTrend ? TrendingUp : TrendingDown;
 
   return (
     <motion.section
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="pb-2"
+      className="relative overflow-hidden rounded-3xl bg-foreground p-6 md:p-8 shadow-2xl"
     >
-      <p className="text-sm font-semibold text-muted-foreground mb-3">
-        Good {timeOfDay}{firstName ? `, ${firstName}` : ""}
-      </p>
+      {/* Subtle radial glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-primary/20 blur-3xl"
+      />
 
-      {/* Balance + sparkline */}
-      <div className="flex items-end justify-between gap-4 mb-4">
-        <p className="font-heading font-bold text-5xl md:text-6xl lg:text-7xl tracking-tight text-foreground tabular-nums leading-none">
-          {totalBalanceFormatted}
+      {/* Top row: greeting + sparkline */}
+      <div className="flex items-start justify-between gap-4 mb-5">
+        <p className="text-sm font-semibold text-white/50">
+          Good {timeOfDay}{firstName ? `, ${firstName}` : ""}
         </p>
-        {!chartLoading && <MiniSparkline data={chartData} />}
+        {!chartLoading && (
+          <div className="w-28 h-12 shrink-0 opacity-80">
+            <MiniSparkline data={chartData} />
+          </div>
+        )}
       </div>
 
-      {/* Stat chips */}
+      {/* Balance */}
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-1">
+        Total balance
+      </p>
+      <p className="font-heading font-bold text-5xl md:text-6xl tracking-tight text-white tabular-nums leading-none mb-6">
+        {totalBalanceFormatted}
+      </p>
+
+      {/* Stat pills */}
       <div className="flex items-center gap-2 flex-wrap">
-        <StatChip variant="muted">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/10 text-white/70">
           <Zap className="size-3" />
           {consume.toFixed(1)} kWh
-        </StatChip>
+        </span>
 
         {!chartLoading && chartData.length > 1 && (
-          <StatChip variant={trendVariant}>
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold ${isPositiveTrend
+                ? "bg-warning/20 text-warning"
+                : "bg-success/20 text-success"
+              }`}
+          >
             <TrendIcon className="size-3" />
             {Math.abs(trend).toFixed(1)} kWh this week
-          </StatChip>
+          </span>
         )}
 
         {firstDaysLeft != null && (
-          <StatChip variant={firstDaysLeft <= 7 ? "warning" : "muted"}>
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold ${firstDaysLeft <= 7
+                ? "bg-warning/20 text-warning"
+                : "bg-white/10 text-white/70"
+              }`}
+          >
             <Clock className="size-3" />
             {firstDaysLeft}d left
-          </StatChip>
+          </span>
         )}
       </div>
     </motion.section>

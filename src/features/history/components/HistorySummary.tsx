@@ -3,6 +3,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 import { SectionCard } from "@/components/ui/card";
 import { IconBox } from "@/components/ui/icon-box";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/types";
 
 const PRIMARY = "oklch(0.53 0.195 258)";
@@ -25,7 +26,7 @@ export function HistorySummary({
   const net = weeklyRecharged - weeklySpent;
 
   return (
-    <section className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+    <section className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 mb-4">
       {/* This week */}
       <SectionCard className="rounded-3xl p-5">
         <header className="flex items-center gap-2 mb-3">
@@ -76,37 +77,10 @@ export function HistorySummary({
         )}
       </SectionCard>
 
-      {/* Net balance */}
-      <SectionCard className="rounded-3xl p-5">
-        <header className="flex items-center gap-2 mb-3">
-          <IconBox variant="warning" size="sm">
-            <ArrowUpRight className="size-3.5 text-warning" />
-          </IconBox>
-          <h3 className="font-semibold text-xs text-muted-foreground">
-            Net balance
-          </h3>
-        </header>
 
-        {isLoading ? (
-          <Skeleton className="h-8 w-3/4" />
-        ) : (
-          <>
-            <p
-              className={`text-lg font-bold tracking-tight font-heading ${net >= 0 ? "text-success" : "text-destructive"
-                }`}
-            >
-              {net >= 0 ? "+" : "-"}
-              {formatCurrency(Math.abs(net * 100))}
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Recharged minus spent
-            </p>
-          </>
-        )}
-      </SectionCard>
 
       {/* Activity trend — desktop only */}
-      <SectionCard className="hidden lg:block rounded-3xl p-5">
+      <SectionCard className="rounded-3xl p-5">
         <header className="mb-3">
           <h3 className="font-semibold text-xs text-muted-foreground">
             Activity trend
@@ -144,6 +118,32 @@ export function HistorySummary({
             </AreaChart>
           </ResponsiveContainer>
         </figure>
+      </SectionCard>
+
+
+      <SectionCard className="rounded-2xl p-5 flex  justify-between items-center">
+        <header className="flex items-center gap-2">
+          <IconBox variant="warning" size="sm">
+            <ArrowUpRight className="size-3.5 text-warning" />
+          </IconBox>
+          <h3 className="font-semibold text-xs text-muted-foreground">
+            Balance
+          </h3>
+        </header>
+        <main>
+
+          {isLoading ? (
+            <Skeleton className="h-8 w-3/4" />
+          ) : (
+            <p
+              className={cn(`font-bold tracking-tight font-heading ${net >= 0 ? "text-success" : "text-destructive"
+                }`)}
+            >
+              {net >= 0 ? "+" : "-"}
+              {formatCurrency(Math.abs(net * 100))}
+            </p>
+          )}
+        </main>
       </SectionCard>
     </section>
   );
