@@ -1,4 +1,5 @@
 import { AlertSection } from "../components/AlertSection";
+import { ExportsSection } from "../components/ExportsSection";
 import { ProfileHero } from "../components/ProfileHero";
 import { SettingsList } from "../components/SettingsList";
 import { SupportCenter } from "../components/SupportCenter";
@@ -12,7 +13,8 @@ export function SettingsView() {
           <AlertSection />
           <SettingsList />
         </div>
-        <aside>
+        <aside className="space-y-0">
+          <ExportsSection />
           <SupportCenter />
         </aside>
       </div>

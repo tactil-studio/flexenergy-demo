@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { getClient } from "@/lib/smartsphere";
 
 export type PaymentMethod = {
   id: string;
@@ -9,12 +10,30 @@ export type PaymentMethod = {
 };
 
 export function useRecharge() {
-  const { recharge } = useApp();
+  const { recharge, contractId } = useApp();
   const [amount, setAmount] = useState<number>(10);
+  const [suggestedAmount, setSuggestedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState<string>("");
   const [isCustom, setIsCustom] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState<string>("visa_4242");
+
+  // Fetch smart suggestion from shop.suggest
+  useEffect(() => {
+    if (!contractId) return;
+    getClient()
+      .shop.suggest({ contracts: [contractId], days: 30 })
+      .then((res) => {
+        const suggested = res.contracts?.find(
+          (c) => c.contractID === contractId,
+        );
+        if (suggested?.suggestedAmount)
+          setSuggestedAmount(suggested.suggestedAmount);
+      })
+      .catch(() => {
+        /* non-critical */
+      });
+  }, [contractId]);
 
   const paymentMethods: PaymentMethod[] = [
     { id: "visa_4242", type: "card", label: "Visa", details: "ending in 4242" },
@@ -67,6 +86,7 @@ export function useRecharge() {
     isSuccess,
     selectedMethod,
     paymentMethods,
+    suggestedAmount,
     setSelectedMethod,
     handleRecharge,
     selectPredefinedAmount,

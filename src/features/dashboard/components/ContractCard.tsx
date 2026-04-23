@@ -1,7 +1,8 @@
-import { AlertTriangle, Clock } from "lucide-react";
+import { AlertTriangle, ChevronRight, Clock } from "lucide-react";
 import { StatusBadge } from "@/components/ui/badge";
 import type { ContractSummary } from "../hooks/useDashboard";
 import { RadialRing } from "./RadialRing";
+import { TariffDrawer } from "./TariffDrawer";
 
 interface ContractCardProps {
   c: ContractSummary;
@@ -49,10 +50,10 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
         {c.daysLeft !== null && (
           <div
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold mb-4 ${c.daysLeft <= 3
-                ? "bg-destructive/10 text-destructive"
-                : c.daysLeft <= 7
-                  ? "bg-warning/10 text-warning"
-                  : "bg-muted text-muted-foreground"
+              ? "bg-destructive/10 text-destructive"
+              : c.daysLeft <= 7
+                ? "bg-warning/10 text-warning"
+                : "bg-muted text-muted-foreground"
               }`}
           >
             <Clock className="size-3" />
@@ -71,6 +72,19 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
             <p className="text-sm font-bold text-foreground">{c.forecastFormatted}</p>
           </div>
         </div>
+
+        {/* Tariff detail trigger */}
+        <TariffDrawer
+          contractLabel={c.buContractId ? `Contract · ${c.buContractId}` : `Contract #${c.contractId}`}
+        >
+          <button
+            type="button"
+            className="mt-3 w-full flex items-center justify-between px-3 py-2.5 rounded-2xl bg-muted/50 hover:bg-muted border border-border text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span>View tariff details</span>
+            <ChevronRight className="size-3.5" />
+          </button>
+        </TariffDrawer>
 
         {c.isLowBalance && (
           <button

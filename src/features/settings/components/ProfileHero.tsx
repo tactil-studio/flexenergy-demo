@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
+import { ProfileEditForm } from "./ProfileEditForm";
 
 export function ProfileHero() {
   const { user } = useAuth();
@@ -48,6 +49,7 @@ export function ProfileHero() {
           </dl>
         </aside>
       </div>
+      <ProfileEditForm />
     </section>
   );
 }
