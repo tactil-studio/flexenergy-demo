@@ -1,4 +1,5 @@
 import { AlertTriangle, ChevronRight, Clock, TrendingDown, Zap } from "lucide-react";
+import { motion } from "motion/react";
 import { StatusBadge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { ContractSummary } from "../hooks/useDashboard";
@@ -19,7 +20,10 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
     pct > 40 ? "bg-primary" : pct > 15 ? "bg-warning" : "bg-destructive";
 
   return (
-    <article
+    <motion.article
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.985 }}
+      transition={{ type: "spring", stiffness: 400, damping: 28 }}
       className={cn(
         "relative bg-card rounded-3xl overflow-hidden flex flex-col ring-1",
         c.isLowBalance ? "ring-warning/30" : "ring-border",
@@ -51,8 +55,8 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
             <span className={cn(
               "inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0",
               c.daysLeft <= 3 ? "bg-destructive/10 text-destructive" :
-              c.daysLeft <= 7 ? "bg-warning/10 text-warning" :
-              "bg-muted text-muted-foreground"
+                c.daysLeft <= 7 ? "bg-warning/10 text-warning" :
+                  "bg-muted text-muted-foreground"
             )}>
               <Clock className="size-3" />
               {c.daysLeft}d left
@@ -111,6 +115,6 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }

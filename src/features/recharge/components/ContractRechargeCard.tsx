@@ -1,4 +1,5 @@
 import { Check, Clock, Loader2, ShoppingCart, Sparkles } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -172,22 +173,30 @@ export function ContractRechargeCard({
         </div>
 
         {/* Suggestion result */}
-        {suggestion !== null && !isSuggesting && (
-          <button
-            type="button"
-            onClick={() => {
-              setCustomValue(String(suggestion));
-              setIsCustom(true);
-              setAmount(0);
-            }}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 transition-all group"
-          >
-            <span className="text-xs text-primary font-medium">Suggested for {suggestDays} days</span>
-            <span className="font-bold text-sm text-primary tabular-nums">
-              {c.currency} {suggestion.toFixed(2)}
-            </span>
-          </button>
-        )}
+        <AnimatePresence>
+          {suggestion !== null && !isSuggesting && (
+            <motion.button
+              type="button"
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                setCustomValue(String(suggestion));
+                setIsCustom(true);
+                setAmount(0);
+              }}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 transition-colors group"
+            >
+              <span className="text-xs text-primary font-medium">Suggested for {suggestDays} days</span>
+              <span className="font-bold text-sm text-primary tabular-nums">
+                {c.currency} {suggestion.toFixed(2)}
+              </span>
+            </motion.button>
+          )}
+        </AnimatePresence>
 
         {suggestError && (
           <p className="text-[11px] text-destructive">Could not calculate. Try again.</p>
