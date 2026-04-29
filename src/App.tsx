@@ -81,7 +81,7 @@ function MainContent() {
       <BottomNav />
       <div className="lg:ml-60 flex flex-col min-h-screen">
         <Header />
-        <main className="flex-1 pb-28 lg:pb-10 px-4 lg:px-10">
+        <main className="flex-1 pt-16 lg:pt-18 pb-28 lg:pb-10 px-4 lg:px-10">
           <div className="max-w-2xl mx-auto lg:max-w-5xl lg:mx-0">
             <ErrorBoundary>
               <AnimatedRoutes />
