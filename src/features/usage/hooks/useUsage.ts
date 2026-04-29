@@ -34,13 +34,8 @@ export function useUsage() {
 
     const effectiveIds =
       activeContractIDs.length > 0 ? activeContractIDs : [contractId];
-    const effectiveId =
-      selectedContract === "all" ? contractId : (selectedContract as number);
 
-    const fetch =
-      mode === "cost"
-        ? apiService.getGroupedCostsData(period, effectiveIds)
-        : apiService.getUsageData(period, effectiveId);
+    const fetch = apiService.getGroupedCostsData(period, effectiveIds);
 
     fetch
       .then((res) => {
@@ -49,7 +44,7 @@ export function useUsage() {
       })
       .catch(() => setIsLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [period, contractId, mode, selectedContract]);
+  }, [period, contractId, selectedContract]);
 
   const totalUsage = data.reduce((acc, curr) => acc + curr.value, 0).toFixed(1);
   const avgUsage = (Number(totalUsage) / (data.length || 1)).toFixed(1);

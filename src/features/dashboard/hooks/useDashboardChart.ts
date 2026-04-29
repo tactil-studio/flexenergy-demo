@@ -15,7 +15,7 @@ export function useDashboardChart() {
     }
     setIsLoading(true);
     apiService
-      .getUsageData("week", contractId)
+      .getGroupedCostsData("week", [contractId])
       .then((res) => setData([...res].reverse()))
       .catch(() => {})
       .finally(() => setIsLoading(false));

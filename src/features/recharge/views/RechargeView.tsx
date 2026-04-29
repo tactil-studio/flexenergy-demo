@@ -28,6 +28,8 @@ export function RechargeView() {
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [suggestions, setSuggestions] = useState<SuggestionResult[] | null>(null);
   const [suggestError, setSuggestError] = useState<string | null>(null);
+  /** contractId → prefill amount (display units) */
+  const [prefills, setPrefills] = useState<Map<number, number>>(new Map());
 
   const handleSuggest = async () => {
     if (contracts.length === 0) return;
@@ -46,23 +48,16 @@ export function RechargeView() {
   };
 
   const handleApplyOne = (s: SuggestionResult) => {
-    const contract = contracts.find((c) => c.contractId === s.contractID);
-    if (!contract) return;
-    addToCart({
-      contractId: s.contractID,
-      amount: s.suggestedAmount,
-      label: contract.buContractId
-        ? `Contract · ${contract.buContractId}`
-        : `Contract #${contract.contractId}`,
-      currency: contract.currency,
-      scale: contract.scale,
-      balanceFormatted: contract.balanceFormatted,
+    setPrefills((prev) => {
+      const next = new Map(prev);
+      next.set(s.contractID, s.suggestedAmount);
+      return next;
     });
   };
 
   const handleApplyAll = () => {
     if (!suggestions) return;
-    for (const s of suggestions) handleApplyOne(s);
+    setPrefills(new Map(suggestions.map((s) => [s.contractID, s.suggestedAmount])));
   };
 
   return (
@@ -159,13 +154,13 @@ export function RechargeView() {
                     contract.currency,
                     contract.scale,
                   );
-                  const alreadyInCart = !!cart.get(s.contractID);
+                  const isPrefilled = prefills.get(s.contractID) === s.suggestedAmount;
                   return (
                     <li
                       key={s.contractID}
                       className={cn(
                         "flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 bg-background border",
-                        alreadyInCart ? "border-primary/30" : "border-border",
+                        isPrefilled ? "border-primary/30" : "border-border",
                       )}
                     >
                       <div className="min-w-0">
@@ -176,13 +171,13 @@ export function RechargeView() {
                         <span className="font-bold text-foreground tabular-nums">{formatted}</span>
                         <Button
                           size="sm"
-                          variant={alreadyInCart ? "ghost" : "outline"}
+                          variant={isPrefilled ? "ghost" : "outline"}
                           className="h-7 px-3 text-xs gap-1"
                           onClick={() => handleApplyOne(s)}
-                          disabled={alreadyInCart}
+                          disabled={isPrefilled}
                         >
                           <Zap className="size-3" />
-                          {alreadyInCart ? "Added" : "Apply"}
+                          {isPrefilled ? "Applied" : "Apply"}
                         </Button>
                       </div>
                     </li>
@@ -191,7 +186,7 @@ export function RechargeView() {
               </ul>
               <Button className="w-full gap-2" variant="outline" onClick={handleApplyAll}>
                 <Zap className="size-4" />
-                Apply All to Cart
+                Apply All
               </Button>
             </div>
           )}
@@ -223,6 +218,7 @@ export function RechargeView() {
                   cartItem={cart.get(c.contractId)}
                   onAddToCart={addToCart}
                   onRemove={removeFromCart}
+                  prefillAmount={prefills.get(c.contractId)}
                 />
               </Fragment>
             ))}

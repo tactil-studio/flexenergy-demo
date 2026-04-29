@@ -1,5 +1,5 @@
 import { Check, Clock, ShoppingCart } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,8 @@ interface ContractRechargeCardProps {
   cartItem: CartItem | undefined;
   onAddToCart: (item: CartItem) => void;
   onRemove: (contractId: number) => void;
+  /** When set, pre-fills the custom input with this amount (display units). */
+  prefillAmount?: number;
 }
 
 export function ContractRechargeCard({
@@ -22,12 +24,22 @@ export function ContractRechargeCard({
   cartItem,
   onAddToCart,
   onRemove,
+  prefillAmount,
 }: ContractRechargeCardProps) {
   const [amount, setAmount] = useState<number>(cartItem?.amount ?? 0);
   const [customValue, setCustomValue] = useState<string>(
     cartItem ? String(cartItem.amount) : "",
   );
   const [isCustom, setIsCustom] = useState(false);
+
+  // Sync externally suggested amount into the custom input
+  useEffect(() => {
+    if (prefillAmount !== undefined && prefillAmount > 0) {
+      setCustomValue(String(prefillAmount));
+      setIsCustom(true);
+      setAmount(0);
+    }
+  }, [prefillAmount]);
 
   const currentAmount = isCustom ? Number(customValue) || 0 : amount;
   const inCart = !!cartItem;
