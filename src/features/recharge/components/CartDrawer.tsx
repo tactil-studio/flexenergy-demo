@@ -1,4 +1,5 @@
 import { AlertCircle, CheckCircle, Loader2, ShoppingCart, Trash2, Zap } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -65,15 +66,18 @@ export function CartDrawer({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         {floating ? (
-          <button
+          <motion.button
             type="button"
-            className="flex items-center gap-3 px-5 py-3 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 transition-all font-semibold text-sm"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="flex items-center gap-3 px-5 py-3 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 font-semibold text-sm"
           >
             <ShoppingCart className="size-4" />
             <span>{count} {count === 1 ? "item" : "items"}</span>
             <span className="opacity-70">·</span>
             <span>{totalFormatted}</span>
-          </button>
+          </motion.button>
         ) : (
           <Button
             className="relative gap-2"

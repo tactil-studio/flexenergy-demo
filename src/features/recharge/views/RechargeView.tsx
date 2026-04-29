@@ -1,5 +1,6 @@
 ﻿import { FileText, Loader2, Sparkles, Zap } from "lucide-react";
-import { Fragment, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
@@ -212,9 +213,18 @@ export function RechargeView() {
             description="There are no active contracts associated with your account."
           />
         ) : (
-          <div className={cn(contracts.length > 1 && "grid grid-cols-1 xl:grid-cols-2 gap-4")}>
+          <motion.div
+            className={cn(contracts.length > 1 && "grid grid-cols-1 xl:grid-cols-2 gap-4")}
+            initial="hidden"
+            animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
+          >
             {contracts.map((c) => (
-              <Fragment key={c.contractId}>
+              <motion.div
+                key={c.contractId}
+                variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
                 <ContractRechargeCard
                   contract={c}
                   cartItem={cart.get(c.contractId)}
@@ -222,28 +232,33 @@ export function RechargeView() {
                   onRemove={removeFromCart}
                   prefillAmount={prefills.get(c.contractId)}
                 />
-              </Fragment>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </section>
 
       {/* ── Floating cart trigger ── */}
-      {count > 0 && scrolled && (
-        <div className={cn(
-          "fixed bottom-24 lg:bottom-8 right-4 lg:right-8 z-50 transition-all duration-300",
-          scrolled ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none",
-        )}>
-          <CartDrawer
-            items={items}
-            count={count}
-            totalFormatted={totalFormatted}
-            onRemove={removeFromCart}
-            onClear={clearCart}
-            floating
-          />
-        </div>
-      )}
+      <AnimatePresence>
+        {count > 0 && scrolled && (
+          <motion.div
+            className="fixed bottom-24 lg:bottom-8 right-4 lg:right-8 z-50"
+            initial={{ opacity: 0, y: 24, scale: 0.88 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 420, damping: 28 }}
+          >
+            <CartDrawer
+              items={items}
+              count={count}
+              totalFormatted={totalFormatted}
+              onRemove={removeFromCart}
+              onClear={clearCart}
+              floating
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
