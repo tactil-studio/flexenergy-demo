@@ -33,8 +33,12 @@ export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const { state, markNotificationAsRead, clearNotifications } = useApp();
+  const { user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const isDashboard = location.pathname === "/";
+  const userName = user?.firstName && user?.lastName 
+    ? `${user.firstName} ${user.lastName}` 
+    : user?.firstName || "User";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -71,7 +75,7 @@ export function Header() {
           <UserAvatar onClick={() => navigate("/settings")} scrolled={transparent} />
           <div className="flex flex-col">
             <p className={`text-xs transition-colors duration-300 ${transparent ? "text-white/60" : "text-muted-foreground"}`}>Welcome back,</p>
-            <p className={`font-semibold text-base tracking-tight leading-tight transition-colors duration-300 ${transparent ? "text-white" : "text-foreground"}`}>Mario Rossi</p>
+            <p className={`font-semibold text-base tracking-tight leading-tight transition-colors duration-300 ${transparent ? "text-white" : "text-foreground"}`}>{userName}</p>
           </div>
         </div>
 

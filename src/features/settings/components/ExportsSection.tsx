@@ -242,7 +242,7 @@ export function ExportsSection() {
               aria-busy={isTransitioning}
             >
               {rows.map((row) => {
-                if (row.type === "skeleton") return <SkeletonRow key={`sk-${row.i}`} index={row.i} />;
+                if (row.type === "skeleton") return <div key={`sk-${row.i}`}><SkeletonRow index={row.i} /></div>;
                 if (row.type === "ghost") return <GhostRow key={`gh-${row.i}`} />;
                 const { item, i } = row;
                 return (

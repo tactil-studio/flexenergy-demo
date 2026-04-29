@@ -1,4 +1,5 @@
 import { Clock, TrendingDown, Zap } from "lucide-react";
+import { motion } from "motion/react";
 import { StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -21,17 +22,36 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
 
   return (
     <TariffDrawer contractLabel={contractLabel}>
-      <article
+      <motion.article
+        initial="hidden"
+        animate="visible"
+        variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
         className={cn(
           "relative bg-card rounded-3xl overflow-hidden flex flex-col ring-1 cursor-pointer transition-all hover:shadow-md hover:ring-primary/30",
           c.isLowBalance ? "ring-warning/40" : "ring-border",
         )}
       >
-        {/* ── Tinted header zone ─────────────────────────── */}
-        <div className={cn(
-          "flex items-center justify-between gap-2 px-5 pt-4 pb-3",
-          c.isLowBalance ? "bg-warning/6" : "bg-muted/40",
-        )}>
+        {/* ── Alert strip ──────────────────────────────── */}
+        {c.isLowBalance && (
+          <motion.div
+            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+            transition={{ duration: 0.3 }}
+            role="alert"
+            className="flex items-center gap-2 px-5 py-2.5 bg-warning/8 border-b border-warning/15"
+          >
+            <span className="text-xs font-semibold text-warning">{c.depletionLabel}</span>
+          </motion.div>
+        )}
+
+        {/* ── Header: ID + status ──────────────────────── */}
+        <motion.div
+          variants={{ hidden: { opacity: 0, y: -8 }, visible: { opacity: 1, y: 0 } }}
+          transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className={cn(
+            "flex items-center justify-between gap-2 px-5 pt-4 pb-3",
+            c.isLowBalance ? "bg-warning/6" : "bg-muted/40",
+          )}
+        >
           <div className="flex items-center gap-2 min-w-0">
             <span className={cn(
               "w-7 h-7 rounded-xl flex items-center justify-center shrink-0",
@@ -42,10 +62,14 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
             <p className="text-xs font-semibold text-foreground/60 truncate">{contractLabel}</p>
           </div>
           <StatusBadge status={c.serviceStatus} />
-        </div>
+        </motion.div>
 
         {/* ── Body ──────────────────────────────────────── */}
-        <div className="flex flex-col flex-1 px-5 pt-4 pb-5 gap-4">
+        <motion.div
+          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+          transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex flex-col flex-1 px-5 pt-4 pb-5 gap-4"
+        >
           {c.isLowBalance ? (
             /* ── Low-balance state: illustration alongside info ── */
             <div className="flex items-end gap-2">
@@ -185,8 +209,8 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
               </Button>
             )}
           </div>
-        </div>
-      </article>
+        </motion.div>
+      </motion.article>
     </TariffDrawer>
   );
 }
