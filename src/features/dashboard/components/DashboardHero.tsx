@@ -48,26 +48,16 @@ export function DashboardHero({
       />
 
       {/* Content */}
-      <div className="relative z-10 px-6 md:px-10 lg:px-10 pt-6 pb-6 md:pt-8 md:pb-8">
-        {/* Sparkline top-right */}
-      {/*   {!chartLoading && (
-          <div className="flex justify-end mb-4">
-            <div className="w-28 h-10 opacity-80">
-              <MiniSparkline data={chartData} />
-            </div>
-          </div>
-        )} */}
+      <div className="relative z-10 px-6 md:px-10 lg:px-10 pt-28 pb-8 md:pt-32 md:pb-16 flex flex-col items-center text-center">
 
         {/* Balance */}
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-1">
-          Total balance
-        </p>
-        <p className="font-heading font-bold text-5xl md:text-6xl tracking-tight text-white tabular-nums leading-none mb-8">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-2">Total balance</p>
+        <p className="font-heading font-bold text-4xl md:text-6xl tracking-tight text-white tabular-nums leading-none mb-16">
           {totalBalanceFormatted}
         </p>
 
         {/* Stat pills */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center justify-center gap-2 flex-wrap">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/10 backdrop-blur-sm text-white/80 border border-white/10">
             <Zap className="size-3" />
             {consume.toFixed(1)} kWh

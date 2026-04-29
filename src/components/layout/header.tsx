@@ -1,11 +1,12 @@
 import { AlertCircle, Bell, CheckCircle2, Info, Settings, X } from "lucide-react";
 import { Popover } from "radix-ui";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useApp } from "@/context/AppContext";
 import { useAuth } from "@/context/AuthContext";
 import { formatCurrency } from "@/types";
 
-function UserAvatar({ onClick }: { onClick: () => void }) {
+function UserAvatar({ onClick, scrolled }: { onClick: () => void; scrolled: boolean }) {
   const { user } = useAuth();
   const initials = [user?.firstName, user?.lastName]
     .filter(Boolean)
@@ -16,17 +17,30 @@ function UserAvatar({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-border hover:ring-2 hover:ring-ring transition-all active:scale-95 shrink-0"
+      className={`w-10 h-10 rounded-full flex items-center justify-center border hover:ring-2 transition-all active:scale-95 shrink-0 ${
+        scrolled
+          ? "bg-white/15 border-white/20 hover:ring-white/30"
+          : "bg-primary/10 border-border hover:ring-ring"
+      }`}
       aria-label="Open settings"
     >
-      <span className="text-sm font-bold text-primary">{initials}</span>
+      <span className={`text-sm font-bold transition-colors duration-300 ${scrolled ? "text-white" : "text-primary"}`}>{initials}</span>
     </button>
   );
 }
 
 export function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { state, markNotificationAsRead, clearNotifications } = useApp();
+  const [scrolled, setScrolled] = useState(false);
+  const isDashboard = location.pathname === "/";
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const balanceMinor = state?.dashboard?.balance ?? 0;
   const scale = state?.dashboard?.scale ?? 2;
@@ -44,14 +58,20 @@ export function Header() {
     }
   };
 
+  const transparent = isDashboard && !scrolled;
+
   return (
-    <header className="sticky top-0 left-0 right-0  z-40 bg-card/80 backdrop-blur-xl border-b border-border">
+    <header className={`fixed top-0 left-0 right-0 lg:left-60 z-40 border-b transition-all duration-300 ${
+      transparent
+        ? "bg-transparent border-transparent"
+        : "bg-card/90 backdrop-blur-xl border-border"
+    }`}>
       <div className="flex justify-between lg:ml-40 items-center px-6 lg:px-10 h-16 lg:h-18 w-full max-w-5xl mx-auto">
         <div className="flex items-center gap-3">
-          <UserAvatar onClick={() => navigate("/settings")} />
+          <UserAvatar onClick={() => navigate("/settings")} scrolled={transparent} />
           <div className="flex flex-col">
-            <p className="text-xs text-muted-foreground">Welcome back,</p>
-            <p className="font-semibold text-base tracking-tight text-foreground leading-tight">Mario Rossi</p>
+            <p className={`text-xs transition-colors duration-300 ${transparent ? "text-white/60" : "text-muted-foreground"}`}>Welcome back,</p>
+            <p className={`font-semibold text-base tracking-tight leading-tight transition-colors duration-300 ${transparent ? "text-white" : "text-foreground"}`}>Mario Rossi</p>
           </div>
         </div>
 
@@ -59,19 +79,19 @@ export function Header() {
           <button
             type="button"
             onClick={() => navigate("/settings")}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors active:scale-95 outline-none"
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors active:scale-95 outline-none ${transparent ? "hover:bg-white/10" : "hover:bg-muted"}`}
             aria-label="Settings"
           >
-            <Settings className="w-5 h-5 text-muted-foreground" />
+            <Settings className={`w-5 h-5 transition-colors duration-300 ${transparent ? "text-white/80" : "text-muted-foreground"}`} />
           </button>
 
           <Popover.Root>
             <Popover.Trigger asChild>
               <button
                 type="button"
-                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors active:scale-95 relative outline-none"
+                className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors active:scale-95 relative outline-none ${transparent ? "hover:bg-white/10" : "hover:bg-muted"}`}
               >
-                <Bell className="w-5 h-5 text-muted-foreground" />
+                <Bell className={`w-5 h-5 transition-colors duration-300 ${transparent ? "text-white/80" : "text-muted-foreground"}`} />
                 {unreadCount > 0 && (
                   <span className="absolute top-2 right-2 size-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                     {unreadCount}
