@@ -31,6 +31,7 @@ export function DashboardHero({
       transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="relative overflow-hidden bg-foreground -mx-4 lg:-mx-10"
     >
+
       {/* Background video */}
       <video
         aria-hidden="true"
@@ -44,7 +45,7 @@ export function DashboardHero({
       {/* Gradient overlay — dark at top/bottom, lighter in the middle */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-foreground/70 via-foreground/30 to-foreground/80"
+        className="pointer-events-none absolute inset-0 bg-linear-to-b from-foreground/70 via-foreground/30 to-background"
       />
 
       {/* Content */}
@@ -66,8 +67,8 @@ export function DashboardHero({
           {!chartLoading && chartData.length > 1 && (
             <span
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm border ${isPositiveTrend
-                  ? "bg-warning/20 text-warning border-warning/20"
-                  : "bg-success/20 text-success border-success/20"
+                ? "bg-warning/20 text-warning border-warning/20"
+                : "bg-success/20 text-success border-success/20"
                 }`}
             >
               <TrendIcon className="size-3" />
@@ -78,8 +79,8 @@ export function DashboardHero({
           {firstDaysLeft != null && (
             <span
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm border ${firstDaysLeft <= 7
-                  ? "bg-warning/20 text-warning border-warning/20"
-                  : "bg-white/10 text-white/80 border-white/10"
+                ? "bg-warning/20 text-warning border-warning/20"
+                : "bg-white/10 text-white/80 border-white/10"
                 }`}
             >
               <Clock className="size-3" />

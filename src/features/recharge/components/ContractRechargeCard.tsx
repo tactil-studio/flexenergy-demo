@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { ContractSummary } from "@/features/dashboard/hooks/useDashboard";
 import { cn } from "@/lib/utils";
-import { formatCurrency, toMinorUnits } from "@/types";
+
 import type { CartItem } from "../hooks/useRechargeCart";
 
 const PRESET_AMOUNTS = [20, 50, 100, 200] as const;
@@ -93,23 +93,29 @@ export function ContractRechargeCard({
       )}
 
       {/* Preset amounts */}
-      <div className="grid grid-cols-4 gap-2">
-        {PRESET_AMOUNTS.map((amt) => (
-          <Button
-            key={amt}
-            variant="ghost"
-            size="sm"
-            onClick={() => handlePreset(amt)}
-            className={cn(
-              "rounded-xl border font-bold text-sm",
-              !isCustom && amount === amt
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border text-muted-foreground hover:border-primary/30",
-            )}
-          >
-            {formatCurrency(toMinorUnits(amt), c.currency, c.scale)}
-          </Button>
-        ))}
+      <div>
+        <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Quick amounts</p>
+        <div className="grid grid-cols-2 gap-2">
+          {PRESET_AMOUNTS.map((amt) => {
+            const active = !isCustom && amount === amt;
+            return (
+              <button
+                key={amt}
+                type="button"
+                onClick={() => handlePreset(amt)}
+                className={cn(
+                  "flex items-baseline justify-between px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all",
+                  active
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border text-foreground hover:border-primary/30 hover:bg-muted/50",
+                )}
+              >
+                <span className="text-[10px] font-bold text-muted-foreground mr-1">{c.currency}</span>
+                <span className="tabular-nums">{amt.toFixed(2)}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Custom input */}
