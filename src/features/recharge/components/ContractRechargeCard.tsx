@@ -1,11 +1,11 @@
-import { Check, Clock, ShoppingCart } from "lucide-react";
+import { Check, Clock, Loader2, ShoppingCart, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { ContractSummary } from "@/features/dashboard/hooks/useDashboard";
 import { cn } from "@/lib/utils";
-
+import { apiService } from "@/services/api";
 import type { CartItem } from "../hooks/useRechargeCart";
 
 const PRESET_AMOUNTS = [20, 50, 100, 200] as const;
@@ -31,6 +31,27 @@ export function ContractRechargeCard({
     cartItem ? String(cartItem.amount) : "",
   );
   const [isCustom, setIsCustom] = useState(false);
+
+  // Per-card smart suggest
+  const [suggestDays, setSuggestDays] = useState(30);
+  const [isSuggesting, setIsSuggesting] = useState(false);
+  const [suggestion, setSuggestion] = useState<number | null>(null);
+  const [suggestError, setSuggestError] = useState(false);
+
+  const handleSuggest = async () => {
+    setIsSuggesting(true);
+    setSuggestError(false);
+    setSuggestion(null);
+    try {
+      const results = await apiService.suggestRecharge([c.contractId], suggestDays);
+      const match = results.find((r) => r.contractID === c.contractId);
+      setSuggestion(match?.suggestedAmount ?? null);
+    } catch {
+      setSuggestError(true);
+    } finally {
+      setIsSuggesting(false);
+    }
+  };
 
   // Sync externally suggested amount into the custom input
   useEffect(() => {
@@ -116,6 +137,61 @@ export function ContractRechargeCard({
             );
           })}
         </div>
+      </div>
+
+      {/* Smart Suggest */}
+      <div className="rounded-xl border border-dashed border-primary/30 bg-primary/3 p-3 space-y-2.5">
+        <div className="flex items-center gap-2">
+          <Sparkles className="size-3.5 text-primary shrink-0" />
+          <p className="text-xs font-semibold text-primary flex-1">Smart</p>
+          <div className="flex items-center gap-1.5">
+            <div className="relative">
+              <Input
+                type="number"
+                min={1}
+                max={365}
+                value={suggestDays}
+                onChange={(e) => setSuggestDays(Math.max(1, Number(e.target.value)))}
+                className="w-16 h-7 pr-7 text-xs font-semibold bg-background text-center"
+              />
+              <span className="absolute inset-y-0 right-2 flex items-center text-[10px] text-muted-foreground pointer-events-none">d</span>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleSuggest}
+              disabled={isSuggesting}
+              className="h-8 px-2.5 text-xs gap-1.5 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary"
+            >
+              {isSuggesting
+                ? <Loader2 className="size-3 animate-spin" />
+                : <Sparkles className="size-3" />}
+              {isSuggesting ? "…" : "Calculate"}
+            </Button>
+          </div>
+        </div>
+
+        {/* Suggestion result */}
+        {suggestion !== null && !isSuggesting && (
+          <button
+            type="button"
+            onClick={() => {
+              setCustomValue(String(suggestion));
+              setIsCustom(true);
+              setAmount(0);
+            }}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-primary/30 bg-primary/8 hover:bg-primary/15 transition-all group"
+          >
+            <span className="text-xs text-primary font-medium">Suggested for {suggestDays} days</span>
+            <span className="font-bold text-sm text-primary tabular-nums">
+              {c.currency} {suggestion.toFixed(2)}
+            </span>
+          </button>
+        )}
+
+        {suggestError && (
+          <p className="text-[11px] text-destructive">Could not calculate. Try again.</p>
+        )}
       </div>
 
       {/* Custom input */}

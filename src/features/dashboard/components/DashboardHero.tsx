@@ -29,7 +29,7 @@ export function DashboardHero({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="relative overflow-hidden bg-foreground -mx-4 lg:-mx-10"
+      className="relative overflow-hidden bg-foreground -mx-4 lg:-mx-10 -mt-16 lg:-mt-18"
     >
 
       {/* Background video */}

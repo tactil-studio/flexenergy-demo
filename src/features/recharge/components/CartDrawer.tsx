@@ -19,6 +19,7 @@ interface CartDrawerProps {
   totalFormatted: string;
   onRemove: (contractId: number) => void;
   onClear: () => void;
+  floating?: boolean;
 }
 
 export function CartDrawer({
@@ -27,6 +28,7 @@ export function CartDrawer({
   totalFormatted,
   onRemove,
   onClear,
+  floating = false,
 }: CartDrawerProps) {
   const { rechargeCart } = useApp();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -62,19 +64,31 @@ export function CartDrawer({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button
-          className="relative gap-2"
-          variant={count > 0 ? "default" : "outline"}
-          disabled={count === 0}
-        >
-          <ShoppingCart className="size-4" />
-          Cart
-          {count > 0 && (
-            <span className="absolute -top-2 -right-2 size-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center border-2 border-background">
-              {count}
-            </span>
-          )}
-        </Button>
+        {floating ? (
+          <button
+            type="button"
+            className="flex items-center gap-3 px-5 py-3 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 transition-all font-semibold text-sm"
+          >
+            <ShoppingCart className="size-4" />
+            <span>{count} {count === 1 ? "item" : "items"}</span>
+            <span className="opacity-70">·</span>
+            <span>{totalFormatted}</span>
+          </button>
+        ) : (
+          <Button
+            className="relative gap-2"
+            variant={count > 0 ? "default" : "outline"}
+            disabled={count === 0}
+          >
+            <ShoppingCart className="size-4" />
+            Cart
+            {count > 0 && (
+              <span className="absolute -top-2 -right-2 size-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center border-2 border-background">
+                {count}
+              </span>
+            )}
+          </Button>
+        )}
       </SheetTrigger>
 
       <SheetContent side="bottom" className="pb-8">

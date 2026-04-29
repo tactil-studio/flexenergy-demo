@@ -1,5 +1,5 @@
 ﻿import { FileText, Loader2, Sparkles, Zap } from "lucide-react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,13 @@ export function RechargeView() {
   const { contracts, isLoading } = useDashboard();
   const { items, count, addToCart, removeFromCart, clearCart, totalFormatted, cart } =
     useRechargeCart();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Smart Suggest state
   const [days, setDays] = useState<number>(30);
@@ -82,30 +89,25 @@ export function RechargeView() {
 
       {/* ── Smart Suggest Card ── */}
       {!isLoading && contracts.length > 0 && (
-        <section className="rounded-2xl border border-primary/20 bg-primary/5 p-5 space-y-5">
+        <section className="rounded-2xl bg-primary/5 p-5 space-y-5">
           {/* Title row */}
-          <div className="flex items-center gap-2.5">
-            <div className="size-8 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
-              <Sparkles className="size-4 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-sm text-foreground leading-tight">Smart Suggest</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                We'll calculate the recommended amount to cover your usage.
-              </p>
-            </div>
+          <div className="flex flex-col gap-2">
+            <h3 className="font-semibold text-sm text-foreground leading-tight">Smart Suggest</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              We'll calculate the recommended amount to cover your usage.
+            </p>
           </div>
 
           {/* Input + button */}
-          <div className="flex items-center gap-2">
-            <div className="relative w-32 shrink-0">
+          <div className="grid grid-cols-[1fr_auto] items-center gap-2">
+            <div className="relative">
               <Input
                 type="number"
                 min={1}
                 max={365}
                 value={days}
                 onChange={(e) => setDays(Math.max(1, Number(e.target.value)))}
-                className="pr-12 font-semibold bg-background"
+                className="h-11 pr-12 font-semibold bg-background"
               />
               <span className="absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground pointer-events-none">
                 days
@@ -225,6 +227,23 @@ export function RechargeView() {
           </div>
         )}
       </section>
+
+      {/* ── Floating cart trigger ── */}
+      {count > 0 && scrolled && (
+        <div className={cn(
+          "fixed bottom-24 lg:bottom-8 right-4 lg:right-8 z-50 transition-all duration-300",
+          scrolled ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none",
+        )}>
+          <CartDrawer
+            items={items}
+            count={count}
+            totalFormatted={totalFormatted}
+            onRemove={removeFromCart}
+            onClear={clearCart}
+            floating
+          />
+        </div>
+      )}
     </main>
   );
 }
