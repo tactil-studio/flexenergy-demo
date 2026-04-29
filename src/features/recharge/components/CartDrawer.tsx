@@ -1,4 +1,4 @@
-import { CheckCircle, ShoppingCart, Trash2, Zap } from "lucide-react";
+import { AlertCircle, CheckCircle, Loader2, ShoppingCart, Trash2, Zap } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -31,11 +31,13 @@ export function CartDrawer({
   const { rechargeCart } = useApp();
   const [isProcessing, setIsProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
   const handlePay = async () => {
     if (items.length === 0) return;
     setIsProcessing(true);
+    setError(null);
     try {
       await rechargeCart(
         items.map((item) => ({
@@ -50,6 +52,8 @@ export function CartDrawer({
         setSuccess(false);
         setOpen(false);
       }, 2500);
+    } catch {
+      setError("Payment failed. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -124,13 +128,24 @@ export function CartDrawer({
               <span className="text-foreground text-lg">{totalFormatted}</span>
             </div>
 
+            {error && (
+              <div className="flex items-center gap-2 rounded-xl bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
+                <AlertCircle className="size-4 shrink-0" />
+                {error}
+              </div>
+            )}
+
             <Button
               className="w-full gap-2"
               size="lg"
               disabled={isProcessing}
               onClick={handlePay}
             >
-              <Zap className="size-4" />
+              {isProcessing ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Zap className="size-4" />
+              )}
               {isProcessing ? "Processing…" : "Confirm Payment"}
             </Button>
           </div>

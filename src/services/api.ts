@@ -274,17 +274,42 @@ export const apiService = {
     });
     const orderId = orderRes.orderId ?? undefined;
 
-    // Step 2 — settle the transaction, referencing the orderId
+    // Step 2 — settle via Shop endpoint (bypasses Stripe)
     await client.financial.setTransaction({
       transactionDate: new Date().toISOString(),
       contractId,
       customerId,
       orderId,
       amount,
-      transactionSource: 1, // Stripe
+      transactionSource: 3, // Shop (client's custom flow — no Stripe)
       transactionStatus: 1, // Settled
-      description: "Manual Recharge",
+      description: "Recharge via portal",
     });
+  },
+
+  /**
+   * Calls Shop/Suggest to recommend recharge amounts per contract based on days.
+   */
+  async suggestRecharge(
+    contractIds: number[],
+    days: number,
+  ): Promise<
+    Array<{
+      contractID: number;
+      suggestedAmount: number;
+      suggestedAmountRaw: number;
+    }>
+  > {
+    const res = await getClient().shop.suggest({
+      contracts: contractIds,
+      days,
+      groupID: null,
+    });
+    return (res.contracts ?? []).map((c) => ({
+      contractID: c.contractID ?? 0,
+      suggestedAmount: c.suggestedAmount ?? 0,
+      suggestedAmountRaw: c.suggestedAmountRaw ?? 0,
+    }));
   },
 
   /**

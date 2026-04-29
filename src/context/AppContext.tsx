@@ -41,7 +41,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     setIsLoading(true);
     apiService
-      .getAppState(271)
+      .getAppState(user.id)
       .then((data) => setState(data))
       .catch(() => setState(null))
       .finally(() => setIsLoading(false));
@@ -54,7 +54,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (!state?.dashboard || !user) return;
     const amountMinor = toMinorUnits(amount, state.dashboard.scale);
 
-    await apiService.rechargeBalance(271, contractId, amountMinor, state.dashboard.scale);
+    await apiService.rechargeBalance(user.id, contractId, amountMinor, state.dashboard.scale);
 
     const newNotification: Notification = {
       id: Math.random().toString(36).substr(2, 9),
