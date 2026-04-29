@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 
 /**
  * Muestra una ruta truncando el prefijo (directorio) y dejando visible el sufijo (nombre de archivo).
