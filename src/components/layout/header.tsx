@@ -1,4 +1,4 @@
-import { AlertCircle, Bell, CheckCircle2, Info, X } from "lucide-react";
+import { AlertCircle, Bell, CheckCircle2, Info, Settings, X } from "lucide-react";
 import { Popover } from "radix-ui";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "@/context/AppContext";
@@ -55,7 +55,16 @@ export function Header() {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => navigate("/settings")}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors active:scale-95 outline-none"
+            aria-label="Settings"
+          >
+            <Settings className="w-5 h-5 text-muted-foreground" />
+          </button>
+
           <Popover.Root>
             <Popover.Trigger asChild>
               <button
@@ -148,5 +157,6 @@ export function Header() {
         </div>
       </div>
     </header>
+
   );
 }
