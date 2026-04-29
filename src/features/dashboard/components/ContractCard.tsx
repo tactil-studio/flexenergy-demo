@@ -1,6 +1,5 @@
 import { AlertTriangle, ChevronRight, Clock, TrendingDown, Zap } from "lucide-react";
 import { StatusBadge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ContractSummary } from "../hooks/useDashboard";
 import { TariffDrawer } from "./TariffDrawer";
@@ -74,8 +73,8 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
           </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-x-4 pt-1 border-t border-border">
+        {/* Stats + Actions */}
+        <div className="grid grid-cols-2 gap-x-4 pt-1">
           <div className="py-3 border-r border-border pr-4">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Daily avg</p>
             <div className="flex items-center gap-1">
@@ -83,32 +82,34 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
               <p className="text-sm font-semibold text-foreground tabular-nums">{c.avgCostFormatted}</p>
             </div>
           </div>
-          <div className="py-3 pl-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Forecast</p>
-            <p className="text-sm font-semibold text-foreground tabular-nums">{c.forecastFormatted}</p>
+          <div className="py-2 pl-4 flex items-center justify-around">
+            <TariffDrawer contractLabel={contractLabel}>
+              <button type="button" className="flex flex-col items-center gap-1.5 group">
+                <span className="w-9 h-9 rounded-2xl bg-muted flex items-center justify-center group-hover:bg-muted/70 transition-colors">
+                  <ChevronRight className="size-4 text-foreground" />
+                </span>
+                <span className="text-[10px] font-medium text-muted-foreground">Details</span>
+              </button>
+            </TariffDrawer>
+
+            {c.isLowBalance && (
+              <button type="button" onClick={onRecharge} className="flex flex-col items-center gap-1.5 group">
+                <span className="w-9 h-9 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <Zap className="size-4 text-primary" />
+                </span>
+                <span className="text-[10px] font-medium text-primary">Top up</span>
+              </button>
+            )}
+
+            {!c.isLowBalance && (
+              <TariffDrawer contractLabel={contractLabel}>
+                <button type="button" className="flex flex-col items-center gap-1.5 group opacity-0 pointer-events-none" aria-hidden>
+                  <span className="w-9 h-9 rounded-2xl bg-muted flex items-center justify-center" />
+                </button>
+              </TariffDrawer>
+            )}
           </div>
         </div>
-
-        {/* Actions */}
-        <footer className="flex items-center gap-2 mt-auto">
-          <TariffDrawer contractLabel={contractLabel}>
-            <Button variant="ghost" size="sm" className="gap-1.5 text-xs flex-1 rounded-xl bg-muted hover:bg-muted/80 text-foreground">
-              Tariff details
-              <ChevronRight className="size-3.5" />
-            </Button>
-          </TariffDrawer>
-
-          <Button
-            size="sm"
-            className={cn("gap-1.5 text-xs rounded-xl", c.isLowBalance ? "flex-1" : "opacity-0 pointer-events-none")}
-            onClick={onRecharge}
-            tabIndex={c.isLowBalance ? 0 : -1}
-            aria-hidden={!c.isLowBalance}
-          >
-            <Zap className="size-3.5" />
-            Top up
-          </Button>
-        </footer>
       </div>
     </article>
   );

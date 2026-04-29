@@ -52,6 +52,8 @@ function MainContent() {
   const { isLoading: isAppLoading } = useApp();
   const { user, isLoading: isAuthLoading } = useAuth();
   const [authView, setAuthView] = useState<"login" | "forgot">("login");
+  const { pathname } = useLocation();
+  const isDashboard = pathname === "/";
 
   if (isAuthLoading || isAppLoading) {
     return <AppLoadingScreen />;
@@ -81,14 +83,11 @@ function MainContent() {
       <BottomNav />
       <div className="lg:ml-60 flex flex-col min-h-screen">
         <Header />
-        <main className="flex-1 pb-28 lg:pb-10 px-4 lg:px-10">
+        <main className={`flex-1 pb-28 lg:pb-10 px-4 lg:px-10 ${isDashboard ? "" : "pt-16"}`}>
           <div className="max-w-2xl mx-auto lg:max-w-5xl lg:mx-0">
             <ErrorBoundary>
               <AnimatedRoutes />
             </ErrorBoundary>
-            <footer className="text-center py-10">
-              <p className="text-xs text-slate-300">© 2026 EnergyDynamics AG</p>
-            </footer>
           </div>
         </main>
       </div>

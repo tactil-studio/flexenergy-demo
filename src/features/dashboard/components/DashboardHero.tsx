@@ -49,7 +49,7 @@ export function DashboardHero({
       />
 
       {/* Content */}
-      <div className="relative z-10 px-6 md:px-10 lg:px-10 pt-28 pb-8 md:pt-32 md:pb-16 flex flex-col items-center text-center">
+      <div className="relative z-10 px-6 md:px-10 lg:px-10 pt-28 pb-14 md:pt-32 md:pb-16 flex flex-col items-center text-center">
 
         {/* Balance */}
         <p className="text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-2">Total balance</p>
