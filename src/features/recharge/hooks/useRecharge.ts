@@ -22,7 +22,7 @@ export function useRecharge() {
   useEffect(() => {
     if (!contractId) return;
     getClient()
-      .shop.suggest({
+      .shop.suggestBulk({
         contracts: [contractId],
         days: 30,
         groupID: "electrical",

@@ -300,7 +300,7 @@ export const apiService = {
       suggestedAmountRaw: number;
     }>
   > {
-    const res = await getClient().shop.suggest({
+    const res = await getClient().shop.suggestBulk({
       contracts: contractIds,
       days,
       groupID: "electrical",
