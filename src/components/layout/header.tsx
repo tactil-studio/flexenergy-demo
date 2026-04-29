@@ -45,17 +45,14 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0  z-40 bg-card/80 backdrop-blur-xl border-b border-border">
+    <header className="sticky top-0 left-0 right-0  z-40 bg-card/80 backdrop-blur-xl border-b border-border">
       <div className="flex justify-between lg:ml-40 items-center px-6 lg:px-10 h-16 lg:h-18 w-full max-w-5xl mx-auto">
         <div className="flex items-center gap-3">
           <UserAvatar onClick={() => navigate("/settings")} />
-          <dl className="flex flex-col">
-            <dt className="sr-only">Current balance</dt>
-            <dd className="font-semibold text-lg tracking-tight text-foreground">
-              {formatCurrency(balanceMinor, "CHF", scale)}
-            </dd>
-            <dd className="text-xs text-muted-foreground">Current balance</dd>
-          </dl>
+          <div className="flex flex-col">
+            <p className="text-xs text-muted-foreground">Welcome back,</p>
+            <p className="font-semibold text-base tracking-tight text-foreground leading-tight">Mario Rossi</p>
+          </div>
         </div>
 
         <div className="relative">

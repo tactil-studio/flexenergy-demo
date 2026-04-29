@@ -19,7 +19,7 @@ export function DashboardView() {
   const firstDaysLeft = contracts[0]?.daysLeft;
 
   return (
-    <div className="space-y-5 md:space-y-6 pt-4 lg:pt-6">
+    <div className="space-y-5 md:space-y-6">
 
       {isLoading ? (
         <HeroSkeleton />
