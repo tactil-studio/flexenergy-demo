@@ -239,26 +239,21 @@ export function RechargeView() {
       </section>
 
       {/* ── Floating cart trigger ── */}
-      <AnimatePresence>
-        {count > 0 && scrolled && (
-          <motion.div
-            className="fixed bottom-24 lg:bottom-8 right-4 lg:right-8 z-50"
-            initial={{ opacity: 0, y: 24, scale: 0.88 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 420, damping: 28 }}
-          >
-            <CartDrawer
-              items={items}
-              count={count}
-              totalFormatted={totalFormatted}
-              onRemove={removeFromCart}
-              onClear={clearCart}
-              floating
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {count > 0 && scrolled && (
+        <div className={cn(
+          "fixed bottom-24 lg:bottom-8 right-4 lg:right-8 z-50 transition-all duration-300",
+          scrolled ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none",
+        )}>
+          <CartDrawer
+            items={items}
+            count={count}
+            totalFormatted={totalFormatted}
+            onRemove={removeFromCart}
+            onClear={clearCart}
+            floating
+          />
+        </div>
+      )}
     </main>
   );
 }
