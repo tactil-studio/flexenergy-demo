@@ -119,7 +119,7 @@ export function RechargeView() {
               {isSuggesting
                 ? <Loader2 className="size-4 animate-spin" />
                 : <Sparkles className="size-4" />}
-              {isSuggesting ? "Calculating…" : "Get Suggestions"}
+              {isSuggesting ? "Calculating…" : "Suggest"}
             </Button>
           </div>
 

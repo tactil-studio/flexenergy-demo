@@ -59,16 +59,16 @@ export function DashboardHero({
 
         {/* Stat pills */}
         <div className="flex items-center justify-center gap-2 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/10 backdrop-blur-sm text-white/80 border border-white/10">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-foreground/10 backdrop-blur-sm text-background border-white/10">
             <Zap className="size-3" />
             {consume.toFixed(1)} kWh
           </span>
 
           {!chartLoading && chartData.length > 1 && (
             <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm border ${isPositiveTrend
-                ? "bg-warning/20 text-warning border-warning/20"
-                : "bg-success/20 text-success border-success/20"
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm ${isPositiveTrend
+                ? "bg-warning/10 text-warning border-warning/20"
+                : "bg-success/10 text-success border-success/20"
                 }`}
             >
               <TrendIcon className="size-3" />

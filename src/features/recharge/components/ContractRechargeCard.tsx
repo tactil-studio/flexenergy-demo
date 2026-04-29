@@ -43,7 +43,7 @@ export function ContractRechargeCard({
 
   const currentAmount = isCustom ? Number(customValue) || 0 : amount;
   const inCart = !!cartItem;
-  const label = c.buContractId ? `Contract · ${c.buContractId}` : `Contract #${c.contractId}`;
+  const label = c.buContractId ? `${c.buContractId}` : `#${c.contractId}`;
 
   const handlePreset = (amt: number) => {
     setAmount(amt);
@@ -71,7 +71,7 @@ export function ContractRechargeCard({
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs text-muted-foreground mb-0.5">{label}</p>
+          <p className="text-xs text-muted-foreground mb-0.5 truncate">{label}</p>
           <p className="font-bold text-xl text-foreground tabular-nums">{c.balanceFormatted}</p>
         </div>
         <StatusBadge status={c.serviceStatus} />
