@@ -3,9 +3,9 @@ import { useState } from "react";
 import { StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { ContractSummary } from "@/features/dashboard/hooks/useDashboard";
 import { cn } from "@/lib/utils";
 import { formatCurrency, toMinorUnits } from "@/types";
-import type { ContractSummary } from "@/features/dashboard/hooks/useDashboard";
 import type { CartItem } from "../hooks/useRechargeCart";
 
 const PRESET_AMOUNTS = [20, 50, 100, 200] as const;
@@ -105,7 +105,7 @@ export function ContractRechargeCard({
         "flex items-center gap-2 px-3 py-2.5 rounded-xl border transition-all",
         isCustom ? "border-primary bg-primary/5" : "border-border bg-muted/30",
       )}>
-        <span className="text-sm font-bold text-muted-foreground">CHF</span>
+        <span className="text-sm font-bold text-muted-foreground">{c.currency}</span>
         <Input
           type="number"
           min={0}

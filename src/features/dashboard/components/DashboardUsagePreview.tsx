@@ -9,6 +9,7 @@ import {
   XAxis,
 } from "recharts";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { MeasureData } from "@/types";
 
@@ -29,12 +30,52 @@ function formatTick(v: string) {
   }
 }
 
+function UsageEmptyState({ onViewUsage }: { onViewUsage: () => void }) {
+  return (
+    <section className="bg-card rounded-[28px] border border-border shadow-sm p-4 md:p-6">
+      <div className="flex items-center justify-between mb-4 md:mb-5">
+        <div className="flex items-center gap-2">
+          <BarChart2 className="size-4 text-primary" aria-hidden="true" />
+          <h2 className="font-semibold text-sm md:text-base text-foreground">Usage analysis</h2>
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-muted text-muted-foreground">
+            This week
+          </span>
+        </div>
+        <Button variant="ghost" size="sm" onClick={onViewUsage} className="text-xs text-muted-foreground gap-1 pr-1">
+          View all <ChevronRight className="size-3.5" />
+        </Button>
+      </div>
+      <div className="flex flex-col items-center justify-center h-28 md:h-36 gap-2 text-center">
+        <BarChart2 className="size-6 text-muted-foreground/40" />
+        <p className="text-xs text-muted-foreground/70">No usage data for this week</p>
+      </div>
+    </section>
+  );
+}
+
+function UsageLoadingSkeleton() {
+  return (
+    <section className="bg-card rounded-[28px] border border-border shadow-sm p-4 md:p-6 space-y-4">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-4 w-36" />
+        <Skeleton className="h-4 w-16" />
+      </div>
+      <Skeleton className="h-28 md:h-36 w-full rounded-2xl" />
+      <div className="grid grid-cols-2 gap-3">
+        <Skeleton className="h-14 rounded-2xl" />
+        <Skeleton className="h-14 rounded-2xl" />
+      </div>
+    </section>
+  );
+}
+
 export function DashboardUsagePreview({
   data,
   isLoading,
   onViewUsage,
 }: DashboardUsagePreviewProps) {
-  if (isLoading || !data.length) return null;
+  if (isLoading) return <UsageLoadingSkeleton />;
+  if (!data.length) return <UsageEmptyState onViewUsage={onViewUsage} />;
 
   const peakEntry = data.reduce(
     (max, d) => (d.value > max.value ? d : max),

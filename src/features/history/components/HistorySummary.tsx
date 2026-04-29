@@ -1,10 +1,19 @@
-import { ArrowUpRight, TrendingUp } from "lucide-react";
+import { ArrowUpRight, BarChart2, TrendingUp } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 import { SectionCard } from "@/components/ui/card";
 import { IconBox } from "@/components/ui/icon-box";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/types";
+
+function EmptyChart() {
+  return (
+    <div className="flex flex-col items-center justify-center h-[80px] gap-1.5 text-center">
+      <BarChart2 className="size-5 text-muted-foreground/40" />
+      <p className="text-[10px] text-muted-foreground/60">No activity data</p>
+    </div>
+  );
+}
 
 const PRIMARY = "oklch(0.53 0.195 258)";
 
@@ -43,6 +52,11 @@ export function HistorySummary({
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-3/4" />
           </div>
+        ) : weeklySpent === 0 && weeklyRecharged === 0 ? (
+          <div className="flex flex-col items-center justify-center py-4 gap-1 text-center">
+            <TrendingUp className="size-5 text-muted-foreground/40" />
+            <p className="text-[10px] text-muted-foreground/60">No activity this week</p>
+          </div>
         ) : (
           <dl className="space-y-2">
             <div className="flex justify-between items-center">
@@ -79,45 +93,51 @@ export function HistorySummary({
 
 
 
-      {/* Activity trend — desktop only */}
+      {/* Activity trend */}
       <SectionCard className="rounded-3xl p-5">
         <header className="mb-3">
           <h3 className="font-semibold text-xs text-muted-foreground">
             Activity trend
           </h3>
         </header>
-        <figure className="w-full" aria-label="Activity trend chart">
-          <ResponsiveContainer width="100%" height={80}>
-            <AreaChart data={chartData}>
-              <defs>
-                <linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={PRIMARY} stopOpacity={0.25} />
-                  <stop offset="95%" stopColor={PRIMARY} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (active && payload?.length) {
-                    return (
-                      <div className="bg-foreground text-background p-2 rounded-xl text-[10px] font-semibold shadow-xl">
-                        {formatCurrency(Number(payload[0].value) * 100)}
-                      </div>
-                    );
-                  }
-                  return null;
-                }}
-              />
-              <Area
-                type="monotone"
-                dataKey="amount"
-                stroke={PRIMARY}
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#colorAmt)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </figure>
+        {isLoading ? (
+          <Skeleton className="h-20 w-full rounded-xl" />
+        ) : chartData.length === 0 ? (
+          <EmptyChart />
+        ) : (
+          <figure className="w-full" aria-label="Activity trend chart">
+            <ResponsiveContainer width="100%" height={80}>
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={PRIMARY} stopOpacity={0.25} />
+                    <stop offset="95%" stopColor={PRIMARY} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload?.length) {
+                      return (
+                        <div className="bg-foreground text-background p-2 rounded-xl text-[10px] font-semibold shadow-xl">
+                          {formatCurrency(Number(payload[0].value) * 100)}
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="amount"
+                  stroke={PRIMARY}
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#colorAmt)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </figure>
+        )}
       </SectionCard>
 
 

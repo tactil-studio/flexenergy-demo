@@ -22,7 +22,11 @@ export function useRecharge() {
   useEffect(() => {
     if (!contractId) return;
     getClient()
-      .shop.suggest({ contracts: [contractId], days: 30 })
+      .shop.suggest({
+        contracts: [contractId],
+        days: 30,
+        groupID: "electrical",
+      })
       .then((res) => {
         const suggested = res.contracts?.find(
           (c) => c.contractID === contractId,

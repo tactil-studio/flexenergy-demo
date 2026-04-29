@@ -303,7 +303,7 @@ export const apiService = {
     const res = await getClient().shop.suggest({
       contracts: contractIds,
       days,
-      groupID: null,
+      groupID: "electrical",
     });
     return (res.contracts ?? []).map((c) => ({
       contractID: c.contractID ?? 0,
