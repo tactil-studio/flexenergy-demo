@@ -13,8 +13,8 @@ interface ContractCardProps {
 export function ContractCard({ c, onRecharge }: ContractCardProps) {
   const pct = Math.min(100, Math.max(0, c.balancePercent ?? 100));
   const contractLabel = c.buContractId
-    ? `Contract · ${c.buContractId}`
-    : `Contract #${c.contractId}`;
+    ? `${c.buContractId}`
+    : `#${c.contractId}`;
 
   const daysVariant =
     c.daysLeft === null
@@ -52,10 +52,10 @@ export function ContractCard({ c, onRecharge }: ContractCardProps) {
 
       <div className="flex flex-col flex-1 p-5 gap-4">
         {/* ── Header: ID + status ───────────────────────── */}
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-[11px] font-medium text-muted-foreground tracking-wide">
+        <div className="flex items-center justify-between gap-2 min-w-0">
+          <p className="text-xs text-muted-foreground truncate">
             {contractLabel}
-          </span>
+          </p>
           <StatusBadge status={c.serviceStatus} />
         </div>
 

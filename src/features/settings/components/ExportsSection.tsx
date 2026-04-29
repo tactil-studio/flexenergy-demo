@@ -1,9 +1,8 @@
 import { format, parseISO } from "date-fns";
 import { ChevronLeft, ChevronRight, Download, FileText, Loader2, RefreshCw } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { TruncatePath } from "@/components/ui/truncate-path";
 import { getClient } from "@/lib/smartsphere";
 import type { ExportItemDto } from "@/lib/smartsphere/modules/file-manager";
 import { cn } from "@/lib/utils";
@@ -249,13 +248,12 @@ export function ExportsSection() {
                 return (
                   <div key={item.id ?? i}>
                     {i > 0 && <Separator />}
-                    <div className="flex items-center gap-3 px-4" style={{ height: ROW_H }}>
-                      <FileText className="size-4 text-muted-foreground shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <TruncatePath
-                          path={item.fileName ?? `export-${offset + i + 1}`}
-                          className="text-sm font-medium text-foreground"
-                        />
+                    <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4" style={{ height: ROW_H }}>
+                      <FileText className="size-4 text-muted-foreground" />
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate">
+                          {item.fileName ?? `export-${offset + i + 1}`}
+                        </p>
                         <p className="text-[11px] text-muted-foreground">
                           {format(parseISO(item.createdAtUtc as string), "d MMM yyyy")}
                           {" · "}

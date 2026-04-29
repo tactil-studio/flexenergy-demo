@@ -74,7 +74,8 @@ function summariseContract(c: DashboardContract): ContractSummary {
         : depletionLabel,
     depletionDate: c.depletionDate,
     lastMeasureLabel,
-    isLowBalance: safeDaysLeft !== null && safeDaysLeft <= 7,
+    isLowBalance:
+      balanceMinor < 0 || (safeDaysLeft !== null && safeDaysLeft <= 7),
     daysLeft: safeDaysLeft,
     balancePercent,
   };
