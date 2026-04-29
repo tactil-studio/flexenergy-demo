@@ -55,6 +55,9 @@ function summariseContract(c: DashboardContract): ContractSummary {
       ? Math.min(100, Math.max(0, (balanceMinor / c.forecastTotalCost) * 100))
       : null;
 
+  // Clamp negative daysLeft — balance already depleted, treat as null for display
+  const safeDaysLeft = daysLeft !== null && daysLeft < 0 ? null : daysLeft;
+
   return {
     contractId: c.contractId,
     buContractId: c.buContractId,
@@ -66,13 +69,13 @@ function summariseContract(c: DashboardContract): ContractSummary {
     avgCostFormatted: formatCurrency(dailyAvgMinor, c.currency, c.scale),
     forecastFormatted: formatCurrency(c.forecastTotalCost, c.currency, c.scale),
     depletionLabel:
-      daysLeft !== null
-        ? `${daysLeft} day${daysLeft !== 1 ? "s" : ""} remaining`
+      safeDaysLeft !== null
+        ? `${safeDaysLeft} day${safeDaysLeft !== 1 ? "s" : ""} remaining`
         : depletionLabel,
     depletionDate: c.depletionDate,
     lastMeasureLabel,
-    isLowBalance: daysLeft !== null && daysLeft <= 7,
-    daysLeft,
+    isLowBalance: safeDaysLeft !== null && safeDaysLeft <= 7,
+    daysLeft: safeDaysLeft,
     balancePercent,
   };
 }

@@ -11,12 +11,12 @@ export function SettingsView() {
       <div className="lg:grid lg:grid-cols-2 lg:gap-6">
         <div className="space-y-0">
           <AlertSection />
-          <SettingsList />
         </div>
         <aside className="space-y-0">
           <ExportsSection />
           <SupportCenter />
-        </aside>
+        </aside>          <SettingsList />
+
       </div>
     </div>
   );
