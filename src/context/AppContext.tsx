@@ -5,9 +5,16 @@ import type { AlertSettings, AppState, Notification } from "../types";
 import { formatCurrency, toMinorUnits } from "../types";
 import { useAuth } from "./AuthContext";
 
+export interface CartRechargeItem {
+  contractId: number;
+  amount: number; // CHF
+  scale: number;
+}
+
 interface AppContextType {
   state: AppState | null;
   recharge: (amount: number) => Promise<void>;
+  rechargeCart: (items: CartRechargeItem[]) => Promise<void>;
   toggleAlert: (key: keyof AlertSettings) => Promise<void>;
   updateAlertSettings: (settings: Partial<AlertSettings>) => Promise<void>;
   addNotification: (title: string, message: string, type: Notification["type"]) => Promise<void>;
@@ -71,6 +78,38 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const rechargeCart = async (items: CartRechargeItem[]) => {
+    if (!state?.dashboard || !user || items.length === 0) return;
+
+    let totalAddedMinor = 0;
+    for (const item of items) {
+      const amountMinor = toMinorUnits(item.amount, item.scale);
+      await apiService.rechargeBalance(271, item.contractId, amountMinor, item.scale);
+      totalAddedMinor += amountMinor;
+    }
+
+    const newNotification: Notification = {
+      id: Math.random().toString(36).substr(2, 9),
+      title: "Balance Recharged",
+      message: `Successfully recharged ${items.length} contract${items.length > 1 ? "s" : ""}.`,
+      timestamp: new Date().toISOString(),
+      read: false,
+      type: "success",
+    };
+    const updatedNotifications = [newNotification, ...state.notifications];
+    await apiService.updateNotifications(updatedNotifications);
+
+    setState((prev) =>
+      prev?.dashboard
+        ? {
+          ...prev,
+          dashboard: { ...prev.dashboard, balance: prev.dashboard.balance + totalAddedMinor },
+          notifications: updatedNotifications,
+        }
+        : prev,
+    );
+  };
+
   const toggleAlert = async (key: keyof AlertSettings) => {
     if (!state || !user) return;
     const newAlerts = { ...state.alerts, [key]: !state.alerts[key] };
@@ -117,6 +156,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       value={{
         state,
         recharge,
+        rechargeCart,
         toggleAlert,
         updateAlertSettings,
         addNotification,

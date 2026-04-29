@@ -1,4 +1,5 @@
-﻿import { HelpCircle, MessageSquare } from "lucide-react";
+﻿import { BookOpen, HelpCircle, MessageSquare } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { IconBox } from "@/components/ui/icon-box";
 
@@ -7,25 +8,35 @@ const SUPPORT_ITEMS = [
     icon: HelpCircle,
     title: "Knowledge Base",
     description: "Detailed guides on managing consumption and billing cycles.",
+    href: null,
   },
   {
     icon: MessageSquare,
     title: "Direct Support",
     description: "24/7 technical assistance for meter connection issues.",
+    href: null,
+  },
+  {
+    icon: BookOpen,
+    title: "Information / FAQ",
+    description: "Domande frequenti sulla piattaforma EnergyDynamics®.",
+    href: "/settings/faq",
   },
 ] as const;
 
 export function SupportCenter() {
+  const navigate = useNavigate();
   return (
     <section className="mb-4 md:mb-10">
       <h2 className="font-bold text-base md:text-xl mb-3 md:mb-6 px-2 text-foreground">
         Support Center
       </h2>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 list-none p-0">
-        {SUPPORT_ITEMS.map(({ icon: Icon, title, description }) => (
+        {SUPPORT_ITEMS.map(({ icon: Icon, title, description, href }) => (
           <li key={title}>
             <Button
               variant="ghost"
+              onClick={() => href && navigate(href)}
               className="w-full h-auto text-left flex-col items-start gap-2 md:gap-4 bg-card p-4 md:p-6 rounded-[20px] md:rounded-[32px] border border-border shadow-sm hover:bg-muted/30 group"
             >
               <IconBox

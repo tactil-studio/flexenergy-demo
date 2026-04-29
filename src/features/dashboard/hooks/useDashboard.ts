@@ -7,6 +7,8 @@ export interface ContractSummary {
   contractId: number;
   buContractId?: string;
   serviceStatus: string;
+  currency: string;
+  scale: number;
   /** Formatted balance string, e.g. "CHF 142.50" */
   balanceFormatted: string;
   /** Raw balance in minor units (for sign checks) */
@@ -57,6 +59,8 @@ function summariseContract(c: DashboardContract): ContractSummary {
     contractId: c.contractId,
     buContractId: c.buContractId,
     serviceStatus: c.serviceStatus,
+    currency: c.currency,
+    scale: c.scale,
     balanceFormatted: formatCurrency(balanceMinor, c.currency, c.scale),
     balanceRaw: balanceMinor,
     avgCostFormatted: formatCurrency(dailyAvgMinor, c.currency, c.scale),

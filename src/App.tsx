@@ -19,6 +19,7 @@ import { TwoFactorAuthView } from "@/features/auth/views/TwoFactorAuthView";
 import { DashboardView } from "@/features/dashboard/views/DashboardView";
 import { HistoryView } from "@/features/history/views/HistoryView";
 import { RechargeView } from "@/features/recharge/views/RechargeView";
+import { FaqView } from "@/features/settings/views/FaqView";
 import { SettingsView } from "@/features/settings/views/SettingsView";
 import { UsageView } from "@/features/usage/views/UsageView";
 
@@ -39,6 +40,7 @@ function AnimatedRoutes() {
           <Route path="/recharge" element={<RechargeView />} />
           <Route path="/history" element={<HistoryView />} />
           <Route path="/settings" element={<SettingsView />} />
+          <Route path="/settings/faq" element={<FaqView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </motion.section>
