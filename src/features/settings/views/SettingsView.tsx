@@ -6,17 +6,15 @@ import { SupportCenter } from "../components/SupportCenter";
 
 export function SettingsView() {
   return (
-    <div className="space-y-0 pt-4 lg:pt-6">
+    <div className="flex flex-col min-h-[calc(100vh-theme(space.16))] pt-4 lg:pt-6">
       <ProfileHero />
-      <div className="lg:grid lg:grid-cols-2 lg:gap-6">
-        <div className="space-y-0">
-          <AlertSection />
-        </div>
-        <aside className="space-y-0">
-          <ExportsSection />
-          <SupportCenter />
-        </aside>          <SettingsList />
-
+      <div className="space-y-0 flex-1">
+        <AlertSection />
+      </div>
+      <div className="space-y-0 mt-auto">
+        <ExportsSection />
+        <SupportCenter />
+        <SettingsList />
       </div>
     </div>
   );

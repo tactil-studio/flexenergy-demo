@@ -31,11 +31,14 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-primary p-12 text-primary-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/80" />
         <div className="relative z-10">
-          <div className="flex items-center gap-2.5 mb-16">
-            <div className="w-9 h-9 bg-white/15 rounded-2xl flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-3 mb-16">
+            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+              <Zap className="w-6 h-6 text-white" />
             </div>
-            <span className="font-heading font-bold text-lg text-white tracking-tight">FlexEnergy</span>
+            <div>
+              <div className="font-heading font-bold text-xl text-white tracking-tight">FlexEnergy</div>
+              <div className="text-xs text-white/50 font-medium">Energy Management</div>
+            </div>
           </div>
           <h1 className="font-heading font-bold text-4xl xl:text-5xl leading-tight text-white mb-4">
             Your energy,<br />always in hand.
@@ -63,12 +66,14 @@ export function LoginView({ onShowForgot }: { onShowForgot: () => void }) {
           className="w-full max-w-md space-y-8"
         >
           {/* Mobile brand header */}
-          <div className="lg:hidden text-center space-y-2">
-            <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-              <Zap className="size-6 text-white" />
+          <div className="lg:hidden text-center space-y-3">
+            <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-primary/50">
+              <Zap className="size-7 text-white" />
             </div>
-            <h1 className="font-heading font-bold text-2xl text-foreground">FlexEnergy</h1>
-            <p className="text-sm text-muted-foreground">EnergyDynamics Platform</p>
+            <div>
+              <h1 className="font-heading font-bold text-2xl text-foreground">FlexEnergy</h1>
+              <p className="text-xs text-muted-foreground font-medium">Energy Management Platform</p>
+            </div>
           </div>
 
           <div className="bg-card p-8 rounded-3xl shadow-sm border border-border space-y-6">
