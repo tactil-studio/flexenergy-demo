@@ -86,8 +86,8 @@ export function HistorySummary({
             Activity trend
           </h3>
         </header>
-        <figure className="h-20 w-full" aria-label="Activity trend chart">
-          <ResponsiveContainer width="100%" height="100%">
+        <figure className="w-full" aria-label="Activity trend chart">
+          <ResponsiveContainer width="100%" height={80}>
             <AreaChart data={chartData}>
               <defs>
                 <linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1">

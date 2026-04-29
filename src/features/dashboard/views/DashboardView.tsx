@@ -1,8 +1,8 @@
 ﻿import { FileText } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ContractCardSkeleton, HeroSkeleton } from '@/components/ui/skeleton';
-import { useApp } from '@/context/AppContext';
 import { useAuth } from '@/context/AuthContext';
 import { ContractCard } from '../components/ContractCard';
 import { DashboardHero } from '../components/DashboardHero';
@@ -13,7 +13,7 @@ import { useDashboardChart } from '../hooks/useDashboardChart';
 export function DashboardView() {
   const { totalBalanceFormatted, contracts, consume, isLoading } = useDashboard();
   const { data: chartData, isLoading: chartLoading, trend } = useDashboardChart();
-  const { setView } = useApp();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const firstDaysLeft = contracts[0]?.daysLeft;
@@ -45,7 +45,7 @@ export function DashboardView() {
       <DashboardUsagePreview
         data={chartData}
         isLoading={chartLoading}
-        onViewUsage={() => setView('usage')}
+        onViewUsage={() => navigate('/usage')}
       />
 
       {isLoading ? (
@@ -66,7 +66,7 @@ export function DashboardView() {
               variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <ContractCard c={c} onRecharge={() => setView('recharge')} />
+              <ContractCard c={c} onRecharge={() => navigate('/recharge')} />
             </motion.li>
           ))}
         </motion.ul>
